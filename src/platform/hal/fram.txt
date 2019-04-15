@@ -1,0 +1,122 @@
+#define WREN	0x06
+#define WRDI	0x04
+#define RDSR	0x05
+#define WRSR	0x01
+#define READ	0x03
+#define FSTRD	0x0B
+#define WRITE	0x02
+#define SLEEP	0xB9
+#define RDID	0x9F
+
+#define FRAM_SPI_CE_H()
+#define FRAM_SPI_CE_L()
+
+static uint8_t SPIx_ReadWriteByte(uint8_t data);
+
+void hal_fram_init(void)
+{	
+	FRAM_SPI_CE_H();	
+}
+
+bool_t hal_fram_read(uint32_t addr, uint8_t *buf, uint32_t len)
+{
+	uint8_t temH,temM,temL;
+	uint32_t i;
+	
+	temH=(uint8_t)((addr&0xff0000)>>16);
+	temM=(uint8_t)((addr&0x00ff00)>>8);
+	temL=(uint8_t)(addr&0x0000ff);
+
+	FRAM_SPI_CE_L();           		//片选CS=0
+	SPIx_ReadWriteByte(READ);     	//读命�?
+	SPIx_ReadWriteByte(temH);      	//高位地址
+	SPIx_ReadWriteByte(temM);      	//中位地址
+	SPIx_ReadWriteByte(temL);      	//低位地址
+	//读数�?
+
+	for(i=0;i<len;i++)
+	{
+		*buf++ = SPIx_ReadWriteByte(0xF0);
+	}
+
+	FRAM_SPI_CE_H();           //片选CS=1
+    
+    return PLAT_TRUE;
+}
+
+bool_t hal_fram_write(uint32_t addr, uint8_t *buf, uint32_t len)
+{
+	uint8_t temH,temM,temL;
+	uint32_t i;
+
+	temH=(uint8_t)((addr&0xff0000)>>16);
+	temM=(uint8_t)((addr&0x00ff00)>>8);
+	temL=(uint8_t)(addr&0x0000ff);
+	
+	FRAM_SPI_CE_L();
+	SPIx_ReadWriteByte(WREN);		  //写使�?
+	FRAM_SPI_CE_H(); 
+	
+	delay_us(5);
+	
+	FRAM_SPI_CE_L();
+	SPIx_ReadWriteByte(WRITE);		  //写命�?
+	SPIx_ReadWriteByte(temH);		  //高位地址
+	SPIx_ReadWriteByte(temM);		  //中位地址
+	SPIx_ReadWriteByte(temL);		  //低位地址
+	//写入数据
+	if (buf != PLAT_NULL)
+	{
+		for(i=0;i<len;i++)
+		{
+		 SPIx_ReadWriteByte(*buf++);
+		}
+	}
+	else
+	{
+		for(i=0;i<len;i++)
+		{
+		 SPIx_ReadWriteByte(255-(uint8_t)i);
+		}
+	}
+	FRAM_SPI_CE_H();
+	
+	delay_us(5);
+	
+	FRAM_SPI_CE_L();
+	SPIx_ReadWriteByte(WRDI);		  //写禁�?
+	FRAM_SPI_CE_H();
+    
+    return PLAT_TRUE;
+}
+
+void hal_fram_get_ver(void)
+{
+	uint8_t value;
+
+	DBG_PRINTF("FRAM Version");
+	
+	FRAM_SPI_CE_L(); 
+    SPIx_ReadWriteByte(RDID);
+    
+    for(uint8_t i=0; i<9; i++)
+    {
+        value = SPIx_ReadWriteByte(0xFF);        
+        DBG_PRINTF(":%x", value);
+    }
+	FRAM_SPI_CE_H();
+
+	DBG_PRINTF("\r\n");
+}
+
+static uint8_t SPIx_ReadWriteByte(uint8_t data)
+{
+	while (UCB0STAT & UCBUSY);
+	
+	UCB0TXBUF = data;
+	
+	while (UCB0STAT & UCBUSY);
+
+	return (uint8_t)UCB0RXBUF;	
+}
+

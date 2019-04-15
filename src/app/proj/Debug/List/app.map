@@ -1,0 +1,1562 @@
+###############################################################################
+#
+# IAR ELF Linker V8.10.1.12857/W32 for ARM                15/Apr/2019  17:41:01
+# Copyright 2007-2017 IAR Systems AB.
+#
+#    Output file  =  
+#        E:\MovingTrackStroeFile\MovingTrackStroeProject\src\app\proj\Debug\Exe\app.out
+#    Map file     =  
+#        E:\MovingTrackStroeFile\MovingTrackStroeProject\src\app\proj\Debug\List\app.map
+#    Command line =  
+#        -f C:\Users\xxk\AppData\Local\Temp\EWB0D1.tmp
+#        (E:\MovingTrackStroeFile\MovingTrackStroeProject\src\app\proj\Debug\Obj\app.o
+#        E:\MovingTrackStroeFile\MovingTrackStroeProject\src\app\proj\Debug\Obj\app_dbg.o
+#        E:\MovingTrackStroeFile\MovingTrackStroeProject\src\app\proj\Debug\Obj\app_gps.o
+#        E:\MovingTrackStroeFile\MovingTrackStroeProject\src\app\proj\Debug\Obj\app_handle.o
+#        E:\MovingTrackStroeFile\MovingTrackStroeProject\src\app\proj\Debug\Obj\app_uart_cfg.o
+#        E:\MovingTrackStroeFile\MovingTrackStroeProject\src\app\proj\Debug\Obj\control_io.o
+#        E:\MovingTrackStroeFile\MovingTrackStroeProject\src\app\proj\Debug\Obj\device.o
+#        E:\MovingTrackStroeFile\MovingTrackStroeProject\src\app\proj\Debug\Obj\init.o
+#        E:\MovingTrackStroeFile\MovingTrackStroeProject\src\platform\proj\Debug\Exe\platform.a
+#        E:\MovingTrackStroeFile\MovingTrackStroeProject\src\sensor\proj\Debug\Exe\sensor.a
+#        E:\MovingTrackStroeFile\MovingTrackStroeProject\src\stack\proj\Debug\Exe\stack.a
+#        E:\MovingTrackStroeFile\MovingTrackStroeProject\src\app\proj\Debug\Obj\test.o
+#        -o
+#        E:\MovingTrackStroeFile\MovingTrackStroeProject\src\app\proj\Debug\Exe\app.out
+#        --map
+#        E:\MovingTrackStroeFile\MovingTrackStroeProject\src\app\proj\Debug\List\app.map
+#        --config
+#        E:\MovingTrackStroeFile\MovingTrackStroeProject\iar\linker\msp432p401r.icf
+#        --entry __iar_program_start --vfe --text_out locale)
+#
+###############################################################################
+
+*******************************************************************************
+*** RUNTIME MODEL ATTRIBUTES
+***
+
+CppFlavor       = *
+__SystemLibrary = DLib
+__dlib_version  = 6
+
+
+*******************************************************************************
+*** HEAP SELECTION
+***
+
+The basic heap was selected because no calls to memory allocation
+functions were found in the application outside of system library
+functions, and there are calls to deallocation functions in the
+application.
+
+
+*******************************************************************************
+*** PLACEMENT SUMMARY
+***
+
+"A0":  place at 0x20000000 { rw section .ram_intvec };
+"A1":  place at 0x00008000 { ro section .intvec };
+"P1":  place in [from 0x00008000 to 0x0003ffff] { ro };
+"P3":  place in [from 0x00000000 to 0x00000000] |
+                [from 0x20000000 to 0x2000ffff] { rw, block CSTACK, block HEAP };
+do not initialize { section .noinit };
+initialize by copy { rw };
+
+  Section            Kind        Address     Size  Object
+  -------            ----        -------     ----  ------
+"A1":                                        0xe4
+  .intvec            const    0x00008000     0xe4  startup_msp432p401r_ewarm.o [5]
+                            - 0x000080e4     0xe4
+
+"P1":                                     0x11030
+  .text              ro code  0x000080e4   0x28f8  test.o [1]
+  .text              ro code  0x0000a9dc     0xe4  debug.o [5]
+  .text              ro code  0x0000aac0    0x838  hal_uart.o [5]
+  .text              ro code  0x0000b2f8    0x12e  memory.o [5]
+  .text              ro code  0x0000b426     0x2c  strstr.o [3]
+  .text              ro code  0x0000b452     0x26  xencoding_8859_1.o [3]
+  .text              ro code  0x0000b478     0x28  sscanf.o [3]
+  .text              ro code  0x0000b4a0    0x72c  hal_rf.o [5]
+  .text              ro code  0x0000bbcc    0x2bc  device.o [1]
+  .text              ro code  0x0000be88    0x298  osel_event.o [5]
+  .text              ro code  0x0000c120    0x3a0  hal_misc.o [5]
+  .text              ro code  0x0000c4c0    0x160  osel_task.o [5]
+  .text              ro code  0x0000c620     0x36  strlen.o [6]
+  .text              ro code  0x0000c656     0x1e  xsscin.o [3]
+  .text              ro code  0x0000c674     0x24  check.o [5]
+  .text              ro code  0x0000c698    0x460  hal_timer.o [5]
+  .text              ro code  0x0000caf8     0x48  FltToDbl.o [4]
+  .text              ro code  0x0000cb40    0x22c  gpio.o [5]
+  .text              ro code  0x0000cd6c    0x410  hal_mem.o [5]
+  .text              ro code  0x0000d17c     0x1a  U32ToDbl.o [4]
+  .text              ro code  0x0000d196      0xa  xsprout.o [3]
+  .text              ro code  0x0000d1a0    0x246  DblDiv.o [4]
+  .text              ro code  0x0000d3e8     0x66  ABImemset.o [6]
+  .text              ro code  0x0000d450     0x40  sprintf.o [3]
+  .text              ro code  0x0000d490     0x38  vsprintf.o [3]
+  .text              ro code  0x0000d4c8    0x6f0  cs.o [5]
+  .text              ro code  0x0000dbb8     0x28  DblToU32.o [4]
+  .text              ro code  0x0000dbe0     0xe2  DblSub.o [4]
+  .text              ro code  0x0000dcc4    0x192  DblMul.o [4]
+  .text              ro code  0x0000de58    0x214  uart.o [5]
+  .text              ro code  0x0000e06c     0xcc  queue.o [5]
+  .text              ro code  0x0000e138    0x440  lib_mem.o [5]
+  .text              ro code  0x0000e578     0x16  strchr.o [6]
+  .text              ro code  0x0000e590    0x6e0  xscanfsmall_nomb.o [3]
+  CODE               ro code  0x0000ec70     0xec  os_cpu_a.o [5]
+  .text              ro code  0x0000ed5c     0xb0  rand.o [3]
+  .text              ro code  0x0000ee0c    0x192  os_sem.o [5]
+  .text              ro code  0x0000efa0    0x2b8  os_q.o [5]
+  .text              ro code  0x0000f258    0x170  interrupt.o [5]
+  .text              ro code  0x0000f3c8    0x2f8  system_msp432p401r.o [5]
+  .text              ro code  0x0000f6c0     0x90  sysctl.o [5]
+  .text              ro code  0x0000f750    0x62c  pcm.o [5]
+  .text              ro code  0x0000fd7c    0xe40  flash.o [5]
+  .text              ro code  0x00010bbc    0x348  os_task.o [5]
+  .text              ro code  0x00010f04     0xcc  timer_a.o [5]
+  .text              ro code  0x00010fd0     0xce  timer32.o [5]
+  .text              ro code  0x000110a0     0x48  U64ToFlt.o [4]
+  .text              ro code  0x000110e8    0x178  DblAdd.o [4]
+  .text              ro code  0x00011260     0x52  DblToU64.o [4]
+  .text              ro code  0x000112b4    0xf56  xprintffull.o [3]
+  .text              ro code  0x0001220c      0x2  cpu_core.o [5]
+  .text              ro code  0x0001220e     0x14  isspace.o [3]
+  .text              ro code  0x00012224     0x44  xfail_s.o [3]
+  .text              ro code  0x00012268     0xf8  xlocale_c.o [3]
+  .text              ro code  0x00012360     0x86  iar_Stolx.o [3]
+  .text              ro code  0x000123e8    0x16c  iar_Stoulx.o [3]
+  .text              ro code  0x00012554    0x2a4  os_cpu_c.o [5]
+  .text              ro code  0x000127f8    0x63c  os_core.o [5]
+  .text              ro code  0x00012e34     0x1c  cpu.o [5]
+  .text              ro code  0x00012e50     0x18  wdt_a.o [5]
+  .text              ro code  0x00012e68    0x164  rtc_c.o [5]
+  .text              ro code  0x00012fcc     0x58  memchr.o [6]
+  .text              ro code  0x00013024      0xa  xmbcurmax.o [3]
+  .text              ro code  0x00013030     0xa6  ABImemcpy.o [6]
+  .text              ro code  0x000130d8     0xee  I64DivMod.o [6]
+  .text              ro code  0x000131c8     0x70  frexp.o [4]
+  .text              ro code  0x00013238     0x2e  DblCmpLe.o [4]
+  .text              ro code  0x00013268     0x2e  DblCmpGe.o [4]
+  .text              ro code  0x00013298    0x13a  ldexp.o [4]
+  .text              ro code  0x000133d4     0x3a  DblToS32.o [4]
+  .text              ro code  0x00013410     0x22  S32ToDbl.o [4]
+  .text              ro code  0x00013432      0xe  div.o [3]
+  .text              ro code  0x00013440      0x6  abort.o [3]
+  .text              ro code  0x00013446     0x14  tolower.o [3]
+  .text              ro code  0x0001345c      0x2  I64DivZer.o [6]
+  .text              ro code  0x00013460      0xc  XXexit.o [6]
+  .text              ro code  0x0001346c    0xc08  mac_handle.o [8]
+  .text              ro code  0x00014074     0xfc  kbuf.o [5]
+  .text              ro code  0x00014170     0x9e  list.o [5]
+  .text              ro code  0x00014210    0x1a4  stack.o [8]
+  .text              ro code  0x000143b4    0x254  mac_slot.o [8]
+  .text              ro code  0x00014608    0x5c0  hal_stimer.o [5]
+  .text              ro code  0x00014bc8     0x34  mac_pib.o [8]
+  .text              ro code  0x00014bfc    0x3b6  control_io.o [1]
+  .text              ro code  0x00014fb4    0xc00  app_handle.o [1]
+  .text              ro code  0x00015bb4    0x6f4  app_gps.o [1]
+  .text              ro code  0x000162a8     0x88  app_dbg.o [1]
+  .text              ro code  0x00016330    0x1b8  hal_rtc.o [5]
+  .text              ro code  0x000164e8    0x19c  app.o [1]
+  .text              ro code  0x00016684    0x428  adc14.o [5]
+  .text              ro code  0x00016aac    0x320  fxos8700cq.o [7]
+  .text              ro code  0x00016dcc    0x220  hal_i2c.o [5]
+  .text              ro code  0x00016fec    0x144  hal_adc.o [5]
+  .text              ro code  0x00017130     0x30  ref_a.o [5]
+  .rodata            const    0x00017160    0x134  test.o [1]
+  .text              ro code  0x00017294    0x130  sensor.o [7]
+  .rodata            const    0x000173c4    0x118  hal_rf.o [5]
+  .rodata            const    0x000174dc    0x100  check.o [5]
+  .rodata            const    0x000175dc    0x100  os_core.o [5]
+  .rodata            const    0x000176dc     0xe8  test.o [1]
+  .text              ro code  0x000177c4     0xe8  init.o [1]
+  .text              ro code  0x000178ac     0x40  osel_kernel.o [5]
+  .rodata            const    0x000178ec     0xb4  test.o [1]
+  .rodata            const    0x000179a0     0x80  adc14.o [5]
+  .rodata            const    0x00017a20     0x54  test.o [1]
+  .rodata            const    0x00017a74     0x50  test.o [1]
+  .rodata            const    0x00017ac4     0x44  test.o [1]
+  .text              ro code  0x00017b08     0x40  zero_init3.o [6]
+  .rodata            const    0x00017b48     0x34  test.o [1]
+  .rodata            const    0x00017b7c     0x34  hal_stimer.o [5]
+  .rodata            const    0x00017bb0     0x30  app_handle.o [1]
+  .rodata            const    0x00017be0     0x30  app_handle.o [1]
+  .rodata            const    0x00017c10     0x30  test.o [1]
+  .rodata            const    0x00017c40     0x30  gpio.o [5]
+  .rodata            const    0x00017c70     0x2c  test.o [1]
+  .rodata            const    0x00017c9c     0x2c  test.o [1]
+  .rodata            const    0x00017cc8     0x2c  test.o [1]
+  .text              ro code  0x00017cf4     0x2c  copy_init3.o [6]
+  .rodata            const    0x00017d20     0x28  test.o [1]
+  .rodata            const    0x00017d48     0x28  hal_misc.o [5]
+  .text              ro code  0x00017d70     0x28  data_init.o [6]
+  .rodata            const    0x00017d98     0x24  lib_mem.o [5]
+  .text              ro code  0x00017dbc     0x22  fpinit_M.o [4]
+  .iar.init_table    const    0x00017de0     0x24  - Linker created -
+  .rodata            const    0x00017e04     0x20  app_gps.o [1]
+  .rodata            const    0x00017e24     0x20  app_handle.o [1]
+  .rodata            const    0x00017e44     0x20  device.o [1]
+  .rodata            const    0x00017e64     0x20  test.o [1]
+  .rodata            const    0x00017e84     0x20  test.o [1]
+  .rodata            const    0x00017ea4     0x20  test.o [1]
+  .rodata            const    0x00017ec4     0x20  test.o [1]
+  .rodata            const    0x00017ee4     0x20  debug.o [5]
+  .rodata            const    0x00017f04     0x20  kbuf.o [5]
+  .rodata            const    0x00017f24     0x20  interrupt.o [5]
+  .rodata            const    0x00017f44     0x20  mac_slot.o [8]
+  .rodata            const    0x00017f64     0x20  mac_slot.o [8]
+  .rodata            const    0x00017f84     0x20  mac_slot.o [8]
+  .rodata            const    0x00017fa4     0x1c  app.o [1]
+  .rodata            const    0x00017fc0     0x1c  app_handle.o [1]
+  .rodata            const    0x00017fdc     0x1c  app_handle.o [1]
+  .rodata            const    0x00017ff8     0x1c  device.o [1]
+  .rodata            const    0x00018014     0x1c  device.o [1]
+  .rodata            const    0x00018030     0x1c  init.o [1]
+  .rodata            const    0x0001804c     0x1c  init.o [1]
+  .rodata            const    0x00018068     0x1c  test.o [1]
+  .rodata            const    0x00018084     0x1c  test.o [1]
+  .rodata            const    0x000180a0     0x1c  test.o [1]
+  .rodata            const    0x000180bc     0x1c  test.o [1]
+  .rodata            const    0x000180d8     0x1c  test.o [1]
+  .rodata            const    0x000180f4     0x1c  test.o [1]
+  .rodata            const    0x00018110     0x1c  test.o [1]
+  .rodata            const    0x0001812c     0x1c  test.o [1]
+  .rodata            const    0x00018148     0x1c  test.o [1]
+  .rodata            const    0x00018164     0x1c  test.o [1]
+  .rodata            const    0x00018180     0x1c  test.o [1]
+  .rodata            const    0x0001819c     0x1c  stack.o [8]
+  .rodata            const    0x000181b8     0x1c  stack.o [8]
+  .rodata            const    0x000181d4     0x1c  kbuf.o [5]
+  .rodata            const    0x000181f0     0x1c  gpio.o [5]
+  .rodata            const    0x0001820c     0x1c  sensor.o [7]
+  .rodata            const    0x00018228     0x1c  sensor.o [7]
+  .rodata            const    0x00018244     0x1c  fxos8700cq.o [7]
+  .rodata            const    0x00018260     0x1c  fxos8700cq.o [7]
+  .rodata            const    0x0001827c     0x1c  mac_slot.o [8]
+  .text              ro code  0x00018298     0x1a  cmain.o [6]
+  .text              ro code  0x000182b2      0x4  low_level_init.o [3]
+  .text              ro code  0x000182b6      0x4  exit.o [3]
+  .text              ro code  0x000182bc      0xa  cexit.o [6]
+  .rodata            const    0x000182c8     0x18  app.o [1]
+  .rodata            const    0x000182e0     0x18  app_gps.o [1]
+  .rodata            const    0x000182f8     0x18  app_gps.o [1]
+  .rodata            const    0x00018310     0x18  app_handle.o [1]
+  .rodata            const    0x00018328     0x18  app_handle.o [1]
+  .rodata            const    0x00018340     0x18  test.o [1]
+  .rodata            const    0x00018358     0x18  test.o [1]
+  .rodata            const    0x00018370     0x18  test.o [1]
+  .rodata            const    0x00018388     0x18  test.o [1]
+  .rodata            const    0x000183a0     0x18  test.o [1]
+  .rodata            const    0x000183b8     0x18  test.o [1]
+  .rodata            const    0x000183d0     0x18  test.o [1]
+  .rodata            const    0x000183e8     0x18  test.o [1]
+  .rodata            const    0x00018400     0x18  test.o [1]
+  .rodata            const    0x00018418     0x18  test.o [1]
+  .rodata            const    0x00018430     0x18  test.o [1]
+  .rodata            const    0x00018448     0x18  test.o [1]
+  .rodata            const    0x00018460     0x18  test.o [1]
+  .rodata            const    0x00018478     0x18  test.o [1]
+  .rodata            const    0x00018490     0x18  test.o [1]
+  .rodata            const    0x000184a8     0x18  test.o [1]
+  .rodata            const    0x000184c0     0x18  test.o [1]
+  .rodata            const    0x000184d8     0x18  test.o [1]
+  .rodata            const    0x000184f0     0x18  test.o [1]
+  .rodata            const    0x00018508     0x18  test.o [1]
+  .rodata            const    0x00018520     0x18  test.o [1]
+  .rodata            const    0x00018538     0x18  hal_misc.o [5]
+  .rodata            const    0x00018550     0x14  app_gps.o [1]
+  .rodata            const    0x00018564     0x14  app_handle.o [1]
+  .rodata            const    0x00018578     0x14  app_handle.o [1]
+  .rodata            const    0x0001858c     0x14  device.o [1]
+  .rodata            const    0x000185a0     0x14  init.o [1]
+  .rodata            const    0x000185b4     0x14  test.o [1]
+  .rodata            const    0x000185c8     0x14  test.o [1]
+  .rodata            const    0x000185dc     0x14  test.o [1]
+  .rodata            const    0x000185f0     0x14  test.o [1]
+  .rodata            const    0x00018604     0x14  test.o [1]
+  .rodata            const    0x00018618     0x14  test.o [1]
+  .rodata            const    0x0001862c     0x14  test.o [1]
+  .rodata            const    0x00018640     0x14  test.o [1]
+  .rodata            const    0x00018654     0x14  test.o [1]
+  .rodata            const    0x00018668     0x14  test.o [1]
+  .rodata            const    0x0001867c     0x14  test.o [1]
+  .rodata            const    0x00018690     0x14  test.o [1]
+  .rodata            const    0x000186a4     0x14  test.o [1]
+  .rodata            const    0x000186b8     0x14  test.o [1]
+  .rodata            const    0x000186cc     0x14  test.o [1]
+  .rodata            const    0x000186e0     0x14  debug.o [5]
+  .rodata            const    0x000186f4     0x14  debug.o [5]
+  .rodata            const    0x00018708     0x14  debug.o [5]
+  .rodata            const    0x0001871c     0x14  hal_uart.o [5]
+  .rodata            const    0x00018730     0x14  hal_mem.o [5]
+  .rodata            const    0x00018744     0x14  hal_adc.o [5]
+  .rodata            const    0x00018758     0x14  sensor.o [7]
+  .rodata            const    0x0001876c     0x14  mac_handle.o [8]
+  .rodata            const    0x00018780     0x14  mac_handle.o [8]
+  .rodata            const    0x00018794     0x14  lib_mem.o [5]
+  CODE               ro code  0x000187a8     0x14  hard_fault.o [5]
+  .rodata            const    0x000187bc     0x10  app_gps.o [1]
+  .rodata            const    0x000187cc     0x10  app_handle.o [1]
+  .rodata            const    0x000187dc     0x10  app_handle.o [1]
+  .rodata            const    0x000187ec     0x10  app_handle.o [1]
+  .rodata            const    0x000187fc     0x10  app_handle.o [1]
+  .rodata            const    0x0001880c     0x10  app_handle.o [1]
+  .rodata            const    0x0001881c     0x10  app_handle.o [1]
+  .rodata            const    0x0001882c     0x10  app_handle.o [1]
+  .rodata            const    0x0001883c     0x10  app_handle.o [1]
+  .rodata            const    0x0001884c     0x10  app_handle.o [1]
+  .rodata            const    0x0001885c     0x10  app_handle.o [1]
+  .rodata            const    0x0001886c     0x10  app_handle.o [1]
+  .rodata            const    0x0001887c     0x10  control_io.o [1]
+  .rodata            const    0x0001888c     0x10  control_io.o [1]
+  .rodata            const    0x0001889c     0x10  control_io.o [1]
+  .rodata            const    0x000188ac     0x10  test.o [1]
+  .rodata            const    0x000188bc     0x10  test.o [1]
+  .rodata            const    0x000188cc     0x10  test.o [1]
+  .rodata            const    0x000188dc     0x10  test.o [1]
+  .rodata            const    0x000188ec     0x10  test.o [1]
+  .rodata            const    0x000188fc     0x10  test.o [1]
+  .rodata            const    0x0001890c     0x10  test.o [1]
+  .rodata            const    0x0001891c     0x10  test.o [1]
+  .rodata            const    0x0001892c     0x10  test.o [1]
+  .rodata            const    0x0001893c     0x10  test.o [1]
+  .rodata            const    0x0001894c     0x10  test.o [1]
+  .rodata            const    0x0001895c     0x10  test.o [1]
+  .rodata            const    0x0001896c     0x10  test.o [1]
+  .rodata            const    0x0001897c     0x10  test.o [1]
+  .rodata            const    0x0001898c     0x10  hal_timer.o [5]
+  .rodata            const    0x0001899c     0x10  hal_timer.o [5]
+  .rodata            const    0x000189ac     0x10  stack.o [8]
+  .rodata            const    0x000189bc     0x10  hal_misc.o [5]
+  .rodata            const    0x000189cc     0x10  hal_misc.o [5]
+  .rodata            const    0x000189dc     0x10  hal_misc.o [5]
+  .rodata            const    0x000189ec     0x10  hal_misc.o [5]
+  .rodata            const    0x000189fc     0x10  hal_misc.o [5]
+  .rodata            const    0x00018a0c     0x10  hal_misc.o [5]
+  .rodata            const    0x00018a1c     0x10  hal_misc.o [5]
+  .rodata            const    0x00018a2c     0x10  hal_mem.o [5]
+  .rodata            const    0x00018a3c     0x10  sensor.o [7]
+  .rodata            const    0x00018a4c     0x10  hal_stimer.o [5]
+  .rodata            const    0x00018a5c     0x10  mac_handle.o [8]
+  .rodata            const    0x00018a6c     0x10  mac_handle.o [8]
+  .rodata            const    0x00018a7c     0x10  mac_handle.o [8]
+  .rodata            const    0x00018a8c     0x10  fxos8700cq.o [7]
+  .text              ro code  0x00018a9c      0xe  startup_msp432p401r_ewarm.o [5]
+  .text              ro code  0x00018aaa      0xc  cstartup_M.o [6]
+  .rodata            const    0x00018ab8      0xc  app.o [1]
+  .rodata            const    0x00018ac4      0xc  app_gps.o [1]
+  .rodata            const    0x00018ad0      0xc  app_handle.o [1]
+  .rodata            const    0x00018adc      0xc  device.o [1]
+  .rodata            const    0x00018ae8      0xc  test.o [1]
+  .rodata            const    0x00018af4      0xc  test.o [1]
+  .rodata            const    0x00018b00      0xc  test.o [1]
+  .rodata            const    0x00018b0c      0xc  test.o [1]
+  .rodata            const    0x00018b18      0xc  test.o [1]
+  .rodata            const    0x00018b24      0xc  test.o [1]
+  .rodata            const    0x00018b30      0xc  test.o [1]
+  .rodata            const    0x00018b3c      0xc  test.o [1]
+  .rodata            const    0x00018b48      0xc  test.o [1]
+  .rodata            const    0x00018b54      0xc  test.o [1]
+  .rodata            const    0x00018b60      0xc  test.o [1]
+  .rodata            const    0x00018b6c      0xc  test.o [1]
+  .rodata            const    0x00018b78      0xc  test.o [1]
+  .rodata            const    0x00018b84      0xc  test.o [1]
+  .rodata            const    0x00018b90      0xc  test.o [1]
+  .rodata            const    0x00018b9c      0xc  test.o [1]
+  .rodata            const    0x00018ba8      0xc  test.o [1]
+  .rodata            const    0x00018bb4      0xc  hal_uart.o [5]
+  .rodata            const    0x00018bc0      0xc  hal_misc.o [5]
+  .rodata            const    0x00018bcc      0xc  hal_misc.o [5]
+  .rodata            const    0x00018bd8      0xc  hal_misc.o [5]
+  .rodata            const    0x00018be4      0xc  hal_misc.o [5]
+  .rodata            const    0x00018bf0      0xc  hal_misc.o [5]
+  .rodata            const    0x00018bfc      0xc  hal_misc.o [5]
+  .rodata            const    0x00018c08      0xc  hal_misc.o [5]
+  .rodata            const    0x00018c14      0xc  hal_misc.o [5]
+  .rodata            const    0x00018c20      0xc  hal_misc.o [5]
+  .rodata            const    0x00018c2c      0xc  hal_misc.o [5]
+  .rodata            const    0x00018c38      0xc  hal_misc.o [5]
+  .rodata            const    0x00018c44      0xc  hal_misc.o [5]
+  .rodata            const    0x00018c50      0xc  hal_mem.o [5]
+  .rodata            const    0x00018c5c      0xc  hal_adc.o [5]
+  .rodata            const    0x00018c68      0xc  sensor.o [7]
+  .rodata            const    0x00018c74      0xc  hal_rf.o [5]
+  .rodata            const    0x00018c80      0xc  hal_rf.o [5]
+  .rodata            const    0x00018c8c      0xc  hal_rf.o [5]
+  .rodata            const    0x00018c98      0xc  hal_rf.o [5]
+  .rodata            const    0x00018ca4      0xc  hal_rf.o [5]
+  .rodata            const    0x00018cb0      0xc  hal_rf.o [5]
+  .rodata            const    0x00018cbc      0xc  hal_rf.o [5]
+  .rodata            const    0x00018cc8      0xc  hal_rf.o [5]
+  .rodata            const    0x00018cd4      0xc  hal_rf.o [5]
+  .rodata            const    0x00018ce0      0xc  hal_rf.o [5]
+  .rodata            const    0x00018cec      0xc  hal_rf.o [5]
+  .rodata            const    0x00018cf8      0xc  hal_rf.o [5]
+  .rodata            const    0x00018d04      0xc  hal_rf.o [5]
+  .rodata            const    0x00018d10      0xc  hal_rf.o [5]
+  .rodata            const    0x00018d1c      0xc  hal_rf.o [5]
+  .rodata            const    0x00018d28      0xc  hal_rf.o [5]
+  .rodata            const    0x00018d34      0xc  hal_rf.o [5]
+  .rodata            const    0x00018d40      0xc  hal_rf.o [5]
+  .rodata            const    0x00018d4c      0xc  hal_rf.o [5]
+  .rodata            const    0x00018d58      0xc  hal_rf.o [5]
+  .rodata            const    0x00018d64      0xc  hal_rf.o [5]
+  .rodata            const    0x00018d70      0xc  hal_rf.o [5]
+  .rodata            const    0x00018d7c      0xc  hal_rf.o [5]
+  .rodata            const    0x00018d88      0xc  mac_handle.o [8]
+  .rodata            const    0x00018d94      0xc  fxos8700cq.o [7]
+  .rodata            const    0x00018da0      0xc  mac_slot.o [8]
+  .rodata            const    0x00018dac      0x8  app.o [1]
+  .rodata            const    0x00018db4      0x8  app_handle.o [1]
+  .rodata            const    0x00018dbc      0x8  app_handle.o [1]
+  .rodata            const    0x00018dc4      0x8  app_handle.o [1]
+  .rodata            const    0x00018dcc      0x8  app_handle.o [1]
+  .rodata            const    0x00018dd4      0x8  app_handle.o [1]
+  .rodata            const    0x00018ddc      0x8  app_handle.o [1]
+  .rodata            const    0x00018de4      0x8  app_handle.o [1]
+  .rodata            const    0x00018dec      0x8  init.o [1]
+  .rodata            const    0x00018df4      0x8  init.o [1]
+  .rodata            const    0x00018dfc      0x8  test.o [1]
+  .rodata            const    0x00018e04      0x8  test.o [1]
+  .rodata            const    0x00018e0c      0x8  test.o [1]
+  .rodata            const    0x00018e14      0x8  test.o [1]
+  .rodata            const    0x00018e1c      0x8  test.o [1]
+  .rodata            const    0x00018e24      0x8  test.o [1]
+  .rodata            const    0x00018e2c      0x8  test.o [1]
+  .rodata            const    0x00018e34      0x8  test.o [1]
+  .rodata            const    0x00018e3c      0x8  test.o [1]
+  .rodata            const    0x00018e44      0x8  test.o [1]
+  .rodata            const    0x00018e4c      0x8  test.o [1]
+  .rodata            const    0x00018e54      0x8  test.o [1]
+  .rodata            const    0x00018e5c      0x8  test.o [1]
+  .rodata            const    0x00018e64      0x8  test.o [1]
+  .rodata            const    0x00018e6c      0x8  test.o [1]
+  .rodata            const    0x00018e74      0x8  test.o [1]
+  .rodata            const    0x00018e7c      0x8  test.o [1]
+  .rodata            const    0x00018e84      0x8  debug.o [5]
+  .rodata            const    0x00018e8c      0x8  stack.o [8]
+  .rodata            const    0x00018e94      0x8  kbuf.o [5]
+  .rodata            const    0x00018e9c      0x8  hal_rf.o [5]
+  .rodata            const    0x00018ea4      0x8  hal_rf.o [5]
+  .rodata            const    0x00018eac      0x8  hal_rf.o [5]
+  .rodata            const    0x00018eb4      0x8  hal_rf.o [5]
+  .rodata            const    0x00018ebc      0x8  hal_rf.o [5]
+  .rodata            const    0x00018ec4      0x8  hal_rf.o [5]
+  .rodata            const    0x00018ecc      0x8  hal_rf.o [5]
+  .rodata            const    0x00018ed4      0x8  hal_rf.o [5]
+  .rodata            const    0x00018edc      0x8  hal_rf.o [5]
+  .rodata            const    0x00018ee4      0x8  hal_rf.o [5]
+  .rodata            const    0x00018eec      0x8  hal_rf.o [5]
+  .rodata            const    0x00018ef4      0x8  mac_handle.o [8]
+  .rodata            const    0x00018efc      0x8  mac_handle.o [8]
+  .rodata            const    0x00018f04      0x8  lib_mem.o [5]
+  .rodata            const    0x00018f0c      0x8  interrupt.o [5]
+  .rodata            const    0x00018f14      0x8  interrupt.o [5]
+  .rodata            const    0x00018f1c      0x8  mac_slot.o [8]
+  .rodata            const    0x00018f24      0x6  xlocale_c.o [3]
+  .rodata            const    0x00018f2c      0x4  app_handle.o [1]
+  .rodata            const    0x00018f30      0x4  app_handle.o [1]
+  .rodata            const    0x00018f34      0x4  hal_rf.o [5]
+  .rodata            const    0x00018f38      0x4  flash.o [5]
+  .rodata            const    0x00018f3c      0x4  flash.o [5]
+  .rodata            const    0x00018f40      0x0  zero_init3.o [6]
+  .rodata            const    0x00018f40      0x0  copy_init3.o [6]
+  Initializer bytes  const    0x00018f40    0x1d4  <for P3 s0>
+                            - 0x00019114  0x11030
+
+"A0":                                        0xe8
+  .ram_intvec        uninit   0x20000000     0xe8  interrupt.o [5]
+                            - 0x200000e8     0xe8
+
+"P3", part 1 of 3:                          0x1d4
+  P3 s0                       0x200000e8    0x1d4  <Init block>
+    .data            inited   0x200000e8     0xfc  mac_slot.o [8]
+    .data            inited   0x200001e4     0x48  xlocale_c.o [3]
+    .data            inited   0x2000022c     0x40  flash.o [5]
+    .data            inited   0x2000026c     0x38  xlocale_c.o [3]
+    .data            inited   0x200002a4      0x8  test.o [1]
+    .data            inited   0x200002ac      0x8  rand.o [3]
+    .data            inited   0x200002b4      0x4  system_msp432p401r.o [5]
+    .data            inited   0x200002b8      0x1  app_handle.o [1]
+    .data            inited   0x200002b9      0x1  test.o [1]
+    .data            inited   0x200002ba      0x1  debug.o [5]
+    .data            inited   0x200002bb      0x1  mac_handle.o [8]
+                            - 0x200002bc    0x1d4
+
+"P3", part 2 of 3:                         0x9a6c
+  .bss               zero     0x200002bc   0x8000  lib_mem.o [5]
+  .bss               zero     0x200082bc    0x800  os_core.o [5]
+  .bss               zero     0x20008abc    0x800  os_cpu_c.o [5]
+  .bss               zero     0x200092bc    0x150  os_core.o [5]
+  .bss               zero     0x2000940c    0x140  os_core.o [5]
+  .bss               zero     0x2000954c    0x100  app_gps.o [1]
+  .bss               zero     0x2000964c    0x100  os_core.o [5]
+  .bss               zero     0x2000974c     0xc0  hal_stimer.o [5]
+  .bss               zero     0x2000980c     0xc0  os_core.o [5]
+  .bss               zero     0x200098cc     0x84  rand.o [3]
+  .bss               zero     0x20009950     0x80  debug.o [5]
+  .bss               zero     0x200099d0     0x80  mac_handle.o [8]
+  .bss               zero     0x20009a50     0x48  hal_uart.o [5]
+  .bss               zero     0x20009a98     0x48  hal_rf.o [5]
+  .bss               zero     0x20009ae0     0x3c  app_gps.o [1]
+  .bss               zero     0x20009b1c     0x34  hal_timer.o [5]
+  .bss               zero     0x20009b50     0x24  app_handle.o [1]
+  .bss               zero     0x20009b74     0x18  osel_task.o [5]
+  .bss               zero     0x20009b8c     0x14  test.o [1]
+  .bss               zero     0x20009ba0     0x14  lib_mem.o [5]
+  .bss               zero     0x20009bb4     0x10  test.o [1]
+  .bss               zero     0x20009bc4     0x10  hal_mem.o [5]
+  .bss               zero     0x20009bd4     0x10  hal_rf.o [5]
+  .bss               zero     0x20009be4      0xc  app_handle.o [1]
+  .bss               zero     0x20009bf0      0xc  mac_handle.o [8]
+  .bss               zero     0x20009bfc      0xc  fxos8700cq.o [7]
+  .bss               zero     0x20009c08      0xc  mac_slot.o [8]
+  .bss               zero     0x20009c14      0x8  app.o [1]
+  .bss               zero     0x20009c1c      0x8  stack.o [8]
+  .bss               zero     0x20009c24      0x8  stack.o [8]
+  .bss               zero     0x20009c2c      0x8  stack.o [8]
+  .bss               zero     0x20009c34      0x8  hal_mem.o [5]
+  .bss               zero     0x20009c3c      0x8  hal_stimer.o [5]
+  .bss               zero     0x20009c44      0x8  hal_stimer.o [5]
+  .bss               zero     0x20009c4c      0x8  mac_pib.o [8]
+  .bss               zero     0x20009c54      0x8  os_core.o [5]
+  .bss               zero     0x20009c5c      0x4  app.o [1]
+  .bss               zero     0x20009c60      0x4  app.o [1]
+  .bss               zero     0x20009c64      0x4  control_io.o [1]
+  .bss               zero     0x20009c68      0x4  device.o [1]
+  .bss               zero     0x20009c6c      0x4  init.o [1]
+  .bss               zero     0x20009c70      0x4  test.o [1]
+  .bss               zero     0x20009c74      0x4  test.o [1]
+  .bss               zero     0x20009c78      0x4  test.o [1]
+  .bss               zero     0x20009c7c      0x4  test.o [1]
+  .bss               zero     0x20009c80      0x4  test.o [1]
+  .bss               zero     0x20009c84      0x4  test.o [1]
+  .bss               zero     0x20009c88      0x4  test.o [1]
+  .bss               zero     0x20009c8c      0x4  osel_event.o [5]
+  .bss               zero     0x20009c90      0x4  osel_event.o [5]
+  .bss               zero     0x20009c94      0x4  osel_task.o [5]
+  .bss               zero     0x20009c98      0x4  stack.o [8]
+  .bss               zero     0x20009c9c      0x4  stack.o [8]
+  .bss               zero     0x20009ca0      0x4  stack.o [8]
+  .bss               zero     0x20009ca4      0x4  stack.o [8]
+  .bss               zero     0x20009ca8      0x4  stack.o [8]
+  .bss               zero     0x20009cac      0x4  stack.o [8]
+  .bss               zero     0x20009cb0      0x4  kbuf.o [5]
+  .bss               zero     0x20009cb4      0x4  kbuf.o [5]
+  .bss               zero     0x20009cb8      0x4  sensor.o [7]
+  .bss               zero     0x20009cbc      0x4  sensor.o [7]
+  .bss               zero     0x20009cc0      0x4  cs.o [5]
+  .bss               zero     0x20009cc4      0x4  cs.o [5]
+  .bss               zero     0x20009cc8      0x4  mac_handle.o [8]
+  .bss               zero     0x20009ccc      0x4  lib_mem.o [5]
+  .bss               zero     0x20009cd0      0x4  os_core.o [5]
+  .bss               zero     0x20009cd4      0x4  os_core.o [5]
+  .bss               zero     0x20009cd8      0x4  os_core.o [5]
+  .bss               zero     0x20009cdc      0x4  os_core.o [5]
+  .bss               zero     0x20009ce0      0x4  os_core.o [5]
+  .bss               zero     0x20009ce4      0x4  os_core.o [5]
+  .bss               zero     0x20009ce8      0x4  os_core.o [5]
+  .bss               zero     0x20009cec      0x4  os_core.o [5]
+  .bss               zero     0x20009cf0      0x4  os_core.o [5]
+  .bss               zero     0x20009cf4      0x4  os_cpu_c.o [5]
+  .bss               zero     0x20009cf8      0x4  mac_slot.o [8]
+  .bss               zero     0x20009cfc      0x4  mac_slot.o [8]
+  .bss               zero     0x20009d00      0x4  xfail_s.o [3]
+  .bss               zero     0x20009d04      0x2  app_gps.o [1]
+  .bss               zero     0x20009d06      0x2  test.o [1]
+  .bss               zero     0x20009d08      0x2  test.o [1]
+  .bss               zero     0x20009d0a      0x2  hal_stimer.o [5]
+  .bss               zero     0x20009d0c      0x1  app.o [1]
+  .bss               zero     0x20009d0d      0x1  app_dbg.o [1]
+  .bss               zero     0x20009d0e      0x1  app_gps.o [1]
+  .bss               zero     0x20009d0f      0x1  app_handle.o [1]
+  .bss               zero     0x20009d10      0x1  app_handle.o [1]
+  .bss               zero     0x20009d11      0x1  app_handle.o [1]
+  .bss               zero     0x20009d12      0x1  app_handle.o [1]
+  .bss               zero     0x20009d13      0x1  app_handle.o [1]
+  .bss               zero     0x20009d14      0x1  test.o [1]
+  .bss               zero     0x20009d15      0x1  test.o [1]
+  .bss               zero     0x20009d16      0x1  test.o [1]
+  .bss               zero     0x20009d17      0x1  test.o [1]
+  .bss               zero     0x20009d18      0x1  sensor.o [7]
+  .bss               zero     0x20009d19      0x1  hal_rf.o [5]
+  .bss               zero     0x20009d1a      0x1  hal_stimer.o [5]
+  .bss               zero     0x20009d1b      0x1  hal_stimer.o [5]
+  .bss               zero     0x20009d1c      0x1  hal_stimer.o [5]
+  .bss               zero     0x20009d1d      0x1  mac_handle.o [8]
+  .bss               zero     0x20009d1e      0x1  mac_handle.o [8]
+  .bss               zero     0x20009d1f      0x1  mac_handle.o [8]
+  .bss               zero     0x20009d20      0x1  os_core.o [5]
+  .bss               zero     0x20009d21      0x1  os_core.o [5]
+  .bss               zero     0x20009d22      0x1  os_core.o [5]
+  .bss               zero     0x20009d23      0x1  os_core.o [5]
+  .bss               zero     0x20009d24      0x1  os_core.o [5]
+  .bss               zero     0x20009d25      0x1  os_core.o [5]
+  .bss               zero     0x20009d26      0x1  os_core.o [5]
+  .bss               zero     0x20009d27      0x1  mac_slot.o [8]
+                            - 0x20009d28   0x9a6c
+
+"P3", part 3 of 3:                          0x200
+  .noinit            uninit   0x20009d28    0x200  startup_msp432p401r_ewarm.o [5]
+                            - 0x20009f28    0x200
+
+
+*******************************************************************************
+*** INIT TABLE
+***
+
+          Address     Size
+          -------     ----
+Zero (__iar_zero_init3)
+    1 destination range, total size 0x9a6c:
+          0x200002bc  0x9a6c
+
+Copy (__iar_copy_init3)
+    1 source range, total size 0x1d4:
+          0x00018f40   0x1d4
+    1 destination range, total size 0x1d4:
+          0x200000e8   0x1d4
+
+
+
+*******************************************************************************
+*** MODULE SUMMARY
+***
+
+    Module                       ro code  ro data  rw data
+    ------                       -------  -------  -------
+E:\MovingTrackStroeFile\MovingTrackStroeProject\src\app\proj\Debug\Obj: [1]
+    app.o                            412       72       17
+    app_dbg.o                        136                 1
+    app_gps.o                      1 780      128      319
+    app_handle.o                   3 072      525       54
+    control_io.o                     950       48        4
+    device.o                         700      120        4
+    init.o                           232       92        4
+    test.o                        10 488    3 037       81
+    ------------------------------------------------------
+    Total:                        17 770    4 022      484
+
+command line: [2]
+    ------------------------------------------------------
+    Total:
+
+dl7M_tlf.a: [3]
+    abort.o                            6
+    div.o                             14
+    exit.o                             4
+    iar_Stolx.o                      134
+    iar_Stoulx.o                     364
+    isspace.o                         20
+    low_level_init.o                   4
+    rand.o                           176        8      140
+    sprintf.o                         64
+    sscanf.o                          40
+    strstr.o                          44
+    tolower.o                         20
+    vsprintf.o                        56
+    xencoding_8859_1.o                38
+    xfail_s.o                         68                 4
+    xlocale_c.o                      248      134      128
+    xmbcurmax.o                       10
+    xprintffull.o                  3 926
+    xscanfsmall_nomb.o             1 760
+    xsprout.o                         10
+    xsscin.o                          30
+    ------------------------------------------------------
+    Total:                         7 036      142      272
+
+m7M_tls.a: [4]
+    DblAdd.o                         376
+    DblCmpGe.o                        46
+    DblCmpLe.o                        46
+    DblDiv.o                         582
+    DblMul.o                         402
+    DblSub.o                         226
+    DblToS32.o                        58
+    DblToU32.o                        40
+    DblToU64.o                        82
+    FltToDbl.o                        72
+    S32ToDbl.o                        34
+    U32ToDbl.o                        26
+    U64ToFlt.o                        72
+    fpinit_M.o                        34
+    frexp.o                          112
+    ldexp.o                          314
+    ------------------------------------------------------
+    Total:                         2 522
+
+platform.a: [5]
+    adc14.o                        1 064      128
+    check.o                           36      256
+    cpu.o                             28
+    cpu_core.o                         2
+    cs.o                           1 776                 8
+    debug.o                          228      101      129
+    flash.o                        3 648       72       64
+    gpio.o                           556       76
+    hal_adc.o                        324       32
+    hal_i2c.o                        544
+    hal_mem.o                      1 040       48       24
+    hal_misc.o                       928      320
+    hal_rf.o                       1 836      648       89
+    hal_rtc.o                        440
+    hal_stimer.o                   1 472       68      213
+    hal_timer.o                    1 120       32       52
+    hal_uart.o                     2 104       32       72
+    hard_fault.o                      20
+    interrupt.o                      368       48      232
+    kbuf.o                           252       68        8
+    lib_mem.o                      1 088       64   32 792
+    list.o                           158
+    memory.o                         302
+    os_core.o                      1 596      256    3 203
+    os_cpu_a.o                       236
+    os_cpu_c.o                       676             2 052
+    os_q.o                           696
+    os_sem.o                         402
+    os_task.o                        840
+    osel_event.o                     664                 8
+    osel_kernel.o                     64
+    osel_task.o                      352                28
+    pcm.o                          1 580
+    queue.o                          204
+    ref_a.o                           48
+    rtc_c.o                          356
+    startup_msp432p401r_ewarm.o       14      228      512
+    sysctl.o                         144
+    system_msp432p401r.o             760        4        4
+    timer32.o                        206
+    timer_a.o                        204
+    uart.o                           532
+    wdt_a.o                           24
+    ------------------------------------------------------
+    Total:                        28 932    2 481   39 490
+
+rt7M_tl.a: [6]
+    ABImemcpy.o                      166
+    ABImemset.o                      102
+    I64DivMod.o                      238
+    I64DivZer.o                        2
+    XXexit.o                          12
+    cexit.o                           10
+    cmain.o                           26
+    copy_init3.o                      44
+    cstartup_M.o                      12
+    data_init.o                       40
+    memchr.o                          88
+    strchr.o                          22
+    strlen.o                          54
+    zero_init3.o                      64
+    ------------------------------------------------------
+    Total:                           880
+
+sensor.a: [7]
+    fxos8700cq.o                     800       84       12
+    sensor.o                         304      104        9
+    ------------------------------------------------------
+    Total:                         1 104      188       21
+
+stack.a: [8]
+    mac_handle.o                   3 080      117      148
+    mac_pib.o                         52                 8
+    mac_slot.o                       596      396      273
+    stack.o                          420       80       48
+    ------------------------------------------------------
+    Total:                         4 148      593      477
+
+    Gaps                              46        8
+    Linker created                             36
+----------------------------------------------------------
+    Grand Total:                  62 438    7 470   40 744
+
+
+*******************************************************************************
+*** ENTRY LIST
+***
+
+Entry                      Address    Size  Type      Object
+-----                      -------    ----  ----      ------
+.iar.init_table$$Base   0x00017de0           --   Gb  - Linker created -
+.iar.init_table$$Limit  0x00017e04           --   Gb  - Linker created -
+?main                   0x00018299          Code  Gb  cmain.o [6]
+ADC14_configureConversionMemory
+                        0x000169cd    0x72  Code  Gb  adc14.o [5]
+ADC14_configureMultiSequenceMode
+                        0x000168d7    0x96  Code  Gb  adc14.o [5]
+ADC14_enableConversion  0x0001696d    0x2e  Code  Gb  adc14.o [5]
+ADC14_enableModule      0x000167d1     0xa  Code  Gb  adc14.o [5]
+ADC14_enableSampleTimer
+                        0x000167db    0x32  Code  Gb  adc14.o [5]
+ADC14_initModule        0x0001680d    0x44  Code  Gb  adc14.o [5]
+ADC14_setPowerMode      0x00016a3f    0x40  Code  Gb  adc14.o [5]
+ADC14_setResolution     0x00016851    0x14  Code  Gb  adc14.o [5]
+ADC14_setSampleHoldTime
+                        0x000168ab    0x2c  Code  Gb  adc14.o [5]
+ADC14_setSampleHoldTrigger
+                        0x00016865    0x46  Code  Gb  adc14.o [5]
+ADC14_toggleConversionTrigger
+                        0x0001699b    0x32  Code  Gb  adc14.o [5]
+ADCIsConversionRunning  0x000167bb    0x16  Code  Lc  adc14.o [5]
+APP_TASK                0x0001656d    0x60  Code  Lc  app.o [1]
+CONFIGURATION_INTERFACE
+                        0x000178ec    0xb4  Data  Gb  test.o [1]
+CPU_SW_Exception        0x0001220d     0x2  Code  Gb  cpu_core.o [5]
+CPU_cpsid               0x00012e35     0x8  Code  Gb  cpu.o [5]
+CPU_cpsie               0x00012e45     0x8  Code  Gb  cpu.o [5]
+CPU_primask             0x00012e3d     0x6  Code  Gb  cpu.o [5]
+CPU_wfi                 0x00012e4d     0x4  Code  Gb  cpu.o [5]
+CRC8_TAB                0x000174dc   0x100  Data  Gb  check.o [5]
+CS_clearInterruptFlag   0x0000db15    0x1a  Code  Gb  cs.o [5]
+CS_enableClockRequest   0x0000d9ed    0x22  Code  Gb  cs.o [5]
+CS_getDCOFrequency      0x0000da0f    0xc6  Code  Gb  cs.o [5]
+CS_getSMCLK             0x0000dad5    0x18  Code  Gb  cs.o [5]
+CS_initClockSignal      0x0000d731   0x128  Code  Gb  cs.o [5]
+CS_setExternalClockSourceFrequency
+                        0x0000d723     0xe  Code  Gb  cs.o [5]
+CS_startHFXTWithTimeout
+                        0x0000d859    0xc8  Code  Gb  cs.o [5]
+CS_startLFXT            0x0000d921     0xa  Code  Gb  cs.o [5]
+CS_startLFXTWithTimeout
+                        0x0000d92b    0xc2  Code  Gb  cs.o [5]
+CacheMore               0x00012299    0x24  Code  Lc  xlocale_c.o [3]
+ControlIO_DevPower      0x00014d05    0x8e  Code  Gb  control_io.o [1]
+ControlIO_GPS_Pulse_Callback
+                        0x00014dad    0x32  Code  Gb  control_io.o [1]
+ControlIO_Init          0x00014bfd   0x108  Code  Gb  control_io.o [1]
+ControlIO_LoraMode      0x00014df9    0xb0  Code  Gb  control_io.o [1]
+ControlIO_StatusLight   0x00014ea9   0x10a  Code  Gb  control_io.o [1]
+DSSS_INTERFACE          0x000186cc    0x14  Data  Gb  test.o [1]
+Default_Handler         0x00018a9d     0x2  Code  Lc  startup_msp432p401r_ewarm.o [5]
+FXOS_Config             0x00016aad    0x1c  Code  Gb  fxos8700cq.o [7]
+FXOS_Get_Data           0x00016ac9    0x12  Code  Gb  fxos8700cq.o [7]
+FXOS_Init               0x00016adb   0x16a  Code  Gb  fxos8700cq.o [7]
+FXOS_ReadReg            0x00016d7d    0x2c  Code  Gb  fxos8700cq.o [7]
+FXOS_ReadSensorData     0x00016c45   0x118  Code  Gb  fxos8700cq.o [7]
+FXOS_WriteReg           0x00016da9    0x24  Code  Gb  fxos8700cq.o [7]
+FlashCtl_clearProgramVerification
+                        0x00010645    0x30  Code  Gb  flash.o [5]
+FlashCtl_disableWordProgramming
+                        0x000106a1     0xa  Code  Gb  flash.o [5]
+FlashCtl_enableWordProgramming
+                        0x00010675    0x2c  Code  Gb  flash.o [5]
+FlashCtl_eraseSector    0x000103e9   0x112  Code  Gb  flash.o [5]
+FlashCtl_getInterruptStatus
+                        0x00010715     0x8  Code  Gb  flash.o [5]
+FlashCtl_getReadMode    0x000103c5    0x24  Code  Gb  flash.o [5]
+FlashCtl_getWaitState   0x000106f1    0x24  Code  Gb  flash.o [5]
+FlashCtl_isSectorProtected
+                        0x000100d1    0x66  Code  Gb  flash.o [5]
+FlashCtl_programMemory  0x00010505   0x10a  Code  Gb  flash.o [5]
+FlashCtl_setProgramVerification
+                        0x00010615    0x30  Code  Gb  flash.o [5]
+FlashCtl_setReadMode    0x00010361    0x64  Code  Gb  flash.o [5]
+FlashCtl_setWaitState   0x000106b5    0x34  Code  Gb  flash.o [5]
+FlashCtl_unprotectSector
+                        0x0001006d    0x64  Code  Gb  flash.o [5]
+FlashCtl_verifyMemory   0x00010139   0x228  Code  Gb  flash.o [5]
+GPIO_PORT_TO_BASE       0x00017c40    0x30  Data  Lc  gpio.o [5]
+GPIO_PORT_TO_INT        0x000181f0    0x1c  Data  Lc  gpio.o [5]
+GPIO_clearInterruptFlag
+                        0x0000cd0f    0x16  Code  Gb  gpio.o [5]
+GPIO_enableInterrupt    0x0000cce9    0x14  Code  Gb  gpio.o [5]
+GPIO_getInputPinValue   0x0000ccd3    0x16  Code  Gb  gpio.o [5]
+GPIO_getInterruptStatus
+                        0x0000ccfd    0x12  Code  Gb  gpio.o [5]
+GPIO_interruptEdgeSelect
+                        0x0000cd25    0x28  Code  Gb  gpio.o [5]
+GPIO_registerInterrupt  0x0000cd4d    0x16  Code  Gb  gpio.o [5]
+GPIO_setAsInputPin      0x0000cb71    0x3a  Code  Gb  gpio.o [5]
+GPIO_setAsOutputPin     0x0000cb41    0x30  Code  Gb  gpio.o [5]
+GPIO_setAsPeripheralModuleFunctionInputPin
+                        0x0000cc23    0x78  Code  Gb  gpio.o [5]
+GPIO_setAsPeripheralModuleFunctionOutputPin
+                        0x0000cbab    0x78  Code  Gb  gpio.o [5]
+GPIO_setOutputHighOnPin
+                        0x0000cc9b    0x12  Code  Gb  gpio.o [5]
+GPIO_setOutputLowOnPin  0x0000ccad    0x14  Code  Gb  gpio.o [5]
+GPIO_toggleOutputOnPin  0x0000ccc1    0x12  Code  Gb  gpio.o [5]
+GPS_Interrupt_Callback  0x00014d93    0x1a  Code  Gb  control_io.o [1]
+HardFault_Handler       0x000187a9          Code  Gb  hard_fault.o [5]
+INIT_TASK               0x00017831    0x5c  Code  Lc  init.o [1]
+IntDefaultHandler       0x0000f259     0x2  Code  Lc  interrupt.o [5]
+Interrupt_disableInterrupt
+                        0x0000f33d    0x66  Code  Gb  interrupt.o [5]
+Interrupt_disableMaster
+                        0x0000f26f    0x14  Code  Gb  interrupt.o [5]
+Interrupt_enableInterrupt
+                        0x0000f2d7    0x66  Code  Gb  interrupt.o [5]
+Interrupt_enableMaster  0x0000f25b    0x14  Code  Gb  interrupt.o [5]
+Interrupt_registerInterrupt
+                        0x0000f283    0x36  Code  Gb  interrupt.o [5]
+Interrupt_setPriorityGrouping
+                        0x0000f2c3    0x14  Code  Gb  interrupt.o [5]
+Interrupt_unregisterInterrupt
+                        0x0000f2b9     0xa  Code  Gb  interrupt.o [5]
+LoadInt                 0x00011483    0x7a  Code  Lc  xprintffull.o [3]
+MAX_ERASE_NO_TLV        0x00018f38     0x4  Data  Lc  flash.o [5]
+MAX_PROGRAM_NO_TLV      0x00018f3c     0x4  Data  Lc  flash.o [5]
+MISC_TEST_INTERFACE     0x00017160   0x134  Data  Gb  test.o [1]
+Mem_Clr                 0x0000e171     0xc  Code  Gb  lib_mem.o [5]
+Mem_Copy                0x0000e1c7    0x5e  Code  Gb  lib_mem.o [5]
+Mem_Heap                0x200002bc  0x8000  Data  Gb  lib_mem.o [5]
+Mem_HeapAlloc           0x0000e225    0x32  Code  Gb  lib_mem.o [5]
+Mem_Init                0x0000e139    0x38  Code  Gb  lib_mem.o [5]
+Mem_PoolBlkFree         0x0000e419    0x3a  Code  Gb  lib_mem.o [5]
+Mem_PoolBlkGet          0x0000e3d3    0x46  Code  Gb  lib_mem.o [5]
+Mem_PoolClr             0x0000e3b3    0x20  Code  Gb  lib_mem.o [5]
+Mem_PoolCreate          0x0000e27b   0x138  Code  Gb  lib_mem.o [5]
+Mem_SegAllocExtCritical
+                        0x0000e4f1    0x6e  Code  Lc  lib_mem.o [5]
+Mem_SegAllocInternal    0x0000e4b9    0x38  Code  Lc  lib_mem.o [5]
+Mem_SegCreate           0x0000e257    0x24  Code  Gb  lib_mem.o [5]
+Mem_SegCreateCritical   0x0000e453    0x1a  Code  Lc  lib_mem.o [5]
+Mem_SegHeadPtr          0x20009ccc     0x4  Data  Gb  lib_mem.o [5]
+Mem_SegHeap             0x20009ba0    0x14  Data  Gb  lib_mem.o [5]
+Mem_SegOverlapChkCritical
+                        0x0000e46d    0x4c  Code  Lc  lib_mem.o [5]
+Mem_Set                 0x0000e17d    0x4a  Code  Gb  lib_mem.o [5]
+OSCtxSw                 0x0000ecf3          Code  Gb  os_cpu_a.o [5]
+OSCtxSwCtr              0x20009cd0     0x4  Data  Gb  os_core.o [5]
+OSEventFreeList         0x20009cd4     0x4  Data  Gb  os_core.o [5]
+OSEventTbl              0x2000940c   0x140  Data  Gb  os_core.o [5]
+OSIdleCtr               0x20009cd8     0x4  Data  Gb  os_core.o [5]
+OSInit                  0x000127f9    0x24  Code  Gb  os_core.o [5]
+OSInitHookBegin         0x00012555    0x38  Code  Gb  os_cpu_c.o [5]
+OSInitHookEnd           0x0001258d     0x2  Code  Gb  os_cpu_c.o [5]
+OSIntCtxSw              0x0000ecfb          Code  Gb  os_cpu_a.o [5]
+OSIntEnter              0x0001281d    0x24  Code  Gb  os_core.o [5]
+OSIntExit               0x00012841    0x82  Code  Gb  os_core.o [5]
+OSIntNesting            0x20009d20     0x1  Data  Gb  os_core.o [5]
+OSLockNesting           0x20009d21     0x1  Data  Gb  os_core.o [5]
+OSPrioCur               0x20009d22     0x1  Data  Gb  os_core.o [5]
+OSPrioHighRdy           0x20009d23     0x1  Data  Gb  os_core.o [5]
+OSQCreate               0x0000efa1    0x9e  Code  Gb  os_q.o [5]
+OSQFreeList             0x20009cec     0x4  Data  Gb  os_core.o [5]
+OSQPend                 0x0000f03f   0x10c  Code  Gb  os_q.o [5]
+OSQPostOpt              0x0000f14b    0xaa  Code  Gb  os_q.o [5]
+OSQTbl                  0x2000980c    0xc0  Data  Gb  os_core.o [5]
+OSRdyGrp                0x20009d24     0x1  Data  Gb  os_core.o [5]
+OSRdyTbl                0x20009c54     0x8  Data  Gb  os_core.o [5]
+OSRunning               0x20009d25     0x1  Data  Gb  os_core.o [5]
+OSSemCreate             0x0000ee0d    0x4c  Code  Gb  os_sem.o [5]
+OSSemPend               0x0000ee59    0xda  Code  Gb  os_sem.o [5]
+OSSemPost               0x0000ef45    0x5a  Code  Gb  os_sem.o [5]
+OSStart                 0x000128c3    0x42  Code  Gb  os_core.o [5]
+OSStartHighRdy          0x0000ec9d          Code  Gb  os_cpu_a.o [5]
+OSTCBCur                0x20009cdc     0x4  Data  Gb  os_core.o [5]
+OSTCBFreeList           0x20009ce0     0x4  Data  Gb  os_core.o [5]
+OSTCBHighRdy            0x20009ce4     0x4  Data  Gb  os_core.o [5]
+OSTCBInitHook           0x0001270b     0x2  Code  Gb  os_cpu_c.o [5]
+OSTCBList               0x20009ce8     0x4  Data  Gb  os_core.o [5]
+OSTCBPrioTbl            0x2000964c   0x100  Data  Gb  os_core.o [5]
+OSTCBTbl                0x200092bc   0x150  Data  Gb  os_core.o [5]
+OSTaskCreateExt         0x00010bbd    0xa0  Code  Gb  os_task.o [5]
+OSTaskCreateHook        0x0001258f     0x2  Code  Gb  os_cpu_c.o [5]
+OSTaskCtr               0x20009d26     0x1  Data  Gb  os_core.o [5]
+OSTaskDel               0x00010c5d   0x134  Code  Gb  os_task.o [5]
+OSTaskDelHook           0x00012591     0x2  Code  Gb  os_cpu_c.o [5]
+OSTaskIdleHook          0x00012593     0x2  Code  Gb  os_cpu_c.o [5]
+OSTaskIdleStk           0x200082bc   0x800  Data  Gb  os_core.o [5]
+OSTaskResume            0x00010d91    0x9a  Code  Gb  os_task.o [5]
+OSTaskReturnHook        0x00012595     0x2  Code  Gb  os_cpu_c.o [5]
+OSTaskStkInit           0x00012597   0x15c  Code  Gb  os_cpu_c.o [5]
+OSTaskSuspend           0x00010e2b    0x9e  Code  Gb  os_task.o [5]
+OSTaskSwHook            0x000126f3    0x18  Code  Gb  os_cpu_c.o [5]
+OSTime                  0x20009cf0     0x4  Data  Gb  os_core.o [5]
+OSTimeTick              0x00012905    0xaa  Code  Gb  os_core.o [5]
+OSUnMapTbl              0x000175dc   0x100  Data  Gb  os_core.o [5]
+OS_CPU_ExceptStk        0x20008abc   0x800  Data  Gb  os_cpu_c.o [5]
+OS_CPU_ExceptStkBase    0x20009cf4     0x4  Data  Gb  os_cpu_c.o [5]
+OS_CPU_FP_Reg_Pop       0x0000ec83          Code  Gb  os_cpu_a.o [5]
+OS_CPU_FP_Reg_Push      0x0000ec71          Code  Gb  os_cpu_a.o [5]
+OS_CPU_PendSVHandler    0x0000ed03          Code  Gb  os_cpu_a.o [5]
+OS_CPU_SR_Restore       0x0000ec97          Code  Gb  os_cpu_a.o [5]
+OS_CPU_SR_Save          0x0000ec8f          Code  Gb  os_cpu_a.o [5]
+OS_CPU_SysTickHandler   0x0001270d    0x1c  Code  Gb  os_cpu_c.o [5]
+OS_CPU_SysTickInit      0x00012737    0x30  Code  Gb  os_cpu_c.o [5]
+OS_CPU_SysTickInitFreq  0x00012729     0xe  Code  Gb  os_cpu_c.o [5]
+OS_Dummy                0x000129af     0x2  Code  Gb  os_core.o [5]
+OS_EventTaskRdy         0x000129b1    0x7e  Code  Gb  os_core.o [5]
+OS_EventTaskRemove      0x00012abb    0x3a  Code  Gb  os_core.o [5]
+OS_EventTaskWait        0x00012a2f    0x8c  Code  Gb  os_core.o [5]
+OS_EventWaitListInit    0x00012af5    0x1c  Code  Gb  os_core.o [5]
+OS_InitEventList        0x00012b11    0x54  Code  Lc  os_core.o [5]
+OS_InitMisc             0x00012b65    0x2c  Code  Lc  os_core.o [5]
+OS_InitRdyList          0x00012b91    0x34  Code  Lc  os_core.o [5]
+OS_InitTCBList          0x00012bf3    0x5c  Code  Lc  os_core.o [5]
+OS_InitTaskIdle         0x00012bc5    0x2e  Code  Lc  os_core.o [5]
+OS_MemClr               0x00012c4f    0x12  Code  Gb  os_core.o [5]
+OS_QInit                0x0000f1f5    0x4a  Code  Gb  os_q.o [5]
+OS_Sched                0x00012c61    0x4e  Code  Gb  os_core.o [5]
+OS_SchedNew             0x00012caf    0x1e  Code  Lc  os_core.o [5]
+OS_TCBInit              0x00012cdb   0x100  Code  Gb  os_core.o [5]
+OS_TaskIdle             0x00012ccd     0xe  Code  Gb  os_core.o [5]
+OS_TaskReturn           0x00010ec9    0x12  Code  Gb  os_task.o [5]
+PCM_getCoreVoltageLevel
+                        0x0000f869    0x4e  Code  Gb  pcm.o [5]
+PCM_getPowerMode        0x0000f82b    0x3e  Code  Gb  pcm.o [5]
+PCM_getPowerState       0x0000fd4b     0xc  Code  Gb  pcm.o [5]
+PCM_gotoLPM0            0x0000fcaf    0x24  Code  Gb  pcm.o [5]
+PCM_gotoLPM3            0x0000fcd3    0x78  Code  Gb  pcm.o [5]
+PCM_gotoLPM4            0x0000fc9f    0x10  Code  Gb  pcm.o [5]
+PCM_setPowerMode        0x0000f9c9     0xc  Code  Gb  pcm.o [5]
+PCM_setPowerState       0x0000fc51     0xc  Code  Gb  pcm.o [5]
+PCM_shutdownDevice      0x0000fc5d    0x42  Code  Gb  pcm.o [5]
+REF_A_disableTempSensor
+                        0x00017143     0x8  Code  Gb  ref_a.o [5]
+REF_A_enableReferenceVoltage
+                        0x0001714b     0x8  Code  Gb  ref_a.o [5]
+REF_A_setReferenceVoltage
+                        0x00017131    0x12  Code  Gb  ref_a.o [5]
+RF_DSSS_CMD             0x00017d20    0x28  Data  Gb  test.o [1]
+RF_DSSS_PARA            0x00017a74    0x50  Data  Gb  test.o [1]
+RTC_C_convertBCDToBinary
+                        0x00012f87     0xc  Code  Gb  rtc_c.o [5]
+RTC_C_convertBinaryToBCD
+                        0x00012f93     0xc  Code  Gb  rtc_c.o [5]
+RTC_C_getCalendarTime   0x00012f1d    0x6a  Code  Gb  rtc_c.o [5]
+RTC_C_holdClock         0x00012e8f    0x26  Code  Gb  rtc_c.o [5]
+RTC_C_initCalendar      0x00012eb5    0x68  Code  Gb  rtc_c.o [5]
+RTC_C_startClock        0x00012e69    0x26  Code  Gb  rtc_c.o [5]
+Region$$Table$$Base     0x00017de0           --   Gb  - Linker created -
+Region$$Table$$Limit    0x00017e04           --   Gb  - Linker created -
+SENSOR_TASK             0x000172f1    0x58  Code  Lc  sensor.o [7]
+SPIx_ReadWriteByte      0x0000d12b    0x1e  Code  Lc  hal_mem.o [5]
+STACK_TASK              0x00014271    0x54  Code  Lc  stack.o [8]
+SysCtl_disableNMISource
+                        0x0000f70f     0xe  Code  Gb  sysctl.o [5]
+SysCtl_enableNMISource  0x0000f71d     0xc  Code  Gb  sysctl.o [5]
+SysCtl_getFlashSize     0x0000f709     0x6  Code  Gb  sysctl.o [5]
+SysCtl_getNMISourceStatus
+                        0x0000f729     0xa  Code  Gb  sysctl.o [5]
+SysCtl_getTLVInfo       0x0000f6c1    0x48  Code  Gb  sysctl.o [5]
+SysCtl_rebootDevice     0x0000f733     0xa  Code  Gb  sysctl.o [5]
+SystemCoreClock         0x200002b4     0x4  Data  Gb  system_msp432p401r.o [5]
+SystemCoreClockUpdate   0x0000f3c9   0x234  Code  Gb  system_msp432p401r.o [5]
+SystemInit              0x0000f601    0x5a  Code  Gb  system_msp432p401r.o [5]
+TA2_CCR_handler         0x00014b69     0x2  Code  Gb  hal_stimer.o [5]
+TEST_INTERFACE          0x000176dc    0xe8  Data  Gb  test.o [1]
+Timer32_disableInterrupt
+                        0x00011095     0xa  Code  Gb  timer32.o [5]
+Timer32_getValue        0x00011059     0x4  Code  Gb  timer32.o [5]
+Timer32_haltTimer       0x0001108b     0xa  Code  Gb  timer32.o [5]
+Timer32_initModule      0x00010fd1    0x5c  Code  Gb  timer32.o [5]
+Timer32_setCount        0x0001102d    0x24  Code  Gb  timer32.o [5]
+Timer32_startTimer      0x0001105d    0x2e  Code  Gb  timer32.o [5]
+Timer_A_registerInterrupt
+                        0x00010f05    0xbe  Code  Gb  timer_a.o [5]
+UART_clearInterruptFlag
+                        0x0000df95     0xa  Code  Gb  uart.o [5]
+UART_disableInterrupt   0x0000df3d    0x1c  Code  Gb  uart.o [5]
+UART_enableInterrupt    0x0000df25    0x18  Code  Gb  uart.o [5]
+UART_enableModule       0x0000df19     0xc  Code  Gb  uart.o [5]
+UART_getEnabledInterruptStatus
+                        0x0000df63    0x32  Code  Gb  uart.o [5]
+UART_getInterruptStatus
+                        0x0000df59     0xa  Code  Gb  uart.o [5]
+UART_initModule         0x0000de59    0xc0  Code  Gb  uart.o [5]
+UART_registerInterrupt  0x0000df9f    0x54  Code  Gb  uart.o [5]
+UART_unregisterInterrupt
+                        0x0000dff3    0x54  Code  Gb  uart.o [5]
+WDT_A_holdTimer         0x00012e51    0x14  Code  Gb  wdt_a.o [5]
+_CSComputeCLKFrequency  0x0000d5d5    0xf8  Code  Lc  cs.o [5]
+_CSGetDOCFrequency      0x0000d6cd    0x56  Code  Lc  cs.o [5]
+_CSGetDividerValue      0x0000d581    0x54  Code  Lc  cs.o [5]
+_CSGetHFXTFrequency     0x0000d4c9    0xb8  Code  Lc  cs.o [5]
+_Encoding_8859_1_Mbrlen
+                        0x0000b46d     0x2  Code  Gb  xencoding_8859_1.o [3]
+_Encoding_8859_1_Mbtowc
+                        0x0000b465     0x8  Code  Gb  xencoding_8859_1.o [3]
+_Encoding_8859_1_Wctomb
+                        0x0000b453    0x12  Code  Gb  xencoding_8859_1.o [3]
+_FlashCtl_Program32     0x0000fe21    0x9e  Code  Lc  flash.o [5]
+_FlashCtl_Program8      0x0000fd7d    0xa2  Code  Lc  flash.o [5]
+_FlashCtl_ProgramBurst  0x0000fec1   0x1ac  Code  Lc  flash.o [5]
+_GenldFull              0x00011efb   0x260  Code  Lc  xprintffull.o [3]
+_GetN                   0x0000e591    0x22  Code  Lc  xscanfsmall_nomb.o [3]
+_GetintSmallNoMb        0x0000e9cd   0x1fa  Code  Lc  xscanfsmall_nomb.o [3]
+_GetstrSmallNoMb        0x0000e7d9   0x1ee  Code  Lc  xscanfsmall_nomb.o [3]
+_LdtobFull              0x00011ad3   0x3fe  Code  Lc  xprintffull.o [3]
+_LitobFull              0x00011983   0x10a  Code  Lc  xprintffull.o [3]
+_LocaleC_isspace        0x00012275    0x14  Code  Gb  xlocale_c.o [3]
+_LocaleC_isupper        0x00012269     0x2  Code  Gb  xlocale_c.o [3]
+_LocaleC_tolower        0x00012289     0xc  Code  Gb  xlocale_c.o [3]
+_Locale_lconv           0x2000026c    0x38  Data  Lc  xlocale_c.o [3]
+_PrintfFull             0x000112b5   0x1b6  Code  Gb  xprintffull.o [3]
+_PutcharsFull           0x0001215b    0x2e  Code  Lc  xprintffull.o [3]
+_PutfldFull             0x000114fd   0x2d0  Code  Lc  xprintffull.o [3]
+_PutstrFull             0x000118c3    0xc0  Code  Lc  xprintffull.o [3]
+_PuttxtFull             0x000117cd    0xf6  Code  Lc  xprintffull.o [3]
+_Rand_idx               0x2000994c     0x4  Data  Lc  rand.o [3]
+_Rand_rv                0x200098cc    0x80  Data  Lc  rand.o [3]
+_Randinit               0x200002ac     0x1  Data  Gb  rand.o [3]
+_Randseed               0x200002b0     0x4  Data  Gb  rand.o [3]
+_SProut                 0x0000d197     0xa  Code  Gb  xsprout.o [3]
+_SScin                  0x0000c657    0x1e  Code  Gb  xsscin.o [3]
+_ScanfSmallNoMb         0x0000e5cd   0x1fe  Code  Gb  xscanfsmall_nomb.o [3]
+_UngetN                 0x0000e5b3    0x1a  Code  Lc  xscanfsmall_nomb.o [3]
+__FlashCtl_remaskBurstDataPost
+                        0x00010a75    0xdc  Code  Gb  flash.o [5]
+__FlashCtl_remaskBurstDataPre
+                        0x00010985    0xea  Code  Gb  flash.o [5]
+__FlashCtl_remaskData32Post
+                        0x00010809    0xb4  Code  Gb  flash.o [5]
+__FlashCtl_remaskData32Pre
+                        0x000108c9    0xb4  Code  Gb  flash.o [5]
+__FlashCtl_remaskData8Post
+                        0x0001072d    0x6a  Code  Gb  flash.o [5]
+__FlashCtl_remaskData8Pre
+                        0x0001079d    0x6c  Code  Gb  flash.o [5]
+__PCM_setCoreVoltageLevelAdvanced
+                        0x0000f751    0xda  Code  Lc  pcm.o [5]
+__PCM_setPowerModeAdvanced
+                        0x0000f8b7   0x112  Code  Lc  pcm.o [5]
+__PCM_setPowerStateAdvanced
+                        0x0000f9d5   0x27c  Code  Lc  pcm.o [5]
+__aeabi_cdcmple         0x00013239          Code  Gb  DblCmpLe.o [4]
+__aeabi_cdrcmple        0x00013269          Code  Gb  DblCmpGe.o [4]
+__aeabi_d2iz            0x000133d5          Code  Gb  DblToS32.o [4]
+__aeabi_d2uiz           0x0000dbb9          Code  Gb  DblToU32.o [4]
+__aeabi_d2ulz           0x00011261          Code  Gb  DblToU64.o [4]
+__aeabi_dadd            0x000110e9          Code  Gb  DblAdd.o [4]
+__aeabi_ddiv            0x0000d1a1          Code  Gb  DblDiv.o [4]
+__aeabi_dmul            0x0000dcc5          Code  Gb  DblMul.o [4]
+__aeabi_dsub            0x0000dbe1          Code  Gb  DblSub.o [4]
+__aeabi_f2d             0x0000caf9          Code  Gb  FltToDbl.o [4]
+__aeabi_i2d             0x00013411          Code  Gb  S32ToDbl.o [4]
+__aeabi_ldiv0           0x0001345d          Code  Gb  I64DivZer.o [6]
+__aeabi_memcpy          0x00013031          Code  Gb  ABImemcpy.o [6]
+__aeabi_memcpy4         0x00013051          Code  Gb  ABImemcpy.o [6]
+__aeabi_memcpy8         0x00013051          Code  Gb  ABImemcpy.o [6]
+__aeabi_memset          0x0000d3e9          Code  Gb  ABImemset.o [6]
+__aeabi_ui2d            0x0000d17d          Code  Gb  U32ToDbl.o [4]
+__aeabi_ul2f            0x000110a1          Code  Gb  U64ToFlt.o [4]
+__aeabi_uldivmod        0x000130d9          Code  Gb  I64DivMod.o [6]
+__cmain                 0x00018299          Code  Gb  cmain.o [6]
+__exit                  0x00013461          Code  Gb  XXexit.o [6]
+__getBurstProgramRegs   0x2000022c    0x40  Data  Lc  flash.o [5]
+__iar_Fail_s            0x00012225    0x1e  Code  Gb  xfail_s.o [3]
+__iar_Mbcurmax          0x00013025     0xa  Code  Gb  xmbcurmax.o [3]
+__iar_Memchr            0x00012fcd          Code  Gb  memchr.o [6]
+__iar_Memset            0x0000d3e9          Code  Gb  ABImemset.o [6]
+__iar_Memset_word       0x0000d3f1          Code  Gb  ABImemset.o [6]
+__iar_Stolx             0x00012361    0x82  Code  Gb  iar_Stolx.o [3]
+__iar_Stoulx            0x000123e9   0x10e  Code  Gb  iar_Stoulx.o [3]
+__iar_Strchr            0x0000e579          Code  Gb  strchr.o [6]
+__iar_copy_init3        0x00017cf5    0x2c  Code  Gb  copy_init3.o [6]
+__iar_dadd              0x0000dbf1          Code  Gb  DblSub.o [4]
+__iar_data_init3        0x00017d71    0x28  Code  Gb  data_init.o [6]
+__iar_dsub              0x000110f9          Code  Gb  DblAdd.o [4]
+__iar_dsubStart         0x0001110b          Code  Gb  DblAdd.o [4]
+__iar_frexp             0x000131d5          Code  Gb  frexp.o [4]
+__iar_frexpl            0x000131d5          Code  Gb  frexp.o [4]
+__iar_globLocale        0x200001e4    0x48  Data  Lc  xlocale_c.o [3]
+__iar_global_Locale     0x00012295     0x4  Code  Gb  xlocale_c.o [3]
+__iar_init_vfp          0x00017dbd          Code  Gb  fpinit_M.o [4]
+__iar_ldexp64           0x00013299          Code  Gb  ldexp.o [4]
+__iar_program_start     0x00018aab          Code  Gb  cstartup_M.o [6]
+__iar_scalbln64         0x00013299          Code  Gb  ldexp.o [4]
+__iar_scalbn64          0x00013299          Code  Gb  ldexp.o [4]
+__iar_softfp___iar_frexp64
+                        0x000131c9          Code  Gb  frexp.o [4]
+__iar_softfp_frexp      0x000131c9          Code  Gb  frexp.o [4]
+__iar_softfp_frexpl     0x000131c9          Code  Gb  frexp.o [4]
+__iar_systems$$module {Abs}
+                        0x00000001          Data  Gb  command line/config [2]
+__iar_zero_init3        0x00017b09    0x40  Code  Gb  zero_init3.o [6]
+__list_add              0x00014177     0xa  Code  Lc  list.o [5]
+__list_del              0x00014181     0x6  Code  Lc  list.o [5]
+__low_level_init        0x000182b3     0x4  Code  Gb  low_level_init.o [3]
+__vector_table          0x00008000    0xe4  Data  Gb  startup_msp432p401r_ewarm.o [5]
+_call_main              0x000182a5          Code  Gb  cmain.o [6]
+_ctlRegs                0x000179a0    0x80  Data  Lc  adc14.o [5]
+_exit                   0x000182bd          Code  Gb  cexit.o [6]
+_gLocale_mblen          0x0001233d     0x4  Code  Gb  xlocale_c.o [3]
+_gLocale_mblenInt       0x000122bd    0x2c  Code  Gb  xlocale_c.o [3]
+_gLocale_mbtowc         0x00012341     0xe  Code  Gb  xlocale_c.o [3]
+_gLocale_mbtowcInt      0x000122e9    0x44  Code  Gb  xlocale_c.o [3]
+_gLocale_wctomb         0x0001234f     0x4  Code  Gb  xlocale_c.o [3]
+_gLocale_wctombInt      0x00012339     0x4  Code  Gb  xlocale_c.o [3]
+_getIndexForMemRegister
+                        0x00016685   0x136  Code  Lc  adc14.o [5]
+_main                   0x000182af          Code  Gb  cmain.o [6]
+abort                   0x00013441     0x6  Code  Gb  abort.o [3]
+actual_size             0x20009d04     0x2  Data  Lc  app_gps.o [1]
+app_cfg_handler         0x00015aa1    0x5c  Code  Lc  app_handle.o [1]
+app_data_tx_q           0x20009c14     0x8  Data  Gb  app.o [1]
+app_dbg_flag            0x20009d0d     0x1  Data  Gb  app_dbg.o [1]
+app_dbg_handler         0x00015449   0x5d4  Code  Lc  app_handle.o [1]
+app_dbg_handler::global_dbg_flag
+                        0x20009d12     0x1  Data  Lc  app_handle.o [1]
+app_dbg_handler::temp_buf
+                        0x20009b50    0x24  Data  Lc  app_handle.o [1]
+app_dbg_handler::temp_len
+                        0x20009d13     0x1  Data  Lc  app_handle.o [1]
+app_dbg_init            0x000162a9     0xc  Code  Gb  app_dbg.o [1]
+app_dbg_recv_callback   0x000165cd    0x14  Code  Lc  app.o [1]
+app_dbg_set             0x000162b5    0x78  Code  Gb  app_dbg.o [1]
+app_event_h             0x20009c60     0x4  Data  Gb  app.o [1]
+app_gps_buf             0x2000954c   0x100  Data  Gb  app_gps.o [1]
+app_gps_poll_callback   0x00015bb5    0x56  Code  Gb  app_gps.o [1]
+app_gps_poll_handler    0x000161d7    0x72  Code  Gb  app_gps.o [1]
+app_gps_proc            0x00015c0d   0x5ca  Code  Gb  app_gps.o [1]
+app_gps_proc::update_rtc_flag
+                        0x20009d0e     0x1  Data  Lc  app_gps.o [1]
+app_handler             0x00014fb5    0xb0  Code  Gb  app_handle.o [1]
+app_idle_hook           0x00017829     0x8  Code  Gb  init.o [1]
+app_indicate_callback   0x00015a71    0x22  Code  Lc  app_handle.o [1]
+app_indicate_event      0x000165f5    0x14  Code  Gb  app.o [1]
+app_indicate_handler    0x00015a1d    0x52  Code  Lc  app_handle.o [1]
+app_indicate_id         0x20009d0f     0x1  Data  Lc  app_handle.o [1]
+app_init                0x000164e9    0x82  Code  Gb  app.o [1]
+app_lora_cfg_event      0x00016609    0x3c  Code  Lc  app.o [1]
+app_lora_handler        0x00015099   0x3a4  Code  Lc  app_handle.o [1]
+app_lora_handler::fram_head_len
+                        0x200002b8     0x1  Data  Lc  app_handle.o [1]
+app_lora_handler::frm_buff
+                        0x20009be4     0xc  Data  Lc  app_handle.o [1]
+app_lora_handler::frm_flag
+                        0x20009d11     0x1  Data  Lc  app_handle.o [1]
+app_lora_handler::frm_len
+                        0x20009d10     0x1  Data  Lc  app_handle.o [1]
+app_lora_recv_callback  0x000165e1    0x14  Code  Gb  app.o [1]
+app_task_h              0x20009c5c     0x4  Data  Gb  app.o [1]
+app_tx_event            0x00016645    0x14  Code  Lc  app.o [1]
+app_tx_handle           0x00015065    0x34  Code  Lc  app_handle.o [1]
+aux_cmd_read_info_format
+                        0x200002a4     0x8  Data  Lc  test.o [1]
+aux_cmd_start_read_bd   0x00018e74     0x8  Data  Gb  test.o [1]
+aux_cmd_stop_read_bd    0x00018e7c     0x8  Data  Gb  test.o [1]
+aux_data_array          0x20009b8c    0x14  Data  Lc  test.o [1]
+aux_data_array_index    0x20009d17     0x1  Data  Lc  test.o [1]
+aux_timeout_cb          0x0000a771    0x38  Code  Lc  test.o [1]
+aux_timer_id            0x20009d16     0x1  Data  Lc  test.o [1]
+aux_uart_rx_cb          0x0000a3b1   0x3b2  Code  Lc  test.o [1]
+compare_interrupt_handler
+                        0x00014a51    0xaa  Code  Gb  hal_stimer.o [5]
+config_set_device       0x0000866f   0x1ca  Code  Lc  test.o [1]
+config_set_register     0x00008525   0x14a  Code  Lc  test.o [1]
+crc8_tab                0x0000c675    0x1e  Code  Gb  check.o [5]
+dbg_buf                 0x20009950    0x80  Data  Lc  debug.o [5]
+dbgg2                   0x20009d1c     0x1  Data  Gb  hal_stimer.o [5]
+delay_ms                0x0000c975    0x22  Code  Gb  hal_timer.o [5]
+delay_us                0x0000c933    0x40  Code  Gb  hal_timer.o [5]
+delete_queue            0x0000e0ff    0x3a  Code  Gb  queue.o [5]
+device_info_get         0x0000bde5     0x6  Code  Gb  device.o [1]
+device_info_init        0x0000bbcd   0x218  Code  Gb  device.o [1]
+device_info_set         0x0000bdeb    0x2a  Code  Gb  device.o [1]
+device_lora_baudrate_info_get
+                        0x0000be31    0x58  Code  Gb  device.o [1]
+digits                  0x00012504    0x28  Data  Lc  iar_Stoulx.o [3]
+div                     0x00013433     0xe  Code  Gb  div.o [3]
+enter_queue             0x0000e0b9    0x46  Code  Gb  queue.o [5]
+event_pool              0x20009c8c     0x4  Data  Lc  osel_event.o [5]
+event_q_pool            0x20009c90     0x4  Data  Lc  osel_event.o [5]
+exit                    0x000182b7     0x4  Code  Gb  exit.o [3]
+flash_addr_manage       0x20009bc4    0x10  Data  Gb  hal_mem.o [5]
+flash_size_manage       0x20009c34     0x8  Data  Gb  hal_mem.o [5]
+fram_state              0x200002b9     0x1  Data  Lc  test.o [1]
+free_timer              0x20009c3c     0x8  Data  Gb  hal_stimer.o [5]
+func                    0x20009c64     0x4  Data  Lc  control_io.o [1]
+fxos_handle             0x20009bfc     0xc  Data  Lc  fxos8700cq.o [7]
+g_pfnRAMVectors         0x20000000    0xe8  Data  Lc  interrupt.o [5]
+g_pulDisRegs            0x00018f14     0x8  Data  Lc  interrupt.o [5]
+g_pulEnRegs             0x00018f0c     0x8  Data  Lc  interrupt.o [5]
+g_pulPriority           0x00017f24    0x20  Data  Lc  interrupt.o [5]
+global_debug_level      0x200002ba     0x1  Data  Gb  debug.o [5]
+graph_ctrl_fram_uart_rx_cb
+                        0x00009e95    0x5e  Code  Lc  test.o [1]
+graph_tc_print          0x0000a0c5    0x22  Code  Lc  test.o [1]
+hal_adc14_init          0x00016fed   0x13c  Code  Gb  hal_adc.o [5]
+hal_board_init          0x0000c121    0x1e  Code  Gb  hal_misc.o [5]
+hal_board_reset         0x0000c13f    0x14  Code  Gb  hal_misc.o [5]
+hal_flash_alloc         0x0000cd93    0x5e  Code  Gb  hal_mem.o [5]
+hal_flash_init          0x0000cd6d    0x26  Code  Gb  hal_mem.o [5]
+hal_flash_read          0x0000cee9    0x18  Code  Gb  hal_mem.o [5]
+hal_flash_write         0x0000cdf1    0xf8  Code  Gb  hal_mem.o [5]
+hal_fram_get_spi_cs     0x0000d09d    0x22  Code  Gb  hal_mem.o [5]
+hal_fram_get_ver        0x0000d025    0x78  Code  Gb  hal_mem.o [5]
+hal_fram_rdy_write      0x0000d0bf    0x6c  Code  Gb  hal_mem.o [5]
+hal_fram_read           0x0000cf01    0x64  Code  Gb  hal_mem.o [5]
+hal_fram_write          0x0000cf65    0xc0  Code  Gb  hal_mem.o [5]
+hal_hardfault_print     0x0000c225   0x218  Code  Gb  hal_misc.o [5]
+hal_htimer_start        0x00014685    0x40  Code  Gb  hal_stimer.o [5]
+hal_output_clock        0x0000c223     0x2  Code  Lc  hal_misc.o [5]
+hal_rf_cfg_int          0x0000b821    0x64  Code  Gb  hal_rf.o [5]
+hal_rf_flush            0x0000b7ad    0x74  Code  Gb  hal_rf.o [5]
+hal_rf_get_register     0x0000b8f1    0x42  Code  Gb  hal_rf.o [5]
+hal_rf_read             0x0000b725    0x88  Code  Gb  hal_rf.o [5]
+hal_rf_read_reg         0x0000b9b5     0xc  Code  Gb  hal_rf.o [5]
+hal_rf_reg_int          0x0000b885    0x36  Code  Gb  hal_rf.o [5]
+hal_rf_set_register     0x0000b935    0x7a  Code  Gb  hal_rf.o [5]
+hal_rf_set_state        0x0000b4a1   0x21c  Code  Gb  hal_rf.o [5]
+hal_rf_unreg_int        0x0000b8bb    0x36  Code  Gb  hal_rf.o [5]
+hal_rf_write            0x0000b6bd    0x68  Code  Gb  hal_rf.o [5]
+hal_rtc_get             0x0001638b    0x6a  Code  Gb  hal_rtc.o [5]
+hal_rtc_init            0x00016331    0x5a  Code  Gb  hal_rtc.o [5]
+hal_rtc_set             0x000163f5    0x80  Code  Gb  hal_rtc.o [5]
+hal_set_clock           0x0000c153    0xd0  Code  Lc  hal_misc.o [5]
+hal_timerA0_cr1_2_isr   0x00014b6d    0x1e  Code  Lc  hal_stimer.o [5]
+hal_timer_a2_cr1_6_isr  0x0000c999   0x136  Code  Lc  hal_timer.o [5]
+hal_timer_alloc         0x0000c6df   0x1b4  Code  Gb  hal_timer.o [5]
+hal_timer_free          0x0000c893    0xa0  Code  Gb  hal_timer.o [5]
+hal_timer_init          0x0000c6ab    0x34  Code  Gb  hal_timer.o [5]
+hal_timer_tick_init     0x0000c699    0x12  Code  Lc  hal_timer.o [5]
+hal_uart_a0_irq_handler
+                        0x0000b1ad    0x48  Code  Lc  hal_uart.o [5]
+hal_uart_a1_irq_handler
+                        0x0000b1f5    0x48  Code  Lc  hal_uart.o [5]
+hal_uart_a2_irq_handler
+                        0x0000b23d    0x4a  Code  Lc  hal_uart.o [5]
+hal_uart_init           0x0000aac1   0x26c  Code  Gb  hal_uart.o [5]
+hal_uart_printf         0x0000ae93    0xc4  Code  Gb  hal_uart.o [5]
+hal_uart_read           0x0000af57    0x86  Code  Gb  hal_uart.o [5]
+hal_uart_read_poll      0x0000afdd    0x9a  Code  Gb  hal_uart.o [5]
+hal_uart_rx_irq_disable
+                        0x0000b157    0x56  Code  Gb  hal_uart.o [5]
+hal_uart_rx_irq_enable  0x0000b0c1    0x96  Code  Gb  hal_uart.o [5]
+hal_uart_rx_set_hiz_state
+                        0x0000b077    0x4a  Code  Gb  hal_uart.o [5]
+hal_uart_send_char      0x0000ad35    0x9c  Code  Gb  hal_uart.o [5]
+hal_uart_send_string    0x0000add1    0xc2  Code  Gb  hal_uart.o [5]
+heap_alloc              0x0000b30f    0x36  Code  Gb  memory.o [5]
+hfxtFreq                0x20009cc0     0x4  Data  Lc  cs.o [5]
+htimer_alloc            0x00014609    0x2e  Code  Gb  hal_stimer.o [5]
+htimer_arrary           0x2000974c    0xc0  Data  Gb  hal_stimer.o [5]
+htimer_at               0x00014879   0x140  Code  Gb  hal_stimer.o [5]
+htimer_cancel           0x000146c5   0x176  Code  Gb  hal_stimer.o [5]
+htimer_compare          0x00014655    0x30  Code  Gb  hal_stimer.o [5]
+htimer_count            0x20009d1a     0x1  Data  Gb  hal_stimer.o [5]
+htimer_free             0x00014637    0x1e  Code  Gb  hal_stimer.o [5]
+htimer_init             0x00014afb    0x4e  Code  Gb  hal_stimer.o [5]
+htimer_int_handler      0x00014b49    0x20  Code  Gb  hal_stimer.o [5]
+htimer_now              0x0001483b    0x3e  Code  Gb  hal_stimer.o [5]
+htimer_state            0x20009d1b     0x1  Data  Gb  hal_stimer.o [5]
+i2c_check_ack           0x00016e41    0x42  Code  Gb  hal_i2c.o [5]
+i2c_init                0x00016dcd    0x24  Code  Gb  hal_i2c.o [5]
+i2c_read                0x00016ecd    0x54  Code  Gb  hal_i2c.o [5]
+i2c_readreg             0x00016f21    0x4c  Code  Gb  hal_i2c.o [5]
+i2c_send                0x00016e83    0x4a  Code  Gb  hal_i2c.o [5]
+i2c_start               0x00016df1    0x28  Code  Gb  hal_i2c.o [5]
+i2c_stop                0x00016e19    0x28  Code  Gb  hal_i2c.o [5]
+i2c_writereg            0x00016f6d    0x38  Code  Gb  hal_i2c.o [5]
+init_i2c                0x00016fe5     0x8  Code  Gb  hal_i2c.o [5]
+init_task_h             0x20009c6c     0x4  Data  Gb  init.o [1]
+isspace                 0x0001220f    0x14  Code  Gb  isspace.o [3]
+kbuf_alloc              0x000140b9    0x6c  Code  Gb  kbuf.o [5]
+kbuf_big_pool           0x20009cb0     0x4  Data  Lc  kbuf.o [5]
+kbuf_free               0x00014125    0x38  Code  Gb  kbuf.o [5]
+kbuf_init               0x00014075    0x44  Code  Gb  kbuf.o [5]
+kbuf_small_pool         0x20009cb4     0x4  Data  Lc  kbuf.o [5]
+ldexp                   0x00013299          Code  Gb  ldexp.o [4]
+ldexpl                  0x00013299          Code  Gb  ldexp.o [4]
+lfxtFreq                0x20009cc4     0x4  Data  Lc  cs.o [5]
+list_behind_put         0x0001419d     0xc  Code  Gb  list.o [5]
+list_del                0x000141a9    0x24  Code  Gb  list.o [5]
+list_empty              0x000141cd    0x16  Code  Gb  list.o [5]
+list_front_get          0x000141e3    0x2c  Code  Gb  list.o [5]
+list_get_head           0x00014187    0x16  Code  Gb  list.o [5]
+list_init               0x00014171     0x6  Code  Gb  list.o [5]
+localeconv              0x00012353     0x4  Code  Gb  xlocale_c.o [3]
+lora_cfg_timeout_id     0x20009d0c     0x1  Data  Lc  app.o [1]
+m_current_slot          0x20009d27     0x1  Data  Gb  mac_slot.o [8]
+m_timer_slot            0x20009cf8     0x4  Data  Gb  mac_slot.o [8]
+mac_beacon_frame_proc   0x00013ad9   0x18c  Code  Lc  mac_handle.o [8]
+mac_beacon_handler      0x000134df   0x294  Code  Lc  mac_handle.o [8]
+mac_cfg_frame_proc      0x00013cc9   0x12a  Code  Lc  mac_handle.o [8]
+mac_ctrl_frame_proc     0x00013c65    0x3a  Code  Lc  mac_handle.o [8]
+mac_handler             0x0001346d    0x72  Code  Gb  mac_handle.o [8]
+mac_idle                0x00014401    0x20  Code  Gb  mac_slot.o [8]
+mac_parse               0x00013a8d    0x2c  Code  Lc  mac_handle.o [8]
+mac_pib                 0x20009c4c     0x8  Data  Gb  mac_pib.o [8]
+mac_pib_init            0x00014bc9    0x34  Code  Gb  mac_pib.o [8]
+mac_query_frame_proc    0x00013c9f    0x2a  Code  Lc  mac_handle.o [8]
+mac_rx_handler          0x00013849   0x244  Code  Lc  mac_handle.o [8]
+mac_rx_handler::fram_all_len
+                        0x20009d1f     0x1  Data  Lc  mac_handle.o [8]
+mac_rx_handler::fram_head_len
+                        0x200002bb     0x1  Data  Lc  mac_handle.o [8]
+mac_rx_handler::frm_buff
+                        0x200099d0    0x80  Data  Lc  mac_handle.o [8]
+mac_rx_handler::frm_flag
+                        0x20009d1e     0x1  Data  Lc  mac_handle.o [8]
+mac_rx_handler::frm_len
+                        0x20009d1d     0x1  Data  Lc  mac_handle.o [8]
+mac_slot_stop           0x00014451    0x26  Code  Gb  mac_slot.o [8]
+mac_status_info_send    0x00013df3   0x11e  Code  Lc  mac_handle.o [8]
+mac_syn_time_init       0x00013ab9    0x1a  Code  Gb  mac_handle.o [8]
+mac_time_handler        0x00013773    0x6e  Code  Lc  mac_handle.o [8]
+mac_time_handler::pre_time_ms
+                        0x20009cc8     0x4  Data  Lc  mac_handle.o [8]
+mac_tx_fix              0x00013f11   0x100  Code  Lc  mac_handle.o [8]
+mac_tx_handler          0x000137e1    0x68  Code  Lc  mac_handle.o [8]
+main                    0x000177c5    0x64  Code  Gb  init.o [1]
+mem_clr                 0x0000b417     0x8  Code  Gb  memory.o [5]
+mem_cpy                 0x0000b41f     0x8  Code  Gb  memory.o [5]
+mem_set                 0x0000b40d     0xa  Code  Gb  memory.o [5]
+memchr                  0x00012fcd          Code  Gb  memchr.o [6]
+memory_init             0x0000b2f9    0x16  Code  Gb  memory.o [5]
+ndigs                   0x0001252c    0x28  Data  Lc  iar_Stoulx.o [3]
+node_slot_system        0x200000e8    0xfc  Data  Lc  mac_slot.o [8]
+node_slot_system_init   0x000143b5    0x4c  Code  Gb  mac_slot.o [8]
+nwk_param               0x20009bf0     0xc  Data  Gb  mac_handle.o [8]
+osel_event_clear        0x0000c087    0x90  Code  Gb  osel_event.o [5]
+osel_event_create       0x0000bebf    0x72  Code  Gb  osel_event.o [5]
+osel_event_init         0x0000be89    0x36  Code  Gb  osel_event.o [5]
+osel_event_set          0x0000bfdf    0xa8  Code  Gb  osel_event.o [5]
+osel_event_wait         0x0000bf31    0xae  Code  Gb  osel_event.o [5]
+osel_idle_task_hook     0x0000c5f3    0x26  Code  Gb  osel_task.o [5]
+osel_init               0x000178ad    0x20  Code  Gb  osel_kernel.o [5]
+osel_start              0x000178cd     0x8  Code  Gb  osel_kernel.o [5]
+osel_systick_init       0x000178d5     0xc  Code  Gb  osel_kernel.o [5]
+osel_task_create        0x0000c4f7    0xbc  Code  Gb  osel_task.o [5]
+osel_task_idle_hook     0x20009b74    0x18  Data  Lc  osel_task.o [5]
+osel_task_idle_hook_reg
+                        0x0000c5e3    0x10  Code  Gb  osel_task.o [5]
+osel_task_init          0x0000c4c1    0x36  Code  Gb  osel_task.o [5]
+osel_task_resume        0x0000c5cb    0x18  Code  Gb  osel_task.o [5]
+osel_task_suspend       0x0000c5b3    0x18  Code  Gb  osel_task.o [5]
+overflow_interrupt_handler
+                        0x00014a3d    0x14  Code  Gb  hal_stimer.o [5]
+p_mac_slot_describe     0x20009cfc     0x4  Data  Gb  mac_slot.o [8]
+p_nmea_gps_msg          0x20009ae0    0x3c  Data  Lc  app_gps.o [1]
+p_recv_rf_frm           0x20009c88     0x4  Data  Lc  test.o [1]
+p_rf_frm                0x20009c78     0x4  Data  Lc  test.o [1]
+p_rf_frm1               0x20009c7c     0x4  Data  Lc  test.o [1]
+p_rf_frm2               0x20009c80     0x4  Data  Lc  test.o [1]
+p_timer                 0x0001898c    0x10  Data  Gb  hal_timer.o [5]
+p_timer_ctrl            0x0001899c    0x10  Data  Gb  hal_timer.o [5]
+pg_device_info          0x20009c68     0x4  Data  Lc  device.o [1]
+plat_dbg_assert         0x0000aa63    0x44  Code  Gb  debug.o [5]
+plat_dbg_print          0x0000a9dd    0x86  Code  Gb  debug.o [5]
+pool_alloc              0x0000b3b3    0x32  Code  Gb  memory.o [5]
+pool_create             0x0000b345    0x6e  Code  Gb  memory.o [5]
+pool_free               0x0000b3e5    0x28  Code  Gb  memory.o [5]
+prev_state              0x20009d19     0x1  Data  Lc  hal_rf.o [5]
+queue_init              0x0000e06d    0x28  Code  Gb  queue.o [5]
+queue_length            0x0000e095    0x24  Code  Gb  queue.o [5]
+queued_timer            0x20009c44     0x8  Data  Gb  hal_stimer.o [5]
+radio_rx_id             0x20009d14     0x1  Data  Lc  test.o [1]
+rand                    0x0000ed5d    0x96  Code  Gb  rand.o [3]
+read_multibyte_i2c      0x00016fa5    0x32  Code  Gb  hal_i2c.o [5]
+rf_cfg                  0x0000baad    0x52  Code  Lc  hal_rf.o [5]
+rf_cfg_int              0x0000bb05    0x56  Code  Lc  hal_rf.o [5]
+rf_default_reg_array    0x000173c4   0x118  Data  Gb  hal_rf.o [5]
+rf_int_reg              0x20009bd4    0x10  Data  Lc  hal_rf.o [5]
+rf_read_reg             0x0000ba31    0x7c  Code  Lc  hal_rf.o [5]
+rf_reg_int              0x0000bb5b    0x36  Code  Lc  hal_rf.o [5]
+rf_reg_value            0x20009a98    0x48  Data  Lc  hal_rf.o [5]
+rf_unreg_int            0x0000bb91    0x1e  Code  Lc  hal_rf.o [5]
+rf_write_reg            0x0000b9c1    0x64  Code  Lc  hal_rf.o [5]
+rtc_day_of_week         0x00016479    0x70  Code  Gb  hal_rtc.o [5]
+scalbln                 0x00013299          Code  Gb  ldexp.o [4]
+scalblnl                0x00013299          Code  Gb  ldexp.o [4]
+scalbn                  0x00013299          Code  Gb  ldexp.o [4]
+scalbnl                 0x00013299          Code  Gb  ldexp.o [4]
+scale                   0x00011a8d    0x46  Code  Lc  xprintffull.o [3]
+sec_hand                0x20009d00     0x4  Data  Lc  xfail_s.o [3]
+sensor_event_h          0x20009cbc     0x4  Data  Gb  sensor.o [7]
+sensor_handler          0x00017377    0x22  Code  Gb  sensor.o [7]
+sensor_init             0x00017295    0x5c  Code  Gb  sensor.o [7]
+sensor_task_h           0x20009cb8     0x4  Data  Gb  sensor.o [7]
+sensor_timeout_callback
+                        0x00017349    0x2e  Code  Lc  sensor.o [7]
+sensor_timeout_id       0x20009d18     0x1  Data  Lc  sensor.o [7]
+set_fake_timer          0x00014477    0x1e  Code  Gb  mac_slot.o [8]
+set_next_timer          0x000149c7    0x76  Code  Gb  hal_stimer.o [5]
+set_of_timer            0x000149b9     0xe  Code  Gb  hal_stimer.o [5]
+set_slot_timer          0x00014495   0x10c  Code  Gb  mac_slot.o [8]
+sigma_all_slot          0x00014421    0x30  Code  Gb  mac_slot.o [8]
+sprintf                 0x0000d451    0x40  Code  Gb  sprintf.o [3]
+srand                   0x0000edf3     0xa  Code  Gb  rand.o [3]
+sscanf                  0x0000b479    0x28  Code  Gb  sscanf.o [3]
+stack_cfg_func          0x20009ca4     0x4  Data  Lc  stack.o [8]
+stack_config            0x0001432f     0xc  Code  Gb  stack.o [8]
+stack_config_handle     0x0001433b    0x12  Code  Gb  stack.o [8]
+stack_data0_tx_q        0x20009c1c     0x8  Data  Gb  stack.o [8]
+stack_data1_tx_q        0x20009c24     0x8  Data  Gb  stack.o [8]
+stack_data_rx_q         0x20009c2c     0x8  Data  Gb  stack.o [8]
+stack_data_tx_q         0x20009cac     0x4  Data  Lc  stack.o [8]
+stack_event_h           0x20009c9c     0x4  Data  Gb  stack.o [8]
+stack_gps_pulse_callback
+                        0x000142d5    0x14  Code  Lc  stack.o [8]
+stack_indicate          0x00014311     0xc  Code  Gb  stack.o [8]
+stack_indicate_func     0x20009ca0     0x4  Data  Lc  stack.o [8]
+stack_indicate_handle   0x0001431d    0x12  Code  Gb  stack.o [8]
+stack_init              0x00014211    0x5e  Code  Gb  stack.o [8]
+stack_lora_recv_callback
+                        0x000142fd    0x14  Code  Lc  stack.o [8]
+stack_priv_list_cfg     0x0001434d     0xa  Code  Gb  stack.o [8]
+stack_priv_list_get_handle
+                        0x00014357     0x6  Code  Gb  stack.o [8]
+stack_priv_list_send_cfg
+                        0x0001435d     0xc  Code  Gb  stack.o [8]
+stack_priv_list_send_handle
+                        0x00014369    0x12  Code  Gb  stack.o [8]
+stack_send_func         0x20009ca8     0x4  Data  Lc  stack.o [8]
+stack_task_h            0x20009c98     0x4  Data  Gb  stack.o [8]
+stack_tx_event          0x000142e9    0x14  Code  Gb  stack.o [8]
+stack_uart_lora_irq_enable_callback
+                        0x000142c5    0x10  Code  Gb  stack.o [8]
+strchr                  0x0000e579          Code  Gb  strchr.o [6]
+strlen                  0x0000c621          Code  Gb  strlen.o [6]
+strstr                  0x0000b427    0x2c  Code  Gb  strstr.o [3]
+strtol                  0x000123e3     0x4  Code  Gb  iar_Stolx.o [3]
+strtoul                 0x000124fd     0x2  Code  Gb  iar_Stoulx.o [3]
+sw_time                 0x20009d0a     0x2  Data  Gb  hal_stimer.o [5]
+syn_time                0x20009c08     0xc  Data  Gb  mac_slot.o [8]
+systemStack             0x20009d28   0x200  Data  Lc  startup_msp432p401r_ewarm.o [5]
+task_pool               0x20009c94     0x4  Data  Lc  osel_task.o [5]
+test_aux_handler        0x0000a7c1   0x130  Code  Lc  test.o [1]
+test_cb                 0x20009c84     0x4  Data  Lc  test.o [1]
+test_config_handler     0x00008849    0xd4  Code  Lc  test.o [1]
+test_dsss_handler       0x000080e5   0x2b6  Code  Lc  test.o [1]
+test_dsss_recv          0x000095f9   0x630  Code  Lc  test.o [1]
+test_dsss_recv_cb       0x000094ed    0xe2  Code  Lc  test.o [1]
+test_dsss_script        0x00008fd5   0x25c  Code  Lc  test.o [1]
+test_dsss_script::test_dsss
+                        0x20009bb4    0x10  Data  Lc  test.o [1]
+test_dsss_send          0x0000927d   0x25e  Code  Lc  test.o [1]
+test_dsss_send_cb       0x00009235    0x12  Code  Lc  test.o [1]
+test_event_h            0x20009c70     0x4  Data  Lc  test.o [1]
+test_fram_handler       0x00009f11   0x1a6  Code  Lc  test.o [1]
+test_gpio_handler       0x00009c3d   0x1dc  Code  Lc  test.o [1]
+test_graph_ip_handler   0x0000a0e7    0xe2  Code  Lc  test.o [1]
+test_handler            0x00008971   0x1ea  Code  Gb  test.o [1]
+test_hw_handler         0x0000a2c9    0xb8  Code  Lc  test.o [1]
+test_init               0x00008921    0x2a  Code  Gb  test.o [1]
+test_misc_handler       0x0000839b   0x184  Code  Lc  test.o [1]
+test_power_manage_handler
+                        0x00009e19    0x72  Code  Lc  test.o [1]
+test_rf_timeout_id      0x20009d06     0x2  Data  Lc  test.o [1]
+test_trigger            0x0000894b    0x1a  Code  Gb  test.o [1]
+test_uart_rx_cb         0x00008bc9   0x3de  Code  Lc  test.o [1]
+test_uart_rx_cb::i      0x20009d08     0x2  Data  Lc  test.o [1]
+test_zdsx_bd_handler    0x0000a1fb    0xc8  Code  Lc  test.o [1]
+timer_reg               0x20009b1c    0x34  Data  Lc  hal_timer.o [5]
+timer_slot_cb           0x000145a1    0x1e  Code  Lc  mac_slot.o [8]
+tolower                 0x00013447    0x14  Code  Gb  tolower.o [3]
+uart_buf                0x20009c74     0x4  Data  Lc  test.o [1]
+uart_entity             0x20009a50    0x48  Data  Lc  hal_uart.o [5]
+uart_state              0x20009d15     0x1  Data  Lc  test.o [1]
+vsprintf                0x0000d491    0x38  Code  Gb  vsprintf.o [3]
+write_i2c               0x00016fd7     0xe  Code  Gb  hal_i2c.o [5]
+zdsx_bd_tc_print        0x0000a1d9    0x22  Code  Lc  test.o [1]
+
+
+[1] = E:\MovingTrackStroeFile\MovingTrackStroeProject\src\app\proj\Debug\Obj
+[2] = command line
+[3] = dl7M_tlf.a
+[4] = m7M_tls.a
+[5] = platform.a
+[6] = rt7M_tl.a
+[7] = sensor.a
+[8] = stack.a
+
+  62 438 bytes of readonly  code memory
+   7 470 bytes of readonly  data memory
+  40 744 bytes of readwrite data memory
+
+Errors: none
+Warnings: none

@@ -1,0 +1,19 @@
+"--endian=little" 
+
+"--cpu=Cortex-M4" 
+
+"--fpu=VFPv4_SP" 
+
+"-p" 
+
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\CONFIG\debugger\TexasInstruments\MSP432P401R.ddf" 
+
+"--semihosting=none" 
+
+"--device=MSP432P401R" 
+
+"--multicore_nr_of_cores=1" 
+
+
+
+

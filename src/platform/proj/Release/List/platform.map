@@ -1,0 +1,275 @@
+###############################################################################
+#
+# IAR ELF Linker V8.10.1.12857/W32 for ARM                18/Dec/2017  09:28:02
+# Copyright 2007-2017 IAR Systems AB.
+#
+#    Output file  =  
+#        D:\WorkGroup\MSP432\Platform\totoro\src\platform\proj\Release\Exe\platform.out
+#    Map file     =  
+#        D:\WorkGroup\MSP432\Platform\totoro\src\platform\proj\Release\List\platform.map
+#    Command line =  
+#        -f C:\Users\HERRYP~1\AppData\Local\Temp\EWAA82.tmp
+#        (D:\WorkGroup\MSP432\Platform\totoro\src\platform\proj\Release\Obj\cpu_a.o
+#        D:\WorkGroup\MSP432\Platform\totoro\src\platform\proj\Release\Obj\cpu_c.o
+#        D:\WorkGroup\MSP432\Platform\totoro\src\platform\proj\Release\Obj\cpu_core.o
+#        D:\WorkGroup\MSP432\Platform\totoro\src\platform\proj\Release\Obj\os_core.o
+#        D:\WorkGroup\MSP432\Platform\totoro\src\platform\proj\Release\Obj\os_cpu_a.o
+#        D:\WorkGroup\MSP432\Platform\totoro\src\platform\proj\Release\Obj\os_cpu_c.o
+#        D:\WorkGroup\MSP432\Platform\totoro\src\platform\proj\Release\Obj\os_dbg.o
+#        D:\WorkGroup\MSP432\Platform\totoro\src\platform\proj\Release\Obj\os_flag.o
+#        D:\WorkGroup\MSP432\Platform\totoro\src\platform\proj\Release\Obj\os_mbox.o
+#        D:\WorkGroup\MSP432\Platform\totoro\src\platform\proj\Release\Obj\os_mem.o
+#        D:\WorkGroup\MSP432\Platform\totoro\src\platform\proj\Release\Obj\os_mutex.o
+#        D:\WorkGroup\MSP432\Platform\totoro\src\platform\proj\Release\Obj\os_q.o
+#        D:\WorkGroup\MSP432\Platform\totoro\src\platform\proj\Release\Obj\os_sem.o
+#        D:\WorkGroup\MSP432\Platform\totoro\src\platform\proj\Release\Obj\os_task.o
+#        D:\WorkGroup\MSP432\Platform\totoro\src\platform\proj\Release\Obj\os_time.o
+#        D:\WorkGroup\MSP432\Platform\totoro\src\platform\proj\Release\Obj\os_tmr.o
+#        -o
+#        D:\WorkGroup\MSP432\Platform\totoro\src\platform\proj\Release\Exe\platform.out
+#        --map
+#        D:\WorkGroup\MSP432\Platform\totoro\src\platform\proj\Release\List\platform.map
+#        --config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.0\arm\CONFIG\generic_cortex.icf" --entry __iar_program_start
+#        --inline --vfe --text_out locale)
+#
+###############################################################################
+
+*******************************************************************************
+*** MESSAGES
+***
+
+Error[Li005]: no definition for "main" [referenced from cmain.o(rt7M_tl.a)]
+
+
+*******************************************************************************
+*** RUNTIME MODEL ATTRIBUTES
+***
+
+CppFlavor       = *
+__SystemLibrary = DLib
+__dlib_version  = 6
+
+
+*******************************************************************************
+*** HEAP SELECTION
+***
+
+The basic heap was selected because no calls to memory allocation
+functions were found in the application outside of system library
+functions, and there are calls to deallocation functions in the
+application.
+
+
+*******************************************************************************
+*** PLACEMENT SUMMARY
+***
+
+"A0":  place at 0x00000000 { ro section .intvec };
+"P1":  place in [from 0x00000000 to 0x0007ffff] { ro };
+"P3":  place in [from 0x00000000 to 0x00000000] |
+                [from 0x20000000 to 0x2000ffff] {
+          rw, block CSTACK, block PROC_STACK, block HEAP };
+
+  Section   Kind        Address   Size  Object
+  -------   ----        -------   ----  ------
+"A0":                             0x40
+  .intvec   ro code  0x00000000   0x40  vector_table_M.o [4]
+                   - 0x00000040   0x40
+
+"P1":                             0xb4
+  .text     ro code  0x00000040   0x1a  cmain.o [4]
+  .text     ro code  0x0000005a    0x4  exit.o [3]
+  .rodata   const    0x0000005e    0x2  os_dbg.o [1]
+  .text     ro code  0x00000060    0xa  cexit.o [4]
+  .rodata   const    0x0000006a    0x2  os_dbg.o [1]
+  .text     ro code  0x0000006c    0xc  XXexit.o [4]
+  .text     ro code  0x00000078    0xc  cstartup_M.o [4]
+  .rodata   const    0x00000084    0x4  os_dbg.o [1]
+  .rodata   const    0x00000088    0x2  os_dbg.o [1]
+  .rodata   const    0x0000008a    0x2  os_dbg.o [1]
+  .rodata   const    0x0000008c    0x2  os_dbg.o [1]
+  .rodata   const    0x0000008e    0x2  os_dbg.o [1]
+  .rodata   const    0x00000090    0x2  os_dbg.o [1]
+  .rodata   const    0x00000092    0x2  os_dbg.o [1]
+  .rodata   const    0x00000094    0x2  os_dbg.o [1]
+  .rodata   const    0x00000096    0x2  os_dbg.o [1]
+  .rodata   const    0x00000098    0x2  os_dbg.o [1]
+  .rodata   const    0x0000009a    0x2  os_dbg.o [1]
+  .rodata   const    0x0000009c    0x2  os_dbg.o [1]
+  .rodata   const    0x0000009e    0x2  os_dbg.o [1]
+  .rodata   const    0x000000a0    0x2  os_dbg.o [1]
+  .rodata   const    0x000000a2    0x2  os_dbg.o [1]
+  .rodata   const    0x000000a4    0x2  os_dbg.o [1]
+  .rodata   const    0x000000a6    0x2  os_dbg.o [1]
+  .rodata   const    0x000000a8    0x2  os_dbg.o [1]
+  .rodata   const    0x000000aa    0x2  os_dbg.o [1]
+  .rodata   const    0x000000ac    0x2  os_dbg.o [1]
+  .rodata   const    0x000000ae    0x2  os_dbg.o [1]
+  .rodata   const    0x000000b0    0x2  os_dbg.o [1]
+  .rodata   const    0x000000b2    0x2  os_dbg.o [1]
+  .rodata   const    0x000000b4    0x2  os_dbg.o [1]
+  .rodata   const    0x000000b6    0x2  os_dbg.o [1]
+  .rodata   const    0x000000b8    0x2  os_dbg.o [1]
+  .rodata   const    0x000000ba    0x2  os_dbg.o [1]
+  .rodata   const    0x000000bc    0x2  os_dbg.o [1]
+  .rodata   const    0x000000be    0x2  os_dbg.o [1]
+  .rodata   const    0x000000c0    0x2  os_dbg.o [1]
+  .rodata   const    0x000000c2    0x2  os_dbg.o [1]
+  .rodata   const    0x000000c4    0x2  os_dbg.o [1]
+  .rodata   const    0x000000c6    0x2  os_dbg.o [1]
+  .rodata   const    0x000000c8    0x2  os_dbg.o [1]
+  .rodata   const    0x000000ca    0x2  os_dbg.o [1]
+  .rodata   const    0x000000cc    0x2  os_dbg.o [1]
+  .rodata   const    0x000000ce    0x2  os_dbg.o [1]
+  .rodata   const    0x000000d0    0x2  os_dbg.o [1]
+  .rodata   const    0x000000d2    0x2  os_dbg.o [1]
+  .rodata   const    0x000000d4    0x2  os_dbg.o [1]
+  .rodata   const    0x000000d6    0x2  os_dbg.o [1]
+  .rodata   const    0x000000d8    0x2  os_dbg.o [1]
+  .rodata   const    0x000000da    0x2  os_dbg.o [1]
+  .rodata   const    0x000000dc    0x2  os_dbg.o [1]
+  .rodata   const    0x000000de    0x2  os_dbg.o [1]
+  .rodata   const    0x000000e0    0x2  os_dbg.o [1]
+  .rodata   const    0x000000e2    0x2  os_dbg.o [1]
+  .rodata   const    0x000000e4    0x2  os_dbg.o [1]
+  .rodata   const    0x000000e6    0x2  os_dbg.o [1]
+  .rodata   const    0x000000e8    0x2  os_dbg.o [1]
+  .rodata   const    0x000000ea    0x2  os_dbg.o [1]
+  .rodata   const    0x000000ec    0x2  os_dbg.o [1]
+  .rodata   const    0x000000ee    0x2  os_dbg.o [1]
+  .rodata   const    0x000000f0    0x2  os_dbg.o [1]
+  .text     ro code  0x000000f2    0x2  vector_table_M.o [4]
+                   - 0x000000f4   0xb4
+
+"P3":                            0x400
+  CSTACK             0x20000000  0x400  <Block>
+    CSTACK  uninit   0x20000000  0x400  <Block tail>
+                   - 0x20000400  0x400
+
+
+
+*******************************************************************************
+*** MODULE SUMMARY
+***
+
+    Module            ro code  ro data  rw data
+    ------            -------  -------  -------
+D:\WorkGroup\MSP432\Platform\totoro\src\platform\proj\Release\Obj: [1]
+    os_dbg.o                       114
+    -------------------------------------------
+    Total:                         114
+
+command line: [2]
+    -------------------------------------------
+    Total:
+
+dl7M_tln.a: [3]
+    exit.o                  4
+    -------------------------------------------
+    Total:                  4
+
+rt7M_tl.a: [4]
+    XXexit.o               12
+    cexit.o                10
+    cmain.o                26
+    cstartup_M.o           12
+    vector_table_M.o       66
+    -------------------------------------------
+    Total:                126
+
+    Linker created                        1 024
+-----------------------------------------------
+    Grand Total:          130      114    1 024
+
+
+*******************************************************************************
+*** ENTRY LIST
+***
+
+Entry                      Address  Size  Type      Object
+-----                      -------  ----  ----      ------
+?main                   0x00000041        Code  Gb  cmain.o [4]
+CSTACK$$Base            0x20000000         --   Gb  - Linker created -
+CSTACK$$Limit           0x20000400         --   Gb  - Linker created -
+OSDataSize              0x000000f0   0x2  Data  Gb  os_dbg.o [1]
+OSDebugEn               0x0000005e   0x2  Data  Gb  os_dbg.o [1]
+OSEndiannessTest        0x00000084   0x4  Data  Gb  os_dbg.o [1]
+OSEventEn               0x0000006a   0x2  Data  Gb  os_dbg.o [1]
+OSEventMax              0x00000088   0x2  Data  Gb  os_dbg.o [1]
+OSEventMultiEn          0x00000090   0x2  Data  Gb  os_dbg.o [1]
+OSEventNameEn           0x0000008a   0x2  Data  Gb  os_dbg.o [1]
+OSEventSize             0x0000008c   0x2  Data  Gb  os_dbg.o [1]
+OSEventTblSize          0x0000008e   0x2  Data  Gb  os_dbg.o [1]
+OSFlagEn                0x00000092   0x2  Data  Gb  os_dbg.o [1]
+OSFlagGrpSize           0x00000094   0x2  Data  Gb  os_dbg.o [1]
+OSFlagMax               0x0000009a   0x2  Data  Gb  os_dbg.o [1]
+OSFlagNameEn            0x0000009c   0x2  Data  Gb  os_dbg.o [1]
+OSFlagNodeSize          0x00000096   0x2  Data  Gb  os_dbg.o [1]
+OSFlagWidth             0x00000098   0x2  Data  Gb  os_dbg.o [1]
+OSLowestPrio            0x0000009e   0x2  Data  Gb  os_dbg.o [1]
+OSMboxEn                0x000000a0   0x2  Data  Gb  os_dbg.o [1]
+OSMemEn                 0x000000a2   0x2  Data  Gb  os_dbg.o [1]
+OSMemMax                0x000000a4   0x2  Data  Gb  os_dbg.o [1]
+OSMemNameEn             0x000000a6   0x2  Data  Gb  os_dbg.o [1]
+OSMemSize               0x000000a8   0x2  Data  Gb  os_dbg.o [1]
+OSMemTblSize            0x000000aa   0x2  Data  Gb  os_dbg.o [1]
+OSMutexEn               0x000000ac   0x2  Data  Gb  os_dbg.o [1]
+OSPtrSize               0x000000ae   0x2  Data  Gb  os_dbg.o [1]
+OSQEn                   0x000000b0   0x2  Data  Gb  os_dbg.o [1]
+OSQMax                  0x000000b2   0x2  Data  Gb  os_dbg.o [1]
+OSQSize                 0x000000b4   0x2  Data  Gb  os_dbg.o [1]
+OSRdyTblSize            0x000000b6   0x2  Data  Gb  os_dbg.o [1]
+OSSemEn                 0x000000b8   0x2  Data  Gb  os_dbg.o [1]
+OSStkWidth              0x000000ba   0x2  Data  Gb  os_dbg.o [1]
+OSTCBPrioTblMax         0x000000d4   0x2  Data  Gb  os_dbg.o [1]
+OSTCBSize               0x000000d6   0x2  Data  Gb  os_dbg.o [1]
+OSTaskCreateEn          0x000000bc   0x2  Data  Gb  os_dbg.o [1]
+OSTaskCreateExtEn       0x000000be   0x2  Data  Gb  os_dbg.o [1]
+OSTaskDelEn             0x000000c0   0x2  Data  Gb  os_dbg.o [1]
+OSTaskIdleStkSize       0x000000c2   0x2  Data  Gb  os_dbg.o [1]
+OSTaskMax               0x000000c6   0x2  Data  Gb  os_dbg.o [1]
+OSTaskNameEn            0x000000c8   0x2  Data  Gb  os_dbg.o [1]
+OSTaskProfileEn         0x000000c4   0x2  Data  Gb  os_dbg.o [1]
+OSTaskRegTblSize        0x000000d2   0x2  Data  Gb  os_dbg.o [1]
+OSTaskStatEn            0x000000ca   0x2  Data  Gb  os_dbg.o [1]
+OSTaskStatStkChkEn      0x000000ce   0x2  Data  Gb  os_dbg.o [1]
+OSTaskStatStkSize       0x000000cc   0x2  Data  Gb  os_dbg.o [1]
+OSTaskSwHookEn          0x000000d0   0x2  Data  Gb  os_dbg.o [1]
+OSTicksPerSec           0x000000d8   0x2  Data  Gb  os_dbg.o [1]
+OSTimeTickHookEn        0x000000da   0x2  Data  Gb  os_dbg.o [1]
+OSTmrCfgMax             0x000000e0   0x2  Data  Gb  os_dbg.o [1]
+OSTmrCfgNameEn          0x000000e2   0x2  Data  Gb  os_dbg.o [1]
+OSTmrCfgTicksPerSec     0x000000e6   0x2  Data  Gb  os_dbg.o [1]
+OSTmrCfgWheelSize       0x000000e4   0x2  Data  Gb  os_dbg.o [1]
+OSTmrEn                 0x000000de   0x2  Data  Gb  os_dbg.o [1]
+OSTmrSize               0x000000e8   0x2  Data  Gb  os_dbg.o [1]
+OSTmrTblSize            0x000000ea   0x2  Data  Gb  os_dbg.o [1]
+OSTmrWheelSize          0x000000ec   0x2  Data  Gb  os_dbg.o [1]
+OSTmrWheelTblSize       0x000000ee   0x2  Data  Gb  os_dbg.o [1]
+OSVersionNbr            0x000000dc   0x2  Data  Gb  os_dbg.o [1]
+Region$$Table$$Base     0x00000000         --   Gb  - Linker created -
+Region$$Table$$Limit    0x00000000         --   Gb  - Linker created -
+__cmain                 0x00000041        Code  Gb  cmain.o [4]
+__exit                  0x0000006d        Code  Gb  XXexit.o [4]
+__iar_program_start     0x00000079        Code  Gb  cstartup_M.o [4]
+__iar_systems$$module {Abs}
+                        0x00000001        Data  Gb  command line/config [2]
+__vector_table          0x00000000        Data  Gb  vector_table_M.o [4]
+_call_main              0x0000004d        Code  Gb  cmain.o [4]
+_exit                   0x00000061        Code  Gb  cexit.o [4]
+_main                   0x00000057        Code  Gb  cmain.o [4]
+exit                    0x0000005b   0x4  Code  Gb  exit.o [3]
+
+
+[1] = D:\WorkGroup\MSP432\Platform\totoro\src\platform\proj\Release\Obj
+[2] = command line
+[3] = dl7M_tln.a
+[4] = rt7M_tl.a
+
+    130 bytes of readonly  code memory
+    114 bytes of readonly  data memory
+  1 024 bytes of readwrite data memory
+
+Errors: 1
+Warnings: none

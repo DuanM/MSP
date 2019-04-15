@@ -1,0 +1,15 @@
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\bin\armproc.dll" 
+
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\bin\armxds2.dll" 
+
+"E:\MovingTrackStroeFile\MovingTrackStroeProject\src\app\proj\Debug\Exe\app.out" 
+
+--plugin "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\bin\armbat.dll" 
+
+--device_macro "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\config\debugger\TexasInstruments\MSP432P401R.dmac" 
+
+--flash_loader "E:\MovingTrackStroeFile\MovingTrackStroeProject\iar\flashloader\FlashMSP432P401R.board" 
+
+
+
+
