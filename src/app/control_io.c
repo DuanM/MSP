@@ -7,6 +7,7 @@
 
 #include <control_io.h>
 
+
 #define ACS_LORA_PWR_PIN		40u
 #define SEN_GPS_PWR_PIN			41u
 #define SEN_GPS_PULSE_PIN		34u //GPS 脉冲管脚
@@ -19,13 +20,25 @@
 #define DEV_STATE_LIGHT_GREEN_PIN		51u //工作状态灯 绿管脚
 #define DEV_STATE_LIGHT_YELLOW_PIN		50u //工作状态灯 黄管脚
 
+#define DEV_STATE_LIGHT_RED_PIN_VALUE GPIO_getInputPinValue((DEV_STATE_LIGHT_RED_PIN/10), (1u<<(DEV_STATE_LIGHT_RED_PIN%10))
+#define DEV_STATE_LIGHT_GREEN_PIN_VALU GPIO_getInputPinValue((DEV_STATE_LIGHT_GREEN_PIN/10), (1u<<(DEV_STATE_LIGHT_GREEN_PIN%10)))
+#define DEV_STATE_LIGHT_YELLOW_PIN_VALUE GPIO_getInputPinValue((DEV_STATE_LIGHT_YELLOW_PIN/10), (1u<<(DEV_STATE_LIGHT_YELLOW_PIN%10)))
+
 #define DEV_MOVE_LIGHT_RED_PIN			47u //移动状态灯 红管脚
 #define DEV_MOVE_LIGHT_GREEN_PIN		46u //移动状态灯 绿管脚
 #define DEV_MOVE_LIGHT_YELLOW_PIN		45u //移动状态灯 黄管脚
 
-#define DEV_SW1_PIN						44u //移动按键管脚
-#define DEV_BUZZER_PIN					43u //移动蜂鸣器管脚
+#define DEV_MOVE_LIGHT_RED_PIN_VALUE     GPIO_getInputPinValue((DEV_MOVE_LIGHT_RED_PIN/10), (1u<<(DEV_MOVE_LIGHT_RED_PIN%10)))
+#define DEV_MOVE_LIGHT_GREEN_PIN_VALUE   GPIO_getInputPinValue((DEV_MOVE_LIGHT_GREEN_PIN/10), (1u<<(DEV_MOVE_LIGHT_GREEN_PIN%10)))
+#define DEV_MOVE_LIGHT_YELLOW_PIN_VALUE  GPIO_getInputPinValue((DEV_MOVE_LIGHT_YELLOW_PIN/10), (1u<<(DEV_MOVE_LIGHT_YELLOW_PIN%10)))
 
+#define DEV_BUZZER_PIN					43u //移动蜂鸣器管脚
+#define DEV_BUZZER_PIN_VALUE   GPIO_getInputPinValue((DEV_BUZZER_PIN/10), (1u<<(DEV_BUZZER_PIN%10)))
+
+#define DEV_SW1_PIN						44u //移动按键管脚
+
+static void Key_Interrupt_Callback(void);
+static void GPS_Interrupt_Callback(void);
 
 void ControlIO_Init(void)
 {
@@ -117,7 +130,7 @@ bool_t ControlIO_DevPower(uint8_t type, bool_t state, bool_t save)
 
 static fpv_t func;
 
-void GPS_Interrupt_Callback(void)
+static void GPS_Interrupt_Callback(void)
 {
 	uint_fast16_t status; 
 	
@@ -139,7 +152,6 @@ void ControlIO_GPS_Pulse_Callback(fpv_t callback)
 
 bool_t ControlIO_LoraMode(uint8_t type)
 {
-	//OSEL_DECL_CRITICAL();
 	device_info_t *p_device_info = device_info_get();
 	switch(type)
 	{
@@ -184,79 +196,133 @@ bool_t ControlIO_LoraMode(uint8_t type)
 	return PLAT_TRUE;
 }
 
+static fpv_t keyfunc;
+uint8_t  get_Key_vlaue(void)
+{
+	return GPIO_getInputPinValue((DEV_SW1_PIN/10), (1u<<(DEV_SW1_PIN%10)));
+}
 
-bool_t ControlIO_StatusLight(uint8_t type)
+static void Key_Interrupt_Callback(void)
+{
+	uint_fast16_t status; 
+	status = GPIO_getInterruptStatus((DEV_SW1_PIN/10),(1u<<(DEV_SW1_PIN%10)));
+	GPIO_clearInterruptFlag((DEV_SW1_PIN/10), status);
+	(*keyfunc)();
+}
+
+void ControlIO_Key_Callback(fpv_t callback)
+{
+	keyfunc = callback;
+	GPIO_setAsInputPin((DEV_SW1_PIN/10), (1u<<(DEV_SW1_PIN%10))); //设置为输入
+	GPIO_interruptEdgeSelect((DEV_SW1_PIN/10), (1u<<(DEV_SW1_PIN%10)), GPIO_HIGH_TO_LOW_TRANSITION);
+	GPIO_registerInterrupt((DEV_SW1_PIN/10), Key_Interrupt_Callback);
+	GPIO_clearInterruptFlag((DEV_SW1_PIN/10), (1u<<(DEV_SW1_PIN%10)));
+	GPIO_enableInterrupt((DEV_SW1_PIN/10), (1u<<(DEV_SW1_PIN%10)));
+}
+
+void ControlIO_StatusLight(uint8_t type)
 {
 	device_info_t *p_device_info = device_info_get();
 	switch(type)
 	{
-		case RED://一般模式//M0=0;M1=0;
-			if(p_device_info->param.state_light.state != RED)
+		case OFF://状态灯 全灭
+			if(p_device_info->param.state_light.state != OFF)
+			{
+				GPIO_setOutputLowOnPin((DEV_STATE_LIGHT_RED_PIN/10), (1u<<(DEV_STATE_LIGHT_RED_PIN%10)));
+				GPIO_setOutputLowOnPin((DEV_STATE_LIGHT_GREEN_PIN/10), (1u<<(DEV_STATE_LIGHT_GREEN_PIN%10)));
+				GPIO_setOutputHighOnPin((DEV_STATE_LIGHT_YELLOW_PIN/10), (1u<<(DEV_STATE_LIGHT_YELLOW_PIN%10)));
+				p_device_info->param.state_light.state  = OFF;
+			}
+		break;
+		case RED://状态灯 红
+			if(p_device_info->param.state_light.state  != RED)
 			{
 				GPIO_setOutputLowOnPin((DEV_STATE_LIGHT_GREEN_PIN/10), (1u<<(DEV_STATE_LIGHT_GREEN_PIN%10)));
 				GPIO_setOutputLowOnPin((DEV_STATE_LIGHT_YELLOW_PIN/10), (1u<<(DEV_STATE_LIGHT_YELLOW_PIN%10)));
 				GPIO_setOutputHighOnPin((DEV_STATE_LIGHT_RED_PIN/10), (1u<<(DEV_STATE_LIGHT_RED_PIN%10)));
-				p_device_info->param.state_light.state = RED;
+				p_device_info->param.state_light.state  = RED;
 			}
 			else if(p_device_info->param.state_light.filcker)
 			{
 				GPIO_toggleOutputOnPin((DEV_STATE_LIGHT_RED_PIN/10), (1u<<(DEV_STATE_LIGHT_RED_PIN%10)));
 			}
 		break;
-		case GREEN://唤醒模式//M0=1;M1=0;
-			if(p_device_info->param.state_light.state != GREEN)
+		case GREEN://状态灯 绿
+			if(p_device_info->param.state_light.state  != GREEN)
 			{
 				GPIO_setOutputLowOnPin((DEV_STATE_LIGHT_YELLOW_PIN/10), (1u<<(DEV_STATE_LIGHT_YELLOW_PIN%10)));
 				GPIO_setOutputLowOnPin((DEV_STATE_LIGHT_RED_PIN/10), (1u<<(DEV_STATE_LIGHT_RED_PIN%10)));
 				GPIO_setOutputHighOnPin((DEV_STATE_LIGHT_GREEN_PIN/10), (1u<<(DEV_STATE_LIGHT_GREEN_PIN%10)));
-				p_device_info->param.state_light.state = GREEN;
+				p_device_info->param.state_light.state  = GREEN;
 			}
 			else if(p_device_info->param.state_light.filcker)
 			{
 				GPIO_toggleOutputOnPin((DEV_STATE_LIGHT_GREEN_PIN/10), (1u<<(DEV_STATE_LIGHT_GREEN_PIN%10)));
 			}
 		break;
-		case YELLOW://省电模式//M0=0;M1=1;
-			if(p_device_info->param.state_light.state != YELLOW)
+		case YELLOW://状态灯 黄
+			if(p_device_info->param.state_light.state  != YELLOW)
 			{
 				GPIO_setOutputLowOnPin((DEV_STATE_LIGHT_RED_PIN/10), (1u<<(DEV_STATE_LIGHT_RED_PIN%10)));
 				GPIO_setOutputLowOnPin((DEV_STATE_LIGHT_GREEN_PIN/10), (1u<<(DEV_STATE_LIGHT_GREEN_PIN%10)));
 				GPIO_setOutputHighOnPin((DEV_STATE_LIGHT_YELLOW_PIN/10), (1u<<(DEV_STATE_LIGHT_YELLOW_PIN%10)));
-				p_device_info->param.state_light.state = YELLOW;
+				p_device_info->param.state_light.state  = YELLOW;
 			}
 			else if(p_device_info->param.state_light.filcker)
 			{
 				GPIO_toggleOutputOnPin((DEV_STATE_LIGHT_YELLOW_PIN/10), (1u<<(DEV_STATE_LIGHT_YELLOW_PIN%10)));
 			}
 		break;
-		default:
-            return PLAT_FALSE;
-		break;
 	}
-    return PLAT_TRUE;
 }
 
-bool_t ControlIO_MoveLight(uint8_t type)
+
+void ControlIO_MoveLight_State(void)
 {
 	device_info_t *p_device_info = device_info_get();
-	switch(type)
+	switch(p_device_info->param.move_light.state)
 	{
-		case OFF://一般模式//M0=0;M1=0;
-			if(p_device_info->param.move_light.state != OFF)
+		case RED://红灯;亮
+			if(!DEV_MOVE_LIGHT_RED_PIN_VALUE)
+			{
+				GPIO_setOutputHighOnPin((DEV_MOVE_LIGHT_RED_PIN/10), (1u<<(DEV_MOVE_LIGHT_RED_PIN%10)));
+			}
+		break;
+		case GREEN://绿灯;亮
+			if(!DEV_MOVE_LIGHT_GREEN_PIN_VALUE)
+			{
+				GPIO_setOutputHighOnPin((DEV_MOVE_LIGHT_GREEN_PIN/10), (1u<<(DEV_MOVE_LIGHT_GREEN_PIN%10)));
+			}
+		break;
+		case YELLOW://黄灯;亮
+			if(!DEV_MOVE_LIGHT_YELLOW_PIN_VALUE)
+			{
+				GPIO_setOutputHighOnPin((DEV_MOVE_LIGHT_YELLOW_PIN/10), (1u<<(DEV_MOVE_LIGHT_YELLOW_PIN%10)));
+			}
+		break;
+	}
+}
+
+
+void ControlIO_MoveLight(void)
+{
+	device_info_t *p_device_info = device_info_get();
+	switch(p_device_info->param.move_light.state)
+	{
+		case OFF://全灭
+			if(!DEV_MOVE_LIGHT_RED_PIN_VALUE || !DEV_MOVE_LIGHT_GREEN_PIN_VALUE || !DEV_MOVE_LIGHT_YELLOW_PIN_VALUE)
 			{
 				GPIO_setOutputLowOnPin((DEV_MOVE_LIGHT_GREEN_PIN/10), (1u<<(DEV_MOVE_LIGHT_GREEN_PIN%10)));
 				GPIO_setOutputLowOnPin((DEV_MOVE_LIGHT_YELLOW_PIN/10), (1u<<(DEV_MOVE_LIGHT_YELLOW_PIN%10)));
 				GPIO_setOutputLowOnPin((DEV_MOVE_LIGHT_RED_PIN/10), (1u<<(DEV_MOVE_LIGHT_RED_PIN%10)));
-				p_device_info->param.move_light.state = OFF;
 			}
 		break;
-		case RED://一般模式//M0=0;M1=0;
-			if(p_device_info->param.move_light.state != RED)
+		case RED://红灯亮
+			if(!DEV_MOVE_LIGHT_RED_PIN_VALUE)
 			{
 				GPIO_setOutputLowOnPin((DEV_MOVE_LIGHT_GREEN_PIN/10), (1u<<(DEV_MOVE_LIGHT_GREEN_PIN%10)));
 				GPIO_setOutputLowOnPin((DEV_MOVE_LIGHT_YELLOW_PIN/10), (1u<<(DEV_MOVE_LIGHT_YELLOW_PIN%10)));
 				GPIO_setOutputHighOnPin((DEV_MOVE_LIGHT_RED_PIN/10), (1u<<(DEV_MOVE_LIGHT_RED_PIN%10)));
-				p_device_info->param.move_light.state = RED;
 			}
 			else if(p_device_info->param.move_light.filcker)
 			{
@@ -264,64 +330,61 @@ bool_t ControlIO_MoveLight(uint8_t type)
 			}
 			
 		break;
-		case GREEN://唤醒模式//M0=1;M1=0;
-			if(p_device_info->param.move_light.state != GREEN)
+		case GREEN://绿灯;亮
+			if(!DEV_MOVE_LIGHT_GREEN_PIN_VALUE)
 			{
 				GPIO_setOutputLowOnPin((DEV_MOVE_LIGHT_YELLOW_PIN/10), (1u<<(DEV_MOVE_LIGHT_YELLOW_PIN%10)));
 				GPIO_setOutputLowOnPin((DEV_MOVE_LIGHT_RED_PIN/10), (1u<<(DEV_MOVE_LIGHT_RED_PIN%10)));
 				GPIO_setOutputHighOnPin((DEV_MOVE_LIGHT_GREEN_PIN/10), (1u<<(DEV_MOVE_LIGHT_GREEN_PIN%10)));
-				p_device_info->param.move_light.state = GREEN;
 			}
 			else if(p_device_info->param.move_light.filcker)
 			{
 				GPIO_toggleOutputOnPin((DEV_MOVE_LIGHT_GREEN_PIN/10), (1u<<(DEV_MOVE_LIGHT_GREEN_PIN%10)));
 			}
 		break;
-		case YELLOW://省电模式//M0=0;M1=1;
-			if(p_device_info->param.move_light.state != YELLOW)
+		case YELLOW://黄灯;亮
+			if(!DEV_MOVE_LIGHT_YELLOW_PIN_VALUE)
 			{
 				GPIO_setOutputLowOnPin((DEV_MOVE_LIGHT_RED_PIN/10), (1u<<(DEV_MOVE_LIGHT_RED_PIN%10)));
 				GPIO_setOutputLowOnPin((DEV_MOVE_LIGHT_GREEN_PIN/10), (1u<<(DEV_MOVE_LIGHT_GREEN_PIN%10)));
 				GPIO_setOutputHighOnPin((DEV_MOVE_LIGHT_YELLOW_PIN/10), (1u<<(DEV_MOVE_LIGHT_YELLOW_PIN%10)));
-				p_device_info->param.move_light.state = YELLOW;
 			}
 			else if(p_device_info->param.move_light.filcker)
 			{
 				GPIO_toggleOutputOnPin((DEV_MOVE_LIGHT_YELLOW_PIN/10), (1u<<(DEV_MOVE_LIGHT_YELLOW_PIN%10)));
 			}
 		break;
-		default:
-			return PLAT_FALSE;
 	}
-    return PLAT_TRUE;
 }
 
-void ControlIO_Buzzer(uint8_t type)
+void ControlIO_Buzzer_State(void)
 {
 	device_info_t *p_device_info = device_info_get();
-	switch(type)
+	switch(p_device_info->param.buzzer)
 	{
 	case BUZZER_OFF://关掉蜂鸣器
-		if(p_device_info->param.buzzer != PLAT_FALSE)
-		{
-			GPIO_setOutputLowOnPin((DEV_BUZZER_PIN/10), (1u<<(DEV_BUZZER_PIN%10)));
-			p_device_info->param.buzzer = PLAT_FALSE;
-		}
+		if(DEV_BUZZER_PIN_VALUE) GPIO_setOutputLowOnPin((DEV_BUZZER_PIN/10), (1u<<(DEV_BUZZER_PIN%10)));
 		break;
 	case BUZZER_OPEN://打开蜂鸣器
-		if(p_device_info->param.buzzer != PLAT_TRUE)
-		{
-			GPIO_setOutputHighOnPin((DEV_BUZZER_PIN/10), (1u<<(DEV_BUZZER_PIN%10)));
-			p_device_info->param.buzzer = PLAT_TRUE;
-		}
+ 		if(!DEV_BUZZER_PIN_VALUE) GPIO_setOutputHighOnPin((DEV_BUZZER_PIN/10), (1u<<(DEV_BUZZER_PIN%10)));
 		break;
-	case BUZZER_FLICKER://打开蜂鸣器
+	}
+}
+
+void ControlIO_Buzzer(void)
+{
+	device_info_t *p_device_info = device_info_get();
+	switch(p_device_info->param.buzzer)
+	{
+	case BUZZER_OFF://关掉蜂鸣器
+		if(DEV_BUZZER_PIN_VALUE) GPIO_setOutputLowOnPin((DEV_BUZZER_PIN/10), (1u<<(DEV_BUZZER_PIN%10)));
+		break;
+	case BUZZER_OPEN://打开蜂鸣器
+		if(!DEV_BUZZER_PIN_VALUE) GPIO_setOutputHighOnPin((DEV_BUZZER_PIN/10), (1u<<(DEV_BUZZER_PIN%10)));
+		break;
+	case BUZZER_FLICKER://蜂鸣器闪鸣
 		GPIO_toggleOutputOnPin((DEV_BUZZER_PIN/10), (1u<<(DEV_BUZZER_PIN%10)));
-		if(p_device_info->param.buzzer != BUZZER_FLICKER)
-		{
-			p_device_info->param.buzzer = BUZZER_FLICKER;
-		}
-		break;	
+		break;
 	}
 }
 

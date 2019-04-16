@@ -11,6 +11,7 @@ static void app_lora_handler(void);
 static void app_cfg_handler(void);
 static void app_indicate_callback(void);
 static void app_indicate_handler(void);
+static void app_key_handler(void);
 
 static uint8_t app_indicate_id = 0;
 
@@ -55,6 +56,12 @@ void app_handler(uint16_t event_type)
 		osel_event_clear(app_event_h, &object);
 		app_indicate_handler();		
 	}
+	else if (event_type & APP_EVENT_KEY)
+	{
+		object = APP_EVENT_KEY;
+		osel_event_clear(app_event_h, &object);
+		app_key_handler();		
+	}
 	else
 	{
 		//DBG_TRACE("no this event type!\r\n");
@@ -64,6 +71,7 @@ void app_handler(uint16_t event_type)
 static void app_tx_handle(void)
 {
 	OSEL_DECL_CRITICAL();
+	device_info_t *device_info = device_info_get();
 	kbuf_t *kbuf = PLAT_NULL;
 	while(1)
 	{
@@ -73,9 +81,62 @@ static void app_tx_handle(void)
 		
 		if (kbuf == PLAT_NULL) return;
 		
-		hal_uart_send_string(UART_DEBUG, kbuf ->base, kbuf->valid_len);
+		if(device_info->param.gateway_ctrl_state)
+		{//串口协议数据可以上传网关发送
+			hal_uart_send_string(UART_DEBUG, kbuf ->base, kbuf->valid_len);
+		}
 		
 		kbuf = kbuf_free(kbuf);
+	}
+}
+
+static void app_key_handler(void)
+{
+	OSEL_DECL_CRITICAL();
+	delay_ms(10);//按键消抖时间
+	if(!get_Key_vlaue())
+	{
+		delay_ms(30);//按键消抖时间
+		if(!get_Key_vlaue())
+		{
+			device_info_t *device_info = device_info_get();
+			uint8_t move_flg = PLAT_FALSE;
+			
+			OSEL_ENTER_CRITICAL();
+			if(device_info->param.move_state == READY_MOVE)
+			{//开始移动
+				device_info->param.move_state = START_MOVE;
+				//行动灯绿，不闪烁,蜂鸣器 停止鸣叫
+				device_info->param.move_light.state = GREEN;
+				device_info->param.move_light.filcker = PLAT_FALSE;
+				device_info->param.buzzer = BUZZER_OFF;
+				move_flg = PLAT_TRUE;
+			}
+			else if(device_info->param.move_state == START_MOVE)
+			{//中途停止
+				device_info->param.move_state = MIDDLE_STOP_MOVE;
+				//行动灯红，不闪烁,蜂鸣器 不鸣叫
+				device_info->param.move_light.state = RED;
+				device_info->param.move_light.filcker = PLAT_FALSE;
+				device_info->param.buzzer = BUZZER_OFF;
+				move_flg = PLAT_TRUE;
+			}
+			else if(device_info->param.move_state == PASSIVITY_MOVE)
+			{//目标停止
+				device_info->param.move_state = STOP_MOVE;
+				//行动灯红，不闪烁,蜂鸣器 停止鸣叫
+				device_info->param.move_light.state = RED;
+				device_info->param.move_light.filcker = PLAT_FALSE;
+				device_info->param.buzzer = BUZZER_OFF;
+				move_flg = PLAT_TRUE;
+			}
+			OSEL_EXIT_CRITICAL();
+			
+			if(move_flg)
+			{
+				app_indicate_event();
+			}
+		}
 	}
 }
 
@@ -168,7 +229,16 @@ static void app_lora_handler(void)
 }
 
 
-
+//接收数据 处理
+static bool_t app_parse(nwk_frm_head_t *frm)
+{
+	device_info_t *device_info = device_info_get();
+	if(frm->id.type_id != GET_DEV_TYPE_ID(device_info->id) || frm->id.group_id != GET_DEV_GROUP_ID(device_info->id) || frm->id.src_id == GET_DEV_ID(device_info->id)|| frm->id.mode_id != DEV_MODE_TERMINAL)
+	{
+		return PLAT_FALSE;
+	}
+	return PLAT_TRUE;
+}
 
 //DBG
 #define CMD_OK		"OK\r\n"
@@ -178,65 +248,149 @@ static void app_lora_handler(void)
 static void app_dbg_handler(void)
 {
 	static bool_t global_dbg_flag = PLAT_FALSE;
-#define BUF_SIZE    36
-		static uint8_t temp_buf[BUF_SIZE];	
+#define BUF_SIZE    40
+	static uint8_t temp_buf[BUF_SIZE];	
 	static uint8_t temp_len = 0;
-
+	
+	static uint8_t frm_flag = NWK_FRM_DEFAULT_FLG;
+	static uint8_t fram_all_len = 0; 
+	static uint8_t fram_head_len = sizeof(nwk_frm_head_t);
+	
 	uint8_t uart_buf[BUF_SIZE];
 	uint8_t size = 0;
-
 	uint32_t value = 0;
-
+	
 	char_t *p_start = PLAT_NULL;	
 	char_t *p_stop = PLAT_NULL; 
 	device_info_t *p_device_info = device_info_get();
-
-	size = hal_uart_read(UART_DEBUG, uart_buf, BUF_SIZE); 
+	
+	size = hal_uart_read(UART_DEBUG, uart_buf, BUF_SIZE);
 	if(size)
-	{		
-	     hal_uart_send_string(UART_DEBUG,uart_buf,size);
-	     
-	     if(temp_len+size >= BUF_SIZE)
-	     {
-	         temp_len = 0;
-	         mem_clr(temp_buf,BUF_SIZE);
-	     }
-	     
-	     for(uint8_t i=0;i<size;i++)
-	     {
-	       temp_buf[temp_len++] = uart_buf[i];
-	       
-	       if(uart_buf[i] == '\r')
-	       {
-	            goto DBG_PROC;
-	       }
-	     }
-	    return;
+	{
+		if(!p_device_info->param.gateway_ctrl_state)
+		{//串口 发送 指令模式
+			hal_uart_send_string(UART_DEBUG,uart_buf,size);
+			
+			if(temp_len+size >= BUF_SIZE)
+			{
+				temp_len = 0;
+				mem_clr(temp_buf,BUF_SIZE);
+			}
+			
+			for(uint8_t i=0;i<size;i++)
+			{
+				temp_buf[temp_len++] = uart_buf[i];
+				
+				if(uart_buf[i] == '\r')
+				{
+					goto DBG_PROC;
+				}
+			}
+		}
+		else
+		{//上位机发送 协议指令模式
+			for(uint8_t i=0; i< size; i++)
+			{
+				temp_buf[temp_len++] = uart_buf[i];
+				if(temp_len >= 2)
+				{
+					//协议数据起始头  
+					if((temp_buf[temp_len-2] == NWK_FRM_HEAD0) && (temp_buf[temp_len-1] == NWK_FRM_HEAD1))
+					{
+						mem_clr(temp_buf,KBUF_SMALL_SIZE);
+						temp_buf[0] = NWK_FRM_HEAD0;
+						temp_buf[1] = NWK_FRM_HEAD1;
+						temp_len = 2;
+						frm_flag = NWK_FRM_HEAD_START_FLG;
+						fram_all_len = 0;
+					}//找到协议头的数据
+					else if((temp_len >= fram_head_len) && (frm_flag == NWK_FRM_HEAD_START_FLG))
+					{
+						nwk_frm_head_t *frm_head = (nwk_frm_head_t *)temp_buf;
+						fram_all_len = frm_head->frm_len+fram_head_len;//一帧数据总长度
+						frm_flag = NWK_FRM_HEAD_LENGTH_FLG;//帧数据帧头接收完成标志
+						
+						if(fram_all_len > BUF_SIZE)
+						{	//帧头数据错误
+							temp_len = 0;
+							mem_clr(temp_buf,BUF_SIZE);
+							
+							fram_all_len = 0;
+							frm_flag = NWK_FRM_DEFAULT_FLG;
+						}
+					}
+					else if((frm_flag == NWK_FRM_HEAD_LENGTH_FLG) && (temp_len >= fram_all_len) && (fram_all_len != 0))
+					{
+						nwk_frm_head_t *frm_head = (nwk_frm_head_t *)temp_buf;
+						if(app_parse(frm_head))
+						{
+							if(frm_head->type == NWK_FRM_DOWN_MTYPE)
+							{//自身为 普通模式
+								switch(frm_head->stype)
+								{
+								case NWK_FRM_DOWN_CTRL_STYPE://下发 控制
+								case NWK_FRM_DOWN_QUERY_STYPE://下发 查询
+								case NWK_FRM_DOWN_CFG_STYPE://下发 配置
+									p_device_info->param.geteway_data.app_ctrl_flg = PLAT_TRUE;
+									p_device_info->param.geteway_data.app_ctrl_order = NWK_FRM_DOWN_CTRL_STYPE;
+									mem_cpy(p_device_info->param.geteway_data.lora_ctrl_content,temp_buf+sizeof(nwk_frm_head_t),BeaconReserveLen);
+									break;
+								case NWK_FRM_DOWN_GATEWAY_STYPE://下发 释放串口协议控制
+									p_device_info->param.gateway_ctrl_state = PLAT_FALSE;
+									break;
+								}
+							}
+						}
+						temp_len = 0;
+						fram_all_len = 0;
+						frm_flag = NWK_FRM_DEFAULT_FLG;
+						mem_clr(temp_buf,BUF_SIZE);
+					}
+					else if(temp_len >= BUF_SIZE)
+					{
+						temp_buf[0] = temp_buf[temp_len-1];
+						temp_len = 1;
+						fram_all_len = 0;
+						frm_flag = NWK_FRM_DEFAULT_FLG;
+						mem_clr(temp_buf+temp_len,BUF_SIZE-temp_len);
+					}
+				}
+			}
+		}
+		return;
 	//////////////////////////////////////////////////////////////////////////////////
 	DBG_PROC:    
-	   DBG_SET_LEVEL(DBG_LEVEL_PRINTF);
-	   DBG_PRINTF("\r\n");
-	   hal_rtc_block_t  rtc_block;
-	   p_start =  strstr((char_t*)temp_buf, "test");
-	   if (p_start)
-	   {
-		   //Enter Test
-		   DBG_PRINTF(CMD_OK);	
-	       DBG_SET_LEVEL(DBG_LEVEL_PRINTF);
-		   test_trigger();
-		   goto QUIT;
-	   }
-	   
-	   p_start =  strstr((char_t*)temp_buf, "reset");
-	   if (p_start)
-	   {
-		   //Enter Reset
-		   DBG_PRINTF(CMD_OK);	
-		   delay_ms(100);
-		   hal_board_reset();
-		   while(1);
-	   }
-       
+		DBG_SET_LEVEL(DBG_LEVEL_PRINTF);
+		DBG_PRINTF("\r\n");
+		hal_rtc_block_t  rtc_block;
+		p_start =  strstr((char_t*)temp_buf, "test");
+		if (p_start)
+		{
+			//Enter Test
+			DBG_PRINTF(CMD_OK);	
+			DBG_SET_LEVEL(DBG_LEVEL_PRINTF);
+			test_trigger();
+			goto QUIT;
+		}
+		
+		p_start =  strstr((char_t*)temp_buf, "reset");
+		if (p_start)
+		{
+			//Enter Reset
+			DBG_PRINTF(CMD_OK);	
+			delay_ms(100);
+			hal_board_reset();
+			while(1);
+		}
+		
+		p_start =  strstr((char_t*)temp_buf, "gateway_order_ctrl");
+		if (p_start)
+		{
+			//Enter 网关模式
+			p_device_info->param.gateway_ctrl_state = PLAT_TRUE;
+			DBG_PRINTF(CMD_OK);
+		}
+		
 	   p_start =  strstr((char_t*)temp_buf, "dbg_app_close");
 	   if (p_start)
 	   {
@@ -245,6 +399,7 @@ static void app_dbg_handler(void)
 	       APP_DBG_INIT();
 		   goto QUIT;
 	   }
+	   
 	   p_start =  strstr((char_t*)temp_buf, "dbg_printf_open");
 	   if (p_start)
 	   {
@@ -286,6 +441,7 @@ static void app_dbg_handler(void)
 		   DBG_PRINTF(CMD_OK);
 		   goto QUIT;
 	   }
+	   
 		p_start =  strstr((char_t*)temp_buf, "query");
 		if (p_start)
 		{
@@ -306,6 +462,36 @@ static void app_dbg_handler(void)
 			DBG_PRINTF("<****************************************>\r\n");
 			goto QUIT;
 		}
+		
+		p_start =  strstr((char_t*)temp_buf, "ready_move");
+		if (p_start)
+		{
+			//准备移动
+			p_device_info->param.move_state = READY_MOVE;
+			//行动灯绿，不闪烁,蜂鸣器 停止鸣叫
+			p_device_info->param.move_light.state = GREEN;
+			p_device_info->param.move_light.filcker = PLAT_TRUE;
+			p_device_info->param.buzzer = BUZZER_FLICKER;////BUZZER_OPEN;
+			app_indicate_event();
+			DBG_PRINTF(CMD_OK);
+			goto QUIT;
+		}
+		
+		p_start =  strstr((char_t*)temp_buf, "passivity_move");
+		if (p_start)
+		{
+			//准备移动
+			p_device_info->param.move_state = PASSIVITY_MOVE;
+			//行动灯绿，不闪烁,蜂鸣器 停止鸣叫
+			p_device_info->param.move_light.state = RED;
+			p_device_info->param.move_light.filcker = PLAT_TRUE;
+			p_device_info->param.buzzer = BUZZER_OPEN;
+			app_indicate_event();
+			
+			DBG_PRINTF(CMD_OK);
+			goto QUIT;
+		}
+		
 		p_start =  strstr((char_t*)temp_buf, "dev_cfg");
 		if (p_start)
 		{
@@ -420,15 +606,18 @@ static void app_indicate_handler(void)
 {
 	device_info_t *p_device_info = device_info_get();
 	
-	ControlIO_StatusLight(p_device_info->param.move_light.state);
-	ControlIO_StatusLight(p_device_info->param.buzzer);
+	ControlIO_MoveLight();
+	ControlIO_Buzzer();
 	
 	if(p_device_info->param.buzzer == BUZZER_FLICKER || p_device_info->param.move_light.filcker == PLAT_TRUE)
 	{
+		app_indicate_id = hal_timer_free(app_indicate_id);
 		app_indicate_id = hal_timer_alloc(APP_TIMEOUT, app_indicate_callback);
 	}
 	else
 	{
+		ControlIO_Buzzer_State();
+		ControlIO_MoveLight_State();
 		app_indicate_id = hal_timer_free(app_indicate_id);
 	}
 }

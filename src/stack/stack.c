@@ -40,7 +40,7 @@ void stack_init(void)
 	stack_event_h = osel_event_create(OSEL_EVENT_TYPE_SEM, 0);
 	DBG_ASSERT(stack_event_h != PLAT_NULL);
 	
-	htimer_init();
+	//htimer_init();
 	
 	list_init(&stack_data0_tx_q);
 	list_init(&stack_data1_tx_q);
@@ -72,14 +72,16 @@ OSEL_DECLARE_TASK(STACK_TASK, param)
 		}
 	}
 }
+
 void stack_uart_lora_irq_enable_callback(void)
 {
 	hal_uart_rx_irq_enable(UART_LORA,1,stack_lora_recv_callback);
 }
+
 //GPS 脉冲回调
 static void stack_gps_pulse_callback(void)
 {
-	uint16_t object = STACK_EVENT_BEACON;
+	uint16_t object = STACK_EVENT_PULSE;
 	osel_event_set(stack_event_h, &object);
 }
 

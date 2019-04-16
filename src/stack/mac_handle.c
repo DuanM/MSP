@@ -17,6 +17,8 @@ static void mac_query_frame_proc(uint8_t *frm_buff);
 static void mac_cfg_frame_proc(uint8_t *frm_buff);
 static void mac_status_info_send(uint8_t *frm_buff,uint16_t frm_len);
 static void mac_time_handler(void);
+static void mac_syn_time_init(void);
+static void mac_pulse_handle(void);
 
 nwk_param_t nwk_param;
 
@@ -36,11 +38,11 @@ void mac_handler(uint16_t event_type)
 		osel_event_clear(stack_event_h, &object);
 		mac_rx_handler();
 	}
-	else if (event_type & STACK_EVENT_BEACON) 
+	else if (event_type & STACK_EVENT_PULSE) 
 	{
-		object = STACK_EVENT_BEACON;
+		object = STACK_EVENT_PULSE;
 		osel_event_clear(stack_event_h, &object);
-		mac_beacon_handler();
+		mac_pulse_handle();
 	}
 	else if (event_type & STACK_EVENT_TIME) 
 	{
@@ -50,99 +52,99 @@ void mac_handler(uint16_t event_type)
 	}
 }
 
-static void mac_beacon_handler(void)
+static uint8_t mac_timeout_id = 0;
+static void mac_pulse_handle(void)
 {
-	OSEL_DECL_CRITICAL();
-	
 	device_info_t *p_device_info = device_info_get();
-	if(!p_device_info->param.lora_state && mac_pib.mode_id == DEV_MODE_CENTRE)
-	{//等待 LORA 为正常工作状态
-		//信标帧时间 间隙
-		kbuf_t *kbuf = kbuf_alloc(KBUF_SMALL_TYPE);
-		if(kbuf==PLAT_NULL) return;
-		nwk_frm_head_t *nwk_frm_head = PLAT_NULL;
-		
-		kbuf->valid_len = sizeof(nwk_frm_head_t);
-		if(p_device_info->param.lora_cfg.OPTION.OPT_MODBUS == PTOP)
-		{//点对点模式
-			nwk_ptop_head_t *nwk_ptop_head =(nwk_ptop_head_t *)kbuf->base;
-			nwk_ptop_head->ADDH = 0xFF;
-			nwk_ptop_head->ADDL = 0xFF;
-			nwk_ptop_head->CHAN = p_device_info->param.lora_cfg.CHAN.CHAN_NUM;
-			kbuf->valid_len += sizeof(nwk_ptop_head_t);
-			nwk_frm_head = (nwk_frm_head_t *)(kbuf->base+sizeof(nwk_ptop_head_t));
-		}
-		else
+	uint8_t slot_num = mac_pib.id%5;
+	
+	if(slot_num)
+	{
+		if(!p_device_info->param.lora_state)
 		{
-			nwk_frm_head = (nwk_frm_head_t *)kbuf->base;
-		}
-		
-		nwk_frm_head->head.first = NWK_FRM_HEAD0;
-		nwk_frm_head->head.second = NWK_FRM_HEAD1;
-		nwk_frm_head->type = NWK_FRM_DOWN_MTYPE;
-		
-		nwk_frm_head->frm_len = sizeof(nwk_beacon_frm_t);
-		mem_cpy(&nwk_frm_head->id,&p_device_info->id,sizeof(nwk_id_t));
-		nwk_frm_head->check = 0x0;
-		
-		kbuf->valid_len += sizeof(nwk_beacon_frm_t);
-		nwk_beacon_frm_t *beacon_frm = (nwk_beacon_frm_t *)(((uint8_t *)nwk_frm_head)+sizeof(nwk_frm_head_t));
-		
-		uint8_t InNetNums=0;//已入网设备个数
-		for(uint8_t i=0;i<INNETMAXNUM;i++)
-		{
-			if(nwk_param.NwkState[i].DeviceState > 0)
+			if( mac_pib.mode_id == DEV_MODE_CENTRE)
 			{
-				beacon_frm->Device_ID[i] = nwk_param.NwkState[i].Device_ID;
-				nwk_param.NwkState[i].DeviceState -= 1;
-				InNetNums += 1;
-				
-				DBG_LORA_PRINTF("1 slot=%d,id=0x%X\r\n",i,nwk_param.NwkState[i].Device_ID);
+				mac_timeout_id=hal_timer_free(mac_timeout_id);
+				mac_timeout_id = hal_timer_alloc(MAC_SLOT_TIMEOUT*slot_num,mac_beacon_handler);
 			}
 			else
 			{
-				for(uint8_t j=(i+1);j<INNETMAXNUM;j++)
-				{
-					if(nwk_param.NwkState[j].Device_ID != 0 && nwk_param.NwkState[j].DeviceState > 0)
-					{
-						nwk_param.NwkState[i].DeviceState = nwk_param.NwkState[j].DeviceState;
-						nwk_param.NwkState[i].Device_ID = nwk_param.NwkState[j].Device_ID;
-						nwk_param.NwkState[j].Device_ID = 0;
-						nwk_param.NwkState[j].DeviceState = 0;
-						
-						beacon_frm->Device_ID[i] = nwk_param.NwkState[i].Device_ID;
-						nwk_param.NwkState[i].DeviceState -= 1;
-						InNetNums += 1;
-						
-						DBG_LORA_PRINTF("2 slot=%d,id=0x%X\r\n",i,nwk_param.NwkState[i].Device_ID);
-						
-						j = INNETMAXNUM;
-					}
-				}
+				mac_timeout_id=hal_timer_free(mac_timeout_id);
+				mac_timeout_id = hal_timer_alloc(MAC_SLOT_TIMEOUT*slot_num,mac_tx_fix);
 			}
 		}
-		//检测和保留 现有的设备 在线个数
-		nwk_param.InNetNum = InNetNums;
-		beacon_frm->InNetNum = InNetNums;
-		if(p_device_info->param.app_ctrl_flg)
-		{
-			p_device_info->param.app_ctrl_flg = PLAT_FALSE;
-			nwk_frm_head->stype = p_device_info->param.app_ctrl_order;
-			mem_cpy(beacon_frm->reserve,p_device_info->param.lora_ctrl_content,BeaconReserveLen);
-		}
-		else
-		{
-			nwk_frm_head->stype = NWK_FRM_DOWN_BEACON_STYPE;
-		}
-		
-		DBG_LORA_PRINTF("InNetNum=%d\r\n",beacon_frm->InNetNum);
-		
-		OSEL_ENTER_CRITICAL();
-		list_behind_put(&kbuf->list, &stack_data1_tx_q);
-		OSEL_EXIT_CRITICAL();
-		
-		stack_tx_event();
 	}
+	else
+	{
+		if(!p_device_info->param.lora_state)
+		{
+			if( mac_pib.mode_id == DEV_MODE_CENTRE)
+			{
+				mac_timeout_id=hal_timer_free(mac_timeout_id);
+				mac_timeout_id = hal_timer_alloc(MAC_SLOT0_TIMEOUT,mac_beacon_handler);
+			}
+			else
+			{
+				mac_timeout_id=hal_timer_free(mac_timeout_id);
+				mac_timeout_id = hal_timer_alloc(MAC_SLOT0_TIMEOUT,mac_tx_fix);
+			}
+		}
+	}
+
+}
+
+
+static void mac_beacon_handler(void)
+{
+	OSEL_DECL_CRITICAL();
+	device_info_t *p_device_info = device_info_get();
+	//信标帧时间 间隙
+	kbuf_t *kbuf = kbuf_alloc(KBUF_SMALL_TYPE);
+	if(kbuf==PLAT_NULL) return;
+	nwk_frm_head_t *nwk_frm_head = PLAT_NULL;
+	
+	kbuf->valid_len = sizeof(nwk_frm_head_t);
+	if(p_device_info->param.lora_cfg.OPTION.OPT_MODBUS == PTOP)
+	{//点对点模式
+		nwk_ptop_head_t *nwk_ptop_head =(nwk_ptop_head_t *)kbuf->base;
+		nwk_ptop_head->ADDH = 0xFF;
+		nwk_ptop_head->ADDL = 0xFF;
+		nwk_ptop_head->CHAN = p_device_info->param.lora_cfg.CHAN.CHAN_NUM;
+		kbuf->valid_len += sizeof(nwk_ptop_head_t);
+		nwk_frm_head = (nwk_frm_head_t *)(kbuf->base+sizeof(nwk_ptop_head_t));
+	}
+	else
+	{
+		nwk_frm_head = (nwk_frm_head_t *)kbuf->base;
+	}
+	
+	nwk_frm_head->head.first = NWK_FRM_HEAD0;
+	nwk_frm_head->head.second = NWK_FRM_HEAD1;
+	nwk_frm_head->type = NWK_FRM_DOWN_MTYPE;
+	
+	nwk_frm_head->frm_len = sizeof(nwk_beacon_frm_t);
+	mem_cpy(&nwk_frm_head->id,&p_device_info->id,sizeof(nwk_id_t));
+	nwk_frm_head->check = 0x0;
+	
+	kbuf->valid_len += sizeof(nwk_beacon_frm_t);
+	nwk_beacon_frm_t *beacon_frm = (nwk_beacon_frm_t *)(((uint8_t *)nwk_frm_head)+sizeof(nwk_frm_head_t));
+	
+	if(p_device_info->param.geteway_data.app_ctrl_flg)
+	{
+		p_device_info->param.geteway_data.app_ctrl_flg = PLAT_FALSE;
+		nwk_frm_head->stype = p_device_info->param.geteway_data.app_ctrl_order;
+		mem_cpy(beacon_frm->reserve,p_device_info->param.geteway_data.lora_ctrl_content,BeaconReserveLen);
+	}
+	else
+	{
+		nwk_frm_head->stype = NWK_FRM_DOWN_BEACON_STYPE;
+	}
+	
+	OSEL_ENTER_CRITICAL();
+	list_behind_put(&kbuf->list, &stack_data1_tx_q);
+	OSEL_EXIT_CRITICAL();
+	
+	stack_tx_event();
 }
 
 //表示 调用发送信标 处理函数 仅用作信标发起模式下的传输板上。
@@ -199,7 +201,7 @@ static void mac_tx_handler(void)
 		
 		hal_uart_send_string(UART_LORA, kbuf ->base, kbuf->valid_len);
 		
-		DBG_LORA_PRINTF("s ");
+		DBG_LORA_PRINTF("t");
 		
 		kbuf = kbuf_free(kbuf);
 	}
@@ -322,7 +324,7 @@ static bool_t mac_parse(nwk_frm_head_t *frm)
 }
 
 //普通节点 接收beacon 同步时间获取
-void mac_syn_time_init(void)
+static void mac_syn_time_init(void)
 {
 	//获取 接收数据到信标帧时，系统的时间
 	htimer_now(&syn_time.attempt_syn_time);
@@ -333,38 +335,9 @@ void mac_syn_time_init(void)
 static void mac_beacon_frame_proc(uint8_t *frm_buff)
 {
 	nwk_frm_head_t *nwk_frm_head = (nwk_frm_head_t *)frm_buff;
-	nwk_beacon_frm_t *beacon_frm = (nwk_beacon_frm_t *)(frm_buff+sizeof(nwk_frm_head_t));
+	mac_pib.centre_id = nwk_frm_head->id.src_id;
 	
-	for(uint8_t i=0;i<beacon_frm->InNetNum;i++)
-	{
-		if(beacon_frm->Device_ID[i]==mac_pib.id)
-		{//表示已经加入
-			mac_pib.centre_id = nwk_frm_head->id.src_id;
-			node_slot_system_init();
-			mac_syn_time_init();
-			m_current_slot = i;
-			set_slot_timer(sigma_all_slot(m_current_slot+1));
-			p_mac_slot_describe[m_current_slot+1].duration = T_FIX_SLOT_MS;
-			p_mac_slot_describe[m_current_slot+1].fn_cb = mac_tx_fix;
-			p_mac_slot_describe[m_current_slot+2].fn_cb = mac_slot_stop;
-			DBG_LORA_PRINTF(" l(%d) ",m_current_slot);
-			return;
-		}
-	}
-	
-	if(beacon_frm->InNetNum < INNETMAXNUM)
-	{//表示还有空余时隙
-		mac_pib.centre_id = nwk_frm_head->id.src_id;
-		node_slot_system_init();
-		mac_syn_time_init();
-		m_current_slot = beacon_frm->InNetNum+(rand()%(INNETMAXNUM-beacon_frm->InNetNum));
-		set_slot_timer(sigma_all_slot(m_current_slot+1));
-		p_mac_slot_describe[m_current_slot+1].duration = T_FIX_SLOT_MS;
-		p_mac_slot_describe[m_current_slot+1].fn_cb = mac_tx_fix;
-		p_mac_slot_describe[m_current_slot+2].fn_cb = mac_slot_stop;
-		DBG_LORA_PRINTF(" 2(%d) ",m_current_slot);
-		return;
-	}
+	DBG_LORA_PRINTF("centre_id[%X] ",mac_pib.centre_id);
 }
 
 //普通节点 控制数据函数
@@ -378,7 +351,6 @@ static void mac_ctrl_frame_proc(uint8_t *frm_buff)
 	p_device_info->param.buzzer = beacon_ctrl_frm->buzzer;
 	stack_indicate_handle();
 }
-
 
 //普通节点 查询数据函数
 static void mac_query_frame_proc(uint8_t *frm_buff)
@@ -422,66 +394,31 @@ static void mac_cfg_frame_proc(uint8_t *frm_buff)
 static void mac_status_info_send(uint8_t *frm_buff,uint16_t frm_len)
 {//上传接收 入网和接收普通节点的状态和配置数据信息支，仅持点对点
 	OSEL_DECL_CRITICAL();
-
 	nwk_frm_head_t *nwk_frm_head = (nwk_frm_head_t *)frm_buff;
 	nwk_status_frm_t *status_frm = (nwk_status_frm_t *)(frm_buff+sizeof(nwk_frm_head_t));
 	if(status_frm->dst_id != mac_pib.id) return;
 	
-	uint8_t i=0;
-	for(i=0;i < INNETMAXNUM;i++)
-	{
-		if(nwk_param.NwkState[i].Device_ID == nwk_frm_head->id.src_id)
-		{
-			nwk_param.NwkState[i].DeviceState = NET_ALIVE_CNT;
-			break;
-		}
-	}
-	// 有待 后买来 写
-	if(nwk_param.InNetNum < INNETMAXNUM)
-	{//有空余时隙
-		if(i == INNETMAXNUM)
-		{//表示还没有入网
-			for(i=0;i<INNETMAXNUM;i++)
-			{
-				if(nwk_param.NwkState[i].DeviceState == 0 && nwk_param.NwkState[i].Device_ID  == 0)
-				{//入网
-					nwk_param.NwkState[i].Device_ID = nwk_frm_head->id.src_id;
-					nwk_param.NwkState[i].DeviceState = NET_ALIVE_CNT;
-					nwk_param.InNetNum += 1;
-					
-					DBG_LORA_PRINTF(" id(%X) ",nwk_param.NwkState[i].Device_ID);
-					break;
-				}
-			}
-		}
-		kbuf_t *kbuf = kbuf_alloc(KBUF_SMALL_TYPE);
-		if(kbuf==PLAT_NULL) return;
-		list_t *stack_priv_list = stack_priv_list_get_handle();
-		
-		//数据发送到APP，Uart 发送给 PC
-		mem_cpy(kbuf->base,frm_buff,frm_len);
-		kbuf->valid_len = frm_len;
-		
-		OSEL_ENTER_CRITICAL();
-		list_behind_put(&kbuf->list, stack_priv_list);
-		OSEL_EXIT_CRITICAL();
-		
-		stack_priv_list_send_handle();
-	}
-	else
-	{
-		DBG_LORA_PRINTF("no slot to in\r\n");
-	}
+	DBG_LORA_PRINTF(" id[%X] ",nwk_frm_head->id.src_id);
+	
+	kbuf_t *kbuf = kbuf_alloc(KBUF_SMALL_TYPE);
+	if(kbuf==PLAT_NULL) return;
+	list_t *stack_priv_list = stack_priv_list_get_handle();
+	
+	//数据发送到APP，Uart 发送给 PC
+	mem_cpy(kbuf->base,frm_buff,frm_len);
+	kbuf->valid_len = frm_len;
+	
+	OSEL_ENTER_CRITICAL();
+	list_behind_put(&kbuf->list, stack_priv_list);
+	OSEL_EXIT_CRITICAL();
+	
+	stack_priv_list_send_handle();
 }
 
 //普通节点 时隙发送
 static void mac_tx_fix(void)
 {
 	OSEL_DECL_CRITICAL();
-	
-	DBG_LORA_PRINTF("t");
-	
-	//mac_slot_stop();
 	
 	kbuf_t *kbuf = kbuf_alloc(KBUF_SMALL_TYPE);
 	if(kbuf==PLAT_NULL) return;

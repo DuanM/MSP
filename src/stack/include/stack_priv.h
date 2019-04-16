@@ -14,7 +14,7 @@
 
 #define STACK_EVENT_TX			(1u << 0)
 #define STACK_EVENT_RX			(1u << 1)
-#define STACK_EVENT_BEACON		(1u << 2)
+#define STACK_EVENT_PULSE		(1u << 2)
 #define STACK_EVENT_TIME		(1u << 3)
 
 #define STACK_EVENT_TRANS_TX	(1u << 4)
@@ -71,14 +71,6 @@ typedef struct
 #define FIX_SLOT_MAX_NUM		8
 
 #pragma pack(1)
-
-//记录超帧指示相关数据
-//typedef struct
-//{
-//	uint8_t superfrm_nbr:	3,//传输设备1s的分为的块
-//			superfrm_no:	3,//传输设备工作的间隙
-//			slot_cur_max:	2,//小系统内竞争时隙个数
-//}mac_superfrm_instr_t;
 
 //信标帧数据格式
 typedef struct

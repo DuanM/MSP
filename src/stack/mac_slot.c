@@ -8,7 +8,7 @@ extern time_t global_time;
 
 static mac_slot_t node_slot_system[] =
 {	
-	{MAC_SLOT_NODE_RX_BEACON, 		T_FIX_SLOT_DATA_MS,			mac_idle},
+	{MAC_SLOT_NODE_RX_BEACON, 		T_BEACON_OFFSET,				mac_idle},
 	{MAC_SLOT_NODE_SLOT_FIX0,	 	T_FIX_SLOT_MS,				mac_idle},
 	{MAC_SLOT_NODE_SLOT_FIX1,	 	T_FIX_SLOT_MS,				mac_idle},
 	{MAC_SLOT_NODE_SLOT_FIX2,	 	T_FIX_SLOT_MS,				mac_idle},
@@ -47,8 +47,7 @@ mac_syn_time_t syn_time;
 void node_slot_system_init(void)
 {
 	mac_slot_stop();
-	node_slot_system[0].fn_cb = mac_idle;
-	for(uint8_t i=1;i<MAC_SLOT_NODE_MAX;i++)
+	for(uint8_t i=0;i<MAC_SLOT_NODE_SLOT_FIX7;i++)
 	{
 		node_slot_system[MAC_SLOT_NODE_SLOT_FIX0+i].duration = T_FIX_SLOT_MS;
 		node_slot_system[MAC_SLOT_NODE_SLOT_FIX0+i].fn_cb = mac_idle;

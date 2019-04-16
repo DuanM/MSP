@@ -25,9 +25,31 @@
 
 
 
+//设备行动指示
+#define IDLE_MOVE			0x0
+#define READY_MOVE			0x1
+#define	START_MOVE			0x2
+#define	MIDDLE_STOP_MOVE	0x3
+#define	PASSIVITY_MOVE		0x4
+#define	STOP_MOVE			0x5
+
+
+
+/**
+ * device LORA 信道设置范围
+ */
 #define  LORA_DEFAULT_CHAN 23 //0-36H
 #define  LORA_MIN_CHAN 0
 #define  LORA_MAX_CHAN 36
+
+
+/**
+ * device Lora TRS_PER 发射功率(大约值)
+ */
+#define PER30dBm	0x0//（默认）
+#define	PER27dBm	0x1
+#define	PER24dBm	0x2
+#define	PER21dBm	0x3 
 
 
 /**
@@ -97,7 +119,6 @@
 
 
 #pragma pack(1)
-
 
 /**
  * device Lora mode
@@ -224,32 +245,41 @@ typedef struct
  */
 typedef struct
 {
-	uint8_t  state		:4,
-			 filcker	:4;
+	uint8_t  state		:7,
+			 filcker	:1;
 }dev_light_t;
 
-
+/**
+ * device getway order param
+ */
+#define  BeaconReserveLen 10
+typedef struct
+{
+	uint8_t app_ctrl_order; //上位机控制命令
+	uint8_t app_ctrl_flg; //上位机控制命令收到标志位
+	uint8_t lora_ctrl_content[BeaconReserveLen];
+}dev_gateway_order_t;
 
 /**
  * device prama
  */
- #define  BeaconReserveLen 10
+
 typedef struct
 {
 	uint16_t software;
 	uint8_t lora_state;
-	uint8_t app_ctrl_order;
-	uint8_t app_ctrl_flg;
-	uint8_t lora_ctrl_content[BeaconReserveLen];
+	uint8_t gateway_ctrl_state;
+	
+	dev_gateway_order_t geteway_data;
 	dev_lora_t lora_cfg;
 	dev_lora_mode_t lora_mode;
 	
+	uint8_t move_state; //物体移动状态
 	dev_light_t state_light;
 	dev_light_t move_light;
 	uint8_t  buzzer;
 	dev_fxos_t fxos_data;
 }dev_param_t;
-
 
 /**
  * device info
@@ -265,12 +295,6 @@ typedef struct
 	dev_param_t param;
 }device_info_t;
 
-typedef enum
-{
-	DEV_MODE_GENERAL = 0, //普通节点
-	DEV_MODE_CENTRE  = 1, //中心汇聚节点
-	DEV_MODE_TERMINAL= 2  //上位机设备
-}device_type_t;
 
 #pragma pack()
 

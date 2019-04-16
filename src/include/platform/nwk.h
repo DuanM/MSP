@@ -3,9 +3,14 @@
 
 #include <device.h>
 
-#define INNETMAXNUM 4 //设备入网支持个数
 #define LORA_CFG_MODE 0xC0
 #define NET_ALIVE_CNT 10
+
+#define	DEV_MODE_GENERAL  0x0 //普通节点
+#define	DEV_MODE_CENTRE   0x01 //中心汇聚节点
+#define	DEV_MODE_TERMINAL 0x02  //上位机设备
+#define MAC_SLOT_TIMEOUT	205000 //时隙时间
+#define MAC_SLOT0_TIMEOUT	13000 //时隙时间
 
 //****************************************************
 //uart 通信数据协议头
@@ -19,6 +24,8 @@
 #define NWK_FRM_DOWN_CTRL_STYPE		0x01//下发 控制
 #define NWK_FRM_DOWN_QUERY_STYPE	0x02//下发 查询
 #define NWK_FRM_DOWN_CFG_STYPE		0x03//下发 配置
+#define NWK_FRM_DOWN_GATEWAY_STYPE	0xFF//下发 释放串口协议控制
+
 
 #define NWK_FRM_UP_STATE_STYPE		0x00//上传 状态
 #define NWK_FRM_UP_CFGINFO_STYPE	0x01//上传 配置
@@ -49,15 +56,7 @@
 
 typedef struct
  {
-	uint8_t DeviceState;//已入网设备个数
-	uint8_t Device_ID;//节点ID按入网顺序排列
-}nwk_state_param_t;
-
-typedef struct
- {
  	uint8_t ctrl_type; //是否获取 上位机 的获取配置指令
-	uint8_t InNetNum; 
-	nwk_state_param_t NwkState[INNETMAXNUM];//节点ID按入网顺序排列
 }nwk_param_t;
 
 extern nwk_param_t nwk_param;
@@ -112,8 +111,6 @@ typedef struct
 //beacon帧
 typedef struct
 {
-	uint8_t InNetNum;//已入网设备个数
-	uint8_t Device_ID[INNETMAXNUM];//节点ID按入网顺序排列
 	uint8_t reserve[BeaconReserveLen];//保留字节
 }nwk_beacon_frm_t;
 

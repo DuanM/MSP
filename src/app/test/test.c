@@ -1488,20 +1488,20 @@ static void aux_uart_rx_cb()
 {
 	uint8_t buffer, len;
 
-	app_sensor_inside_frm_head *p_snr_inside_frm = (app_sensor_inside_frm_head *)aux_data_array;
-
-	app_aux_compass_t *p_aux_compass 
-			= (app_aux_compass_t *)(&aux_data_array[sizeof(app_sensor_inside_frm_head)]);
-	app_aux_postion_t *p_aux_position 
-			= (app_aux_postion_t *)(&aux_data_array[sizeof(app_sensor_inside_frm_head)]);
-	app_aux_altitude_t *p_aux_altitude 
-			= (app_aux_altitude_t *)(&aux_data_array[sizeof(app_sensor_inside_frm_head)]);
-	app_aux_illumination_t *p_aux_illumination 
-			= (app_aux_illumination_t *)(&aux_data_array[sizeof(app_sensor_inside_frm_head)]);
-	app_aux_cal_compass_t *p_aux_cal_compass 
-			= (app_aux_cal_compass_t *)(&aux_data_array[sizeof(app_sensor_inside_frm_head)]);
-	app_aux_version_t *p_aux_version
-			= (app_aux_version_t *)(&aux_data_array[sizeof(app_sensor_inside_frm_head)]);
+//	app_sensor_inside_frm_head *p_snr_inside_frm = (app_sensor_inside_frm_head *)aux_data_array;
+//
+//	app_aux_compass_t *p_aux_compass 
+//			= (app_aux_compass_t *)(&aux_data_array[sizeof(app_sensor_inside_frm_head)]);
+//	app_aux_postion_t *p_aux_position 
+//			= (app_aux_postion_t *)(&aux_data_array[sizeof(app_sensor_inside_frm_head)]);
+//	app_aux_altitude_t *p_aux_altitude 
+//			= (app_aux_altitude_t *)(&aux_data_array[sizeof(app_sensor_inside_frm_head)]);
+//	app_aux_illumination_t *p_aux_illumination 
+//			= (app_aux_illumination_t *)(&aux_data_array[sizeof(app_sensor_inside_frm_head)]);
+//	app_aux_cal_compass_t *p_aux_cal_compass 
+//			= (app_aux_cal_compass_t *)(&aux_data_array[sizeof(app_sensor_inside_frm_head)]);
+//	app_aux_version_t *p_aux_version
+//			= (app_aux_version_t *)(&aux_data_array[sizeof(app_sensor_inside_frm_head)]);
 	do
 	{
 		len = hal_uart_read(UART_DEBUG, &buffer, 1);
@@ -1526,61 +1526,61 @@ static void aux_uart_rx_cb()
 		{            
 			aux_data_array[aux_data_array_index++] = buffer;
 			
-			if (aux_data_array_index >= sizeof(app_sensor_inside_frm_head) 
-				&& p_snr_inside_frm->payload_len == aux_data_array_index - sizeof(app_sensor_inside_frm_head))
-			{
-				aux_data_array_index = 0;                
-                DBG_PRINTF("\r\n");                
-				switch (p_snr_inside_frm->sub_type)
-				{					
-					case AUX_REQ_COMPASS_A:
-					case AUX_REQ_COMPASS_B:
-						DBG_PRINTF("type=%d\r\n", p_aux_compass->type);
-						DBG_PRINTF("direction=%d.%d\r\n", p_aux_compass->dir_int, p_aux_compass->dir_dec);
-						DBG_PRINTF("pitch=");
-						if (p_aux_compass->pitch_pm)
-						{
-							DBG_PRINTF("-");
-						}
-						DBG_PRINTF("%d.%d\r\n", p_aux_compass->pitch_int, p_aux_compass->pitch_dec);
-						DBG_PRINTF("roll=");
-						if (p_aux_compass->roll_pm)
-						{
-							DBG_PRINTF("-");
-						}
-						DBG_PRINTF("%d.%d\r\n", p_aux_compass->roll_int, p_aux_compass->roll_dec);
-						break;
-					case AUX_REQ_POSITION:
-						DBG_PRINTF("latitude=%c", p_aux_position->lat_type);
-						DBG_PRINTF("-%lf\r\n", (fp64_t)p_aux_position->lat/1000000);
-						DBG_PRINTF("longtitude=%c", p_aux_position->lngt_type);
-						DBG_PRINTF("-%lf\r\n", (fp64_t)p_aux_position->lngt/1000000);
-						break;
-					case AUX_REQ_ALTITUDE:
-						DBG_PRINTF("altitude="); 
-						if (p_aux_altitude->alt_pm)
-						{
-							DBG_PRINTF("-");
-						}
-						DBG_PRINTF("%d.%d\r\n", p_aux_altitude->alt_int, p_aux_altitude->alt_dec);
-						break;
-					case AUX_REQ_ILLUM:
-						DBG_PRINTF("illumination=%d\r\n", p_aux_illumination->illum);
-						break;
-					case AUX_REQ_VERSION:
-						DBG_PRINTF("version=0x%04x\r\n", p_aux_version->version);
-						break;
-					case AUX_CAL_COMPASS:
-						DBG_PRINTF("Cal complete rate=%d%\r\n", p_aux_cal_compass->rate);
-						if (p_aux_cal_compass->rate == 100)
-						{
-                            DBG_PRINTF("Cal complete!\r\n");
-							aux_timeout_cb();
-						}
-						break;
-					default:break;
-				}
-			}
+//			if (aux_data_array_index >= sizeof(app_sensor_inside_frm_head) 
+//				&& p_snr_inside_frm->payload_len == aux_data_array_index - sizeof(app_sensor_inside_frm_head))
+//			{
+//				aux_data_array_index = 0;                
+//                DBG_PRINTF("\r\n");                
+//				switch (p_snr_inside_frm->sub_type)
+//				{					
+//					//case AUX_REQ_COMPASS_A:
+//					//case AUX_REQ_COMPASS_B:
+//						DBG_PRINTF("type=%d\r\n", p_aux_compass->type);
+//						DBG_PRINTF("direction=%d.%d\r\n", p_aux_compass->dir_int, p_aux_compass->dir_dec);
+//						DBG_PRINTF("pitch=");
+//						if (p_aux_compass->pitch_pm)
+//						{
+//							DBG_PRINTF("-");
+//						}
+//						DBG_PRINTF("%d.%d\r\n", p_aux_compass->pitch_int, p_aux_compass->pitch_dec);
+//						DBG_PRINTF("roll=");
+//						if (p_aux_compass->roll_pm)
+//						{
+//							DBG_PRINTF("-");
+//						}
+//						DBG_PRINTF("%d.%d\r\n", p_aux_compass->roll_int, p_aux_compass->roll_dec);
+//						break;
+//					//case AUX_REQ_POSITION:
+//						DBG_PRINTF("latitude=%c", p_aux_position->lat_type);
+//						DBG_PRINTF("-%lf\r\n", (fp64_t)p_aux_position->lat/1000000);
+//						DBG_PRINTF("longtitude=%c", p_aux_position->lngt_type);
+//						DBG_PRINTF("-%lf\r\n", (fp64_t)p_aux_position->lngt/1000000);
+//						break;
+//					//case AUX_REQ_ALTITUDE:
+//						DBG_PRINTF("altitude="); 
+//						if (p_aux_altitude->alt_pm)
+//						{
+//							DBG_PRINTF("-");
+//						}
+//						DBG_PRINTF("%d.%d\r\n", p_aux_altitude->alt_int, p_aux_altitude->alt_dec);
+//						break;
+//					//case AUX_REQ_ILLUM:
+//						DBG_PRINTF("illumination=%d\r\n", p_aux_illumination->illum);
+//						break;
+///case AUX_REQ_VERSION:
+//						DBG_PRINTF("version=0x%04x\r\n", p_aux_version->version);
+//						break;
+//					case AUX_CAL_COMPASS:
+//						DBG_PRINTF("Cal complete rate=%d%\r\n", p_aux_cal_compass->rate);
+//						if (p_aux_cal_compass->rate == 100)
+//						{
+//                            DBG_PRINTF("Cal complete!\r\n");
+//							aux_timeout_cb();
+//						}
+//						break;
+//					default:break;
+//				}
+//			}
 		}
 		else
 		{
@@ -1635,40 +1635,40 @@ static void test_aux_handler(void)
             {
                 case 'c':
                     p_cmd = (uint8_t *)aux_cmd_read_info_format;
-					p_cmd[3] = AUX_REQ_COMPASS_B;
+					//p_cmd[3] = AUX_REQ_COMPASS_B;
                     len = sizeof(aux_cmd_read_info_format);						
                     break;
                 case 'p':
                     p_cmd = (uint8_t *)aux_cmd_read_info_format;
-					p_cmd[3] = AUX_REQ_POSITION;
+					//p_cmd[3] = AUX_REQ_POSITION;
                     len = sizeof(aux_cmd_read_info_format);						
                     break;
                 case 'a':
                     p_cmd = (uint8_t *)aux_cmd_read_info_format;
-					p_cmd[3] = AUX_REQ_ALTITUDE;
+					//p_cmd[3] = AUX_REQ_ALTITUDE;
                     len = sizeof(aux_cmd_read_info_format);						
                     break;
                 case 'i':
                     p_cmd = (uint8_t *)aux_cmd_read_info_format;
-					p_cmd[3] = AUX_REQ_ILLUM;
+					//p_cmd[3] = AUX_REQ_ILLUM;
                     len = sizeof(aux_cmd_read_info_format);						
                     break;
 				 case 'm':
                     p_cmd = (uint8_t *)aux_cmd_read_info_format;
-					p_cmd[3] = AUX_CAL_COMPASS;
+					//p_cmd[3] = AUX_CAL_COMPASS;
                     wait_us = 60000000;
                     len = sizeof(aux_cmd_read_info_format);						
                     break;
 				case 'M':
 					p_cmd = (uint8_t *)aux_cmd_read_info_format;
-					p_cmd[3] = AUX_CAL_SOFT_COMPASS;
+					//p_cmd[3] = AUX_CAL_SOFT_COMPASS;
                     wait_us = 120000000;
                     len = sizeof(aux_cmd_read_info_format);
 					uart_state = PLAT_TRUE;
                     break;					
 				case 'v':
                     p_cmd = (uint8_t *)aux_cmd_read_info_format;
-					p_cmd[3] = AUX_REQ_VERSION;
+					//p_cmd[3] = AUX_REQ_VERSION;
                     len = sizeof(aux_cmd_read_info_format);						
                     break;	
                 case 't':

@@ -8,12 +8,9 @@
 #define T_SUPER_FRM				1000
 #define T_CAPTURE_TIME			1666
 
-#define T_FIX_SLOT_MS			200
-
-#define T_FIX_SLOT_DATA_MS		20 //发送每帧数据所需要的时间
-
+#define T_FIX_SLOT_MS			200 //时隙时间
+#define T_FIX_SLOT_DATA_MS		5 //起始点延时
 #define T_BEACON_OFFSET			1
-#define T_SUPER_OFFSET			10	//作为提前超帧醒来处于接收的状态
 
 //#if (T_SUPER_FRM <= T_GROUP_MS*MAX_GROUP_NUM)
 //#error ("T_SUPER_FRM define time must be more than total used time")
@@ -78,9 +75,9 @@ extern mac_slot_t *p_mac_slot_describe;
 
 typedef struct
 {
-	uint8_t id;							//
-	uint8_t group_id;						//
-	uint8_t mode_id;						//
+	uint8_t id;
+	uint8_t group_id;
+	uint8_t mode_id;
 	uint8_t type_id;
 	
 	uint8_t centre_id;				//

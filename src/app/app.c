@@ -16,6 +16,8 @@ list_t app_data_tx_q;
 static void app_dbg_recv_callback(void);
 static void app_lora_cfg_event(void);
 static void app_tx_event(void);
+static void app_key_callback(void);
+
 static uint8_t lora_cfg_timeout_id = 0;
 
 void app_init(void)
@@ -33,6 +35,8 @@ void app_init(void)
 	hal_uart_rx_irq_enable(UART_DEBUG,1,app_dbg_recv_callback);
 	
 	hal_uart_init(UART_GPS, 9600);//GPS
+	
+	ControlIO_Key_Callback(app_key_callback);
 	
 	list_init(&app_data_tx_q);
 	stack_priv_list_cfg(&app_data_tx_q);
@@ -64,14 +68,6 @@ OSEL_DECLARE_TASK(APP_TASK, param)
 		}
 	}
 }
-
-//dbg
-static void app_dbg_recv_callback(void)
-{
-	uint16_t object = APP_EVENT_DBG_RX;
-	osel_event_set(app_event_h, &object);
-}
-
 void app_lora_recv_callback(void)
 {
 	uint16_t object = APP_EVENT_LORA_RX;
@@ -81,6 +77,13 @@ void app_lora_recv_callback(void)
 void app_indicate_event(void)
 {
 	uint16_t object = APP_EVENT_INDICATE;
+	osel_event_set(app_event_h, &object);
+}
+
+//dbg
+static void app_dbg_recv_callback(void)
+{
+	uint16_t object = APP_EVENT_DBG_RX;
 	osel_event_set(app_event_h, &object);
 }
 
@@ -104,6 +107,11 @@ static void app_tx_event(void)
 	osel_event_set(app_event_h, &object);
 }
 
+static void app_key_callback(void)
+{
+	uint16_t object = APP_EVENT_KEY;
+	osel_event_set(app_event_h, &object);
+}
 
 
 

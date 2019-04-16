@@ -71,6 +71,15 @@ void device_info_init(void)
  	pg_device_info->pos.sn = 'V';
 	pg_device_info->pos.we = 'V';
 	
+	if(pg_device_info->lora_cfg.ADDL != GET_DEV_ID(pg_device_info->id))
+	{
+		pg_device_info->lora_cfg.ADDH = 0x00;
+		pg_device_info->lora_cfg.ADDL = GET_DEV_ID(pg_device_info->id);
+		OSEL_ENTER_CRITICAL();
+		hal_flash_write(DEVICE_STORE_INDEX);
+		OSEL_EXIT_CRITICAL();
+	}
+	
 	mem_cpy(&pg_device_info->param.lora_cfg,&pg_device_info->lora_cfg,sizeof(dev_lora_t));
 	
 	//罗盘

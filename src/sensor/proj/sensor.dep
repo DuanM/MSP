@@ -80,15 +80,6 @@
             </inputs>
         </file>
         <file>
-            <name>[ROOT_NODE]</name>
-            <outputs>
-                <tool>
-                    <name>IARCHIVE</name>
-                    <file> 50</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
             <name>$PROJ_DIR$\..\sensor.c</name>
             <outputs>
                 <tool>
@@ -106,6 +97,15 @@
                     <file> 15 24 25 27 39 26 47 48 38 35 31 43 36 42 40 23 29 28 32 37 41 33 30 51 20 52 22 21 7 6 11 9 10 8 13 14 12 1 5 4 0 2 3 45 53 44 46 57 55 56 16 17</file>
                 </tool>
             </inputs>
+        </file>
+        <file>
+            <name>[ROOT_NODE]</name>
+            <outputs>
+                <tool>
+                    <name>IARCHIVE</name>
+                    <file> 50</file>
+                </tool>
+            </outputs>
         </file>
     </configuration>
     <configuration>
