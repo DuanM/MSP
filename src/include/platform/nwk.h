@@ -9,15 +9,18 @@
 #define	DEV_MODE_GENERAL  0x0 //普通节点
 #define	DEV_MODE_CENTRE   0x01 //中心汇聚节点
 #define	DEV_MODE_TERMINAL 0x02  //上位机设备
-#define MAC_SLOT_TIMEOUT	205000 //时隙时间
-#define MAC_SLOT0_TIMEOUT	13000 //时隙时间
+
+#define DEV_NET_MAX_NUM   0x04 //网络最多支持设备数
+#define MAC_SLOT_TIMEOUT  20000 //时隙时间
+#define MAC_SLOT0_TIMEOUT 200000 //时隙时间
+#define MAC_SLOT1_TIMEOUT 200000 //接收时隙
 
 //****************************************************
 //uart 通信数据协议头
 #define NWK_FRM_HEAD0               0xD6
 #define NWK_FRM_HEAD1               0xA4
 
-#define NWK_FRM_DOWN_MTYPE			0x01//下传
+#define NWK_FRM_DOWN_MTYPE			0x01//下传c
 #define NWK_FRM_UP_MTYPE			0x02//上传
 
 #define NWK_FRM_DOWN_BEACON_STYPE	0x00//下发 信标

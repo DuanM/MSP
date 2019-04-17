@@ -12,6 +12,7 @@ static void app_cfg_handler(void);
 static void app_indicate_callback(void);
 static void app_indicate_handler(void);
 static void app_key_handler(void);
+static void app_aux_handler(void);
 
 static uint8_t app_indicate_id = 0;
 
@@ -62,9 +63,26 @@ void app_handler(uint16_t event_type)
 		osel_event_clear(app_event_h, &object);
 		app_key_handler();		
 	}
+	else if (event_type & APP_EVENT_AUX)
+	{
+		object = APP_EVENT_AUX;
+		osel_event_clear(app_event_h, &object);
+		app_aux_handler();		
+	}
 	else
 	{
 		//DBG_TRACE("no this event type!\r\n");
+	}
+}
+static void app_aux_handler(void)
+{
+	if(DEV_AUX_PIN_VALUE)
+	{
+		DBG_LORA_PRINTF("P");
+	}
+	else
+	{
+		DBG_LORA_PRINTF("D");
 	}
 }
 
@@ -94,10 +112,10 @@ static void app_key_handler(void)
 {
 	OSEL_DECL_CRITICAL();
 	delay_ms(10);//按键消抖时间
-	if(!get_Key_vlaue())
+	if(!DEV_KEY_PIN_VALUE)
 	{
 		delay_ms(30);//按键消抖时间
-		if(!get_Key_vlaue())
+		if(!DEV_KEY_PIN_VALUE)
 		{
 			device_info_t *device_info = device_info_get();
 			uint8_t move_flg = PLAT_FALSE;

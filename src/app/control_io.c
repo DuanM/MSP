@@ -8,35 +8,6 @@
 #include <control_io.h>
 
 
-#define ACS_LORA_PWR_PIN		40u
-#define SEN_GPS_PWR_PIN			41u
-#define SEN_GPS_PULSE_PIN		34u //GPS 脉冲管脚
-
-#define ACS_LORA_AUX_PIN		24u //LORA AUX管脚
-#define ACS_LORA_M1_PIN			25u //LORA M1管脚
-#define ACS_LORA_M0_PIN			26u //LORA M0管脚
-
-#define DEV_STATE_LIGHT_RED_PIN			52u //工作状态灯 红管脚
-#define DEV_STATE_LIGHT_GREEN_PIN		51u //工作状态灯 绿管脚
-#define DEV_STATE_LIGHT_YELLOW_PIN		50u //工作状态灯 黄管脚
-
-#define DEV_STATE_LIGHT_RED_PIN_VALUE GPIO_getInputPinValue((DEV_STATE_LIGHT_RED_PIN/10), (1u<<(DEV_STATE_LIGHT_RED_PIN%10))
-#define DEV_STATE_LIGHT_GREEN_PIN_VALU GPIO_getInputPinValue((DEV_STATE_LIGHT_GREEN_PIN/10), (1u<<(DEV_STATE_LIGHT_GREEN_PIN%10)))
-#define DEV_STATE_LIGHT_YELLOW_PIN_VALUE GPIO_getInputPinValue((DEV_STATE_LIGHT_YELLOW_PIN/10), (1u<<(DEV_STATE_LIGHT_YELLOW_PIN%10)))
-
-#define DEV_MOVE_LIGHT_RED_PIN			47u //移动状态灯 红管脚
-#define DEV_MOVE_LIGHT_GREEN_PIN		46u //移动状态灯 绿管脚
-#define DEV_MOVE_LIGHT_YELLOW_PIN		45u //移动状态灯 黄管脚
-
-#define DEV_MOVE_LIGHT_RED_PIN_VALUE     GPIO_getInputPinValue((DEV_MOVE_LIGHT_RED_PIN/10), (1u<<(DEV_MOVE_LIGHT_RED_PIN%10)))
-#define DEV_MOVE_LIGHT_GREEN_PIN_VALUE   GPIO_getInputPinValue((DEV_MOVE_LIGHT_GREEN_PIN/10), (1u<<(DEV_MOVE_LIGHT_GREEN_PIN%10)))
-#define DEV_MOVE_LIGHT_YELLOW_PIN_VALUE  GPIO_getInputPinValue((DEV_MOVE_LIGHT_YELLOW_PIN/10), (1u<<(DEV_MOVE_LIGHT_YELLOW_PIN%10)))
-
-#define DEV_BUZZER_PIN					43u //移动蜂鸣器管脚
-#define DEV_BUZZER_PIN_VALUE   GPIO_getInputPinValue((DEV_BUZZER_PIN/10), (1u<<(DEV_BUZZER_PIN%10)))
-
-#define DEV_SW1_PIN						44u //移动按键管脚
-
 static void Key_Interrupt_Callback(void);
 static void GPS_Interrupt_Callback(void);
 
@@ -46,7 +17,7 @@ void ControlIO_Init(void)
 	
 	GPIO_setAsOutputPin((ACS_LORA_M0_PIN/10), (1u<<(ACS_LORA_M0_PIN%10)));
 	GPIO_setAsOutputPin((ACS_LORA_M1_PIN/10), (1u<<(ACS_LORA_M1_PIN%10)));
-	GPIO_setAsOutputPin((ACS_LORA_AUX_PIN/10), (1u<<(ACS_LORA_AUX_PIN%10)));
+	GPIO_setAsInputPin((ACS_LORA_AUX_PIN/10), (1u<<(ACS_LORA_AUX_PIN%10)));
 	
 	GPIO_setAsOutputPin((DEV_STATE_LIGHT_RED_PIN/10), (1u<<(DEV_STATE_LIGHT_RED_PIN%10)));
 	GPIO_setAsOutputPin((DEV_STATE_LIGHT_GREEN_PIN/10), (1u<<(DEV_STATE_LIGHT_GREEN_PIN%10)));
@@ -149,6 +120,36 @@ void ControlIO_GPS_Pulse_Callback(fpv_t callback)
 	GPIO_enableInterrupt((SEN_GPS_PULSE_PIN/10), (1u<<(SEN_GPS_PULSE_PIN%10)));
 }
 
+static fpv_t auxfunc;
+
+static void Aux_Interrupt_Callback(void)
+{
+	uint_fast16_t status; 
+	status = GPIO_getInterruptStatus((ACS_LORA_AUX_PIN/10),(1u<<(ACS_LORA_AUX_PIN%10)));
+	
+	if(DEV_AUX_PIN_VALUE)
+	{
+		GPIO_interruptEdgeSelect((ACS_LORA_AUX_PIN/10), (1u<<(ACS_LORA_AUX_PIN%10)), GPIO_HIGH_TO_LOW_TRANSITION);
+	}
+	else
+	{
+		GPIO_interruptEdgeSelect((ACS_LORA_AUX_PIN/10), (1u<<(ACS_LORA_AUX_PIN%10)), GPIO_LOW_TO_HIGH_TRANSITION);
+	}
+	
+	GPIO_clearInterruptFlag((ACS_LORA_AUX_PIN/10), status);
+	
+	(*auxfunc)();
+}
+
+void ControlIO_Aux_Callback(fpv_t callback)
+{
+	auxfunc = callback;
+	GPIO_setAsInputPin((ACS_LORA_AUX_PIN/10), (1u<<(ACS_LORA_AUX_PIN%10)));
+	GPIO_interruptEdgeSelect((ACS_LORA_AUX_PIN/10), (1u<<(ACS_LORA_AUX_PIN%10)), GPIO_HIGH_TO_LOW_TRANSITION);
+	GPIO_registerInterrupt((ACS_LORA_AUX_PIN/10), Aux_Interrupt_Callback);
+	GPIO_clearInterruptFlag((ACS_LORA_AUX_PIN/10), (1u<<(ACS_LORA_AUX_PIN%10)));
+	GPIO_enableInterrupt((ACS_LORA_AUX_PIN/10), (1u<<(ACS_LORA_AUX_PIN%10)));
+}
 
 bool_t ControlIO_LoraMode(uint8_t type)
 {
@@ -197,11 +198,6 @@ bool_t ControlIO_LoraMode(uint8_t type)
 }
 
 static fpv_t keyfunc;
-uint8_t  get_Key_vlaue(void)
-{
-	return GPIO_getInputPinValue((DEV_SW1_PIN/10), (1u<<(DEV_SW1_PIN%10)));
-}
-
 static void Key_Interrupt_Callback(void)
 {
 	uint_fast16_t status; 

@@ -80,7 +80,7 @@ typedef struct
 	uint8_t mode_id;
 	uint8_t type_id;
 	
-	uint8_t centre_id;				//
+	int8_t centre_id;				//
 }mac_pib_t;
 
 #pragma pack()

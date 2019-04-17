@@ -56,43 +56,25 @@ static uint8_t mac_timeout_id = 0;
 static void mac_pulse_handle(void)
 {
 	device_info_t *p_device_info = device_info_get();
-	uint8_t slot_num = mac_pib.id%5;
+	uint8_t slot_num = mac_pib.id%DEV_NET_MAX_NUM;
 	
-	if(slot_num)
+	if( mac_pib.mode_id == DEV_MODE_CENTRE)
 	{
-		if(!p_device_info->param.lora_state)
+		mac_beacon_handler();
+	}
+	else if(mac_pib.centre_id >= 0)
+	{
+		for(uint8_t i=1;i<DEV_NET_MAX_NUM;i++)
 		{
-			if( mac_pib.mode_id == DEV_MODE_CENTRE)
+			if((mac_pib.centre_id+i)%DEV_NET_MAX_NUM == (mac_pib.id%DEV_NET_MAX_NUM))
 			{
 				mac_timeout_id=hal_timer_free(mac_timeout_id);
-				mac_timeout_id = hal_timer_alloc(MAC_SLOT_TIMEOUT*slot_num,mac_beacon_handler);
-			}
-			else
-			{
-				mac_timeout_id=hal_timer_free(mac_timeout_id);
-				mac_timeout_id = hal_timer_alloc(MAC_SLOT_TIMEOUT*slot_num,mac_tx_fix);
+				mac_timeout_id=hal_timer_alloc(MAC_SLOT0_TIMEOUT*i,mac_tx_fix);
 			}
 		}
 	}
-	else
-	{
-		if(!p_device_info->param.lora_state)
-		{
-			if( mac_pib.mode_id == DEV_MODE_CENTRE)
-			{
-				mac_timeout_id=hal_timer_free(mac_timeout_id);
-				mac_timeout_id = hal_timer_alloc(MAC_SLOT0_TIMEOUT,mac_beacon_handler);
-			}
-			else
-			{
-				mac_timeout_id=hal_timer_free(mac_timeout_id);
-				mac_timeout_id = hal_timer_alloc(MAC_SLOT0_TIMEOUT,mac_tx_fix);
-			}
-		}
-	}
-
+	DBG_LORA_PRINTF("G");
 }
-
 
 static void mac_beacon_handler(void)
 {
@@ -201,9 +183,9 @@ static void mac_tx_handler(void)
 		
 		hal_uart_send_string(UART_LORA, kbuf ->base, kbuf->valid_len);
 		
-		DBG_LORA_PRINTF("t");
-		
 		kbuf = kbuf_free(kbuf);
+		
+		DBG_LORA_PRINTF("t");
 	}
 }
 
@@ -334,10 +316,10 @@ static void mac_syn_time_init(void)
 //普通节点 接收beacon 入网处理
 static void mac_beacon_frame_proc(uint8_t *frm_buff)
 {
-	nwk_frm_head_t *nwk_frm_head = (nwk_frm_head_t *)frm_buff;
-	mac_pib.centre_id = nwk_frm_head->id.src_id;
 	
-	DBG_LORA_PRINTF("centre_id[%X] ",mac_pib.centre_id);
+	nwk_frm_head_t *nwk_frm_head = (nwk_frm_head_t *)frm_buff;
+	mac_pib.centre_id = nwk_frm_head->id.src_id;	
+	DBG_LORA_PRINTF("M[%X]",mac_pib.centre_id);
 }
 
 //普通节点 控制数据函数
@@ -398,7 +380,7 @@ static void mac_status_info_send(uint8_t *frm_buff,uint16_t frm_len)
 	nwk_status_frm_t *status_frm = (nwk_status_frm_t *)(frm_buff+sizeof(nwk_frm_head_t));
 	if(status_frm->dst_id != mac_pib.id) return;
 	
-	DBG_LORA_PRINTF(" id[%X] ",nwk_frm_head->id.src_id);
+	DBG_LORA_PRINTF("C[%X]",nwk_frm_head->id.src_id);
 	
 	kbuf_t *kbuf = kbuf_alloc(KBUF_SMALL_TYPE);
 	if(kbuf==PLAT_NULL) return;

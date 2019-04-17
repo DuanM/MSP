@@ -74,6 +74,7 @@ typedef void (*fppv_t)(void *);   /* function pointer void and parameter void po
 #include <hal_adc.h>
 #include <hal_battery.h>
 ////////////////////////APP////////////////////////
+#include <control_io.h>
 #include <nwk.h>
 
 

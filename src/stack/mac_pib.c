@@ -12,6 +12,7 @@ void mac_pib_init(void)
 	mac_pib.group_id = GET_DEV_GROUP_ID(p_device_info->id);
 	mac_pib.mode_id = GET_DEV_MODE_ID(p_device_info->id);
 	mac_pib.type_id = GET_DEV_TYPE_ID(p_device_info->id);
+	mac_pib.centre_id = -1;
 	mem_set(&nwk_param, 0, sizeof(nwk_param_t));
 }
 

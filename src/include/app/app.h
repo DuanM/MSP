@@ -9,6 +9,7 @@
 #define APP_EVENT_CFG			(1u<<5)
 #define APP_EVENT_INDICATE		(1u<<6)
 #define APP_EVENT_KEY			(1u<<7)
+#define APP_EVENT_AUX			(1u<<8)
 
 
 #define APP_TIMEOUT  500000
