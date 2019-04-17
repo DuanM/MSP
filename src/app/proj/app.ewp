@@ -652,7 +652,7 @@
                 </option>
                 <option>
                     <name>OOCOutputFile</name>
-                    <state>MTCPV1001.bin</state>
+                    <state>MTCPV1002.bin</state>
                 </option>
                 <option>
                     <name>OOCCommandLineProducer</name>

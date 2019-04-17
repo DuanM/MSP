@@ -56,20 +56,26 @@ static uint8_t mac_timeout_id = 0;
 static void mac_pulse_handle(void)
 {
 	device_info_t *p_device_info = device_info_get();
-	uint8_t slot_num = mac_pib.id%DEV_NET_MAX_NUM;
-	
+    
 	if( mac_pib.mode_id == DEV_MODE_CENTRE)
 	{
 		mac_beacon_handler();
 	}
-	else if(mac_pib.centre_id >= 0)
+	else if(mac_pib.centre_id != DEV_NET_DISADD)
 	{
 		for(uint8_t i=1;i<DEV_NET_MAX_NUM;i++)
 		{
 			if((mac_pib.centre_id+i)%DEV_NET_MAX_NUM == (mac_pib.id%DEV_NET_MAX_NUM))
 			{
 				mac_timeout_id=hal_timer_free(mac_timeout_id);
-				mac_timeout_id=hal_timer_alloc(MAC_SLOT0_TIMEOUT*i,mac_tx_fix);
+				if(i==1)
+				{
+					mac_timeout_id=hal_timer_alloc(MAC_SLOT0_TIMEOUT*i,mac_tx_fix);
+				}
+				else
+				{
+					mac_timeout_id=hal_timer_alloc(MAC_SLOT0_TIMEOUT+MAC_SLOT1_TIMEOUT*(i-1),mac_tx_fix);
+				}
 			}
 		}
 	}
@@ -110,6 +116,25 @@ static void mac_beacon_handler(void)
 	
 	kbuf->valid_len += sizeof(nwk_beacon_frm_t);
 	nwk_beacon_frm_t *beacon_frm = (nwk_beacon_frm_t *)(((uint8_t *)nwk_frm_head)+sizeof(nwk_frm_head_t));
+	beacon_frm->InNetNum = nwk_param.InNetNum;
+	
+	for(uint8_t i=0;i<INNETMAXNUM;i++)
+	{
+		if(nwk_param.InNetDev[i].InNetState > 0)
+		{
+			beacon_frm->InNetId[i] = nwk_param.InNetDev[i].InNetId;
+			nwk_param.InNetDev[i].InNetState -= 1;
+			if(nwk_param.InNetDev[i].InNetState == 0)
+			{
+				nwk_param.InNetNum -= 1;
+				nwk_param.InNetDev[i].InNetId = 0;
+			}
+		}
+		else
+		{
+			beacon_frm->InNetId[i] = 0;
+		}
+	}
 	
 	if(p_device_info->param.geteway_data.app_ctrl_flg)
 	{
@@ -316,10 +341,30 @@ static void mac_syn_time_init(void)
 //普通节点 接收beacon 入网处理
 static void mac_beacon_frame_proc(uint8_t *frm_buff)
 {
-	
 	nwk_frm_head_t *nwk_frm_head = (nwk_frm_head_t *)frm_buff;
-	mac_pib.centre_id = nwk_frm_head->id.src_id;	
-	DBG_LORA_PRINTF("M[%X]",mac_pib.centre_id);
+	nwk_beacon_frm_t *nwk_beacon_frm = (nwk_beacon_frm_t *)(frm_buff+sizeof(nwk_frm_head_t));
+	uint8_t InNetCnt=0;
+	for(InNetCnt=0;InNetCnt<INNETMAXNUM;InNetCnt++)
+	{
+		if(nwk_beacon_frm->InNetId[InNetCnt] == mac_pib.id)
+		{
+			mac_pib.centre_id = nwk_frm_head->id.src_id;
+			break;
+		}
+	}
+	
+	if(InNetCnt==INNETMAXNUM && nwk_beacon_frm->InNetNum < INNETMAXNUM)
+	{
+		if(mac_pib.id%DEV_NET_MAX_NUM != nwk_frm_head->id.src_id%DEV_NET_MAX_NUM)
+		{
+			mac_pib.centre_id = nwk_frm_head->id.src_id;
+			DBG_LORA_PRINTF("M[%X]",mac_pib.centre_id);
+		}
+		else
+		{
+			DBG_LORA_PRINTF("slot conflict\r\n");
+		}
+	}
 }
 
 //普通节点 控制数据函数
@@ -379,7 +424,29 @@ static void mac_status_info_send(uint8_t *frm_buff,uint16_t frm_len)
 	nwk_frm_head_t *nwk_frm_head = (nwk_frm_head_t *)frm_buff;
 	nwk_status_frm_t *status_frm = (nwk_status_frm_t *)(frm_buff+sizeof(nwk_frm_head_t));
 	if(status_frm->dst_id != mac_pib.id) return;
-	
+	uint8_t i=0;
+	for(i=0;i<INNETMAXNUM;i++)
+	{
+		if(nwk_param.InNetDev[i].InNetId == nwk_frm_head->id.src_id)
+		{
+			nwk_param.InNetDev[i].InNetState = INNETALIVETIME;
+			break;
+		}
+	}
+	//代写
+	if(i == INNETMAXNUM && nwk_param.InNetNum < INNETMAXNUM)
+	{
+		for(i=0;i<INNETMAXNUM;i++)
+		{
+			if(nwk_param.InNetDev[i].InNetId == 0)
+			{
+				nwk_param.InNetDev[i].InNetId = nwk_frm_head->id.src_id;
+				nwk_param.InNetDev[i].InNetState = INNETALIVETIME;
+				nwk_param.InNetNum+=1;
+				break;
+			}
+		}
+	}
 	DBG_LORA_PRINTF("C[%X]",nwk_frm_head->id.src_id);
 	
 	kbuf_t *kbuf = kbuf_alloc(KBUF_SMALL_TYPE);

@@ -196,6 +196,11 @@
     <CallStackStripe>
         <ShowTiming>1</ShowTiming>
     </CallStackStripe>
+    <LogFile>
+        <LoggingEnabled>_ 0</LoggingEnabled>
+        <LogFile>_ ""</LogFile>
+        <Category>_ 0</Category>
+    </LogFile>
     <DisassembleMode>
         <mode>0</mode>
     </DisassembleMode>
@@ -205,11 +210,6 @@
         <Bp2>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\init}.407.2" 0 0 1 "" 0 "" 0</Bp2>
         <Count>3</Count>
     </Breakpoints2>
-    <LogFile>
-        <LoggingEnabled>_ 0</LoggingEnabled>
-        <LogFile>_ ""</LogFile>
-        <Category>_ 0</Category>
-    </LogFile>
     <Aliases>
         <A0>_ "D:\WorkGroup\903_V3\ZKCS\totoro\src\platform\osel\uCOS-II\Source\os_core.c" ""</A0>
         <A1>_ "D:\WorkGroup\MSP432\Platform\totoro\src\app\init\init.c" ""</A1>

@@ -218,6 +218,7 @@ static void app_lora_handler(void)
 				{
 					DBG_LORA_PRINTF("lora old cfg.\r\n");
 				}
+				DBG_LORA_PRINTF("bps[%x]",device_info->param.lora_cfg.SPED.SKY_BPS);
 				delay_ms(10); 
 				uint8_t buf[3]={0xC4,0xC4,0xC4};
 				hal_uart_send_string(UART_LORA, buf,3);

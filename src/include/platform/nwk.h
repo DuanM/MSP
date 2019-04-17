@@ -10,9 +10,12 @@
 #define	DEV_MODE_CENTRE   0x01 //中心汇聚节点
 #define	DEV_MODE_TERMINAL 0x02  //上位机设备
 
+#define DEV_NET_DISADD   -1 //无效地址
+
+
 #define DEV_NET_MAX_NUM   0x04 //网络最多支持设备数
 #define MAC_SLOT_TIMEOUT  20000 //时隙时间
-#define MAC_SLOT0_TIMEOUT 200000 //时隙时间
+#define MAC_SLOT0_TIMEOUT 300000 //时隙时间
 #define MAC_SLOT1_TIMEOUT 200000 //接收时隙
 
 //****************************************************
@@ -57,9 +60,23 @@
 
 #pragma pack(1)
 
+#define INNETMAXNUM DEV_NET_MAX_NUM-1
+
+#define INNETALIVETIME 0xf
+
+typedef struct
+ {
+ 	uint8_t InNetState; //在网状态
+ 	uint8_t InNetId;	//在网ID
+}nwk_innetid_t;
+
+
 typedef struct
  {
  	uint8_t ctrl_type; //是否获取 上位机 的获取配置指令
+ 	
+ 	uint8_t InNetNum;
+	nwk_innetid_t InNetDev[INNETMAXNUM];
 }nwk_param_t;
 
 extern nwk_param_t nwk_param;
@@ -111,9 +128,13 @@ typedef struct
 	uint8_t  check;
 }nwk_frm_head_t;
 
+
+
 //beacon帧
 typedef struct
 {
+	uint8_t InNetNum;
+	uint8_t InNetId[INNETMAXNUM];
 	uint8_t reserve[BeaconReserveLen];//保留字节
 }nwk_beacon_frm_t;
 

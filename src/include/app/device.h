@@ -2,8 +2,8 @@
 #define __DEVICE_H
 #include <app_dbg.h>
 
-#define SOFT_VERSION		0x1001
-//此版本首编，工程设备程序编写的开始
+#define SOFT_VERSION		0x1002
+//此版本初步验证完成了网络的组网，以及设备工作时隙进行的数据相互收发的无误，还有设备功能的初级验证。。
 
 #define DEVICE_STORE_INDEX  1
 
@@ -23,8 +23,6 @@
 #define GPS_CALC (1000000.0)
 #define COORD_CALC (100.0)
 
-
-
 //设备行动指示
 #define IDLE_MOVE			0x0
 #define READY_MOVE			0x1
@@ -32,8 +30,6 @@
 #define	MIDDLE_STOP_MOVE	0x3
 #define	PASSIVITY_MOVE		0x4
 #define	STOP_MOVE			0x5
-
-
 
 /**
  * device LORA 信道设置范围

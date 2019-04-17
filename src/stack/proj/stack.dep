@@ -99,6 +99,10 @@
                     <name>__cstat</name>
                     <file> 32</file>
                 </tool>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 30</file>
+                </tool>
             </outputs>
             <inputs>
                 <tool>
