@@ -3,6 +3,7 @@
 
 #include <device.h>
 
+
 #define LORA_CFG_MODE 0xC0
 #define NET_ALIVE_CNT 10
 
@@ -11,9 +12,9 @@
 #define	DEV_MODE_TERMINAL 0x02  //上位机设备
 
 #define DEV_NET_DISADD   -1 //无效地址
-
-
 #define DEV_NET_MAX_NUM   0x04 //网络最多支持设备数
+#define INNETMAXNUM DEV_NET_MAX_NUM-1
+
 #define MAC_SLOT_TIMEOUT  20000 //时隙时间
 #define MAC_SLOT0_TIMEOUT 300000 //时隙时间
 #define MAC_SLOT1_TIMEOUT 200000 //接收时隙
@@ -60,7 +61,6 @@
 
 #pragma pack(1)
 
-#define INNETMAXNUM DEV_NET_MAX_NUM-1
 
 #define INNETALIVETIME 0xf
 
@@ -154,14 +154,25 @@ typedef struct
 	uint8_t reserve[9];//保留字节
 }nwk_beacon_query_frm_t;
 
+#define LORACDFLEN sizeof(dev_lora_t)
+
 //beacon cfg 帧
 typedef struct
 {
 	uint8_t dst_id;//目的id
-	uint8_t cfg[6];//lora 配置
+	uint8_t cfg[LORACDFLEN];//lora 配置
 	uint8_t reserve[3];//保留字节
 }nwk_beacon_cfg_frm_t;
 
+
+typedef struct
+{
+	dev_lora_t lora_cfg;
+	uint8_t reserve[2];//保留字节
+}nwk_cfg_frm_t;
+
+
+#define STATERESERVELEN sizeof(nwk_cfg_frm_t)
 
 
 //上行 状态帧
@@ -173,14 +184,8 @@ typedef struct
 	dev_light_t light;//	1	行动指示灯状态
 	uint8_t buzzer;//	1	蜂鸣器状态
 	uint8_t battery;// 1	节点电量（0-9）
-	uint8_t reserve[8];// 8	保留字节
+	uint8_t reserve[STATERESERVELEN];// 8	保留字节
 }nwk_status_frm_t;
-
-typedef struct
-{
-	dev_lora_t lora_cfg;
-	uint8_t reserve[2];//保留字节
-}nwk_cfg_frm_t;
 
 
 

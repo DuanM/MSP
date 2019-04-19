@@ -13,15 +13,13 @@ OSEL_DECLARE_TASK(STACK_TASK, param);
 osel_task_t *stack_task_h;
 osel_event_t *stack_event_h;
 
-
 list_t stack_data0_tx_q;
 list_t stack_data1_tx_q;
 list_t stack_data_rx_q;
 
-
 static fpv_t stack_indicate_func = PLAT_NULL;
-static fpv_t stack_cfg_func = PLAT_NULL;
 static fpv_t stack_send_func = PLAT_NULL;
+static fpcv_t stack_cfg_func = PLAT_NULL;
 
 static list_t *stack_data_tx_q;
 
@@ -110,16 +108,16 @@ void stack_indicate_handle(void)
 	(*stack_indicate_func)();
 }
 
-void stack_config(fpv_t func)
+void stack_config(fpcv_t func)
 {
 	if(func != PLAT_NULL)
 	stack_cfg_func = func;
 }
 
-void stack_config_handle(void)
+void stack_config_handle(uint8_t *cfg_buf)
 {
 	if(stack_cfg_func != PLAT_NULL)
-	(*stack_cfg_func)();
+	(*stack_cfg_func)(cfg_buf);
 }
 
 void stack_priv_list_cfg(list_t *list)

@@ -77,8 +77,8 @@ OSEL_DECLARE_TASK(INIT_TASK, param)
 	
 	stack_init();
 	
-	//DBG_SET_LEVEL(DBG_LEVEL_CRITICAL);
-	APP_DBG_SET(LORA_PRINTF_LEVEL, PLAT_TRUE);
+	DBG_SET_LEVEL(DBG_LEVEL_CRITICAL);
+	//APP_DBG_SET(LORA_PRINTF_LEVEL, PLAT_TRUE);
 	
 	osel_task_idle_hook_reg(0, app_idle_hook);//nwk
 	

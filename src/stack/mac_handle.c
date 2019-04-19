@@ -19,6 +19,7 @@ static void mac_status_info_send(uint8_t *frm_buff,uint16_t frm_len);
 static void mac_time_handler(void);
 static void mac_syn_time_init(void);
 static void mac_pulse_handle(void);
+static void mac_local_state_handler(void);
 
 nwk_param_t nwk_param;
 
@@ -60,6 +61,7 @@ static void mac_pulse_handle(void)
 	if( mac_pib.mode_id == DEV_MODE_CENTRE)
 	{
 		mac_beacon_handler();
+        mac_local_state_handler();
 	}
 	else if(mac_pib.centre_id != DEV_NET_DISADD)
 	{
@@ -153,6 +155,55 @@ static void mac_beacon_handler(void)
 	
 	stack_tx_event();
 }
+
+
+static void mac_local_state_handler(void)
+{
+	OSEL_DECL_CRITICAL();
+	
+	kbuf_t *kbuf = kbuf_alloc(KBUF_SMALL_TYPE);
+	if(kbuf==PLAT_NULL) return;
+	nwk_frm_head_t *nwk_frm_head = PLAT_NULL;
+	device_info_t *p_device_info = device_info_get();
+	kbuf->valid_len = sizeof(nwk_frm_head_t);
+	nwk_frm_head = (nwk_frm_head_t *)kbuf->base;
+	nwk_frm_head->head.first = NWK_FRM_HEAD0;
+	nwk_frm_head->head.second = NWK_FRM_HEAD1;
+	nwk_frm_head->type = NWK_FRM_UP_MTYPE;
+	nwk_frm_head->frm_len = sizeof(nwk_status_frm_t);
+	mem_cpy(&nwk_frm_head->id,&p_device_info->id,sizeof(nwk_id_t));
+	nwk_frm_head->check = 0x0;
+	
+	kbuf->valid_len += sizeof(nwk_status_frm_t);
+	nwk_status_frm_t *nwk_frm = (nwk_status_frm_t *)((uint8_t *)nwk_frm_head+sizeof(nwk_frm_head_t));
+	nwk_frm->dst_id = mac_pib.centre_id;
+	mem_cpy(&nwk_frm->fxos_data,&p_device_info->param.fxos_data,sizeof(dev_fxos_t));
+	mem_cpy(&nwk_frm->pos,&p_device_info->pos,sizeof(dev_pos_t));
+	mem_cpy(&nwk_frm->light,&p_device_info->param.move_light,sizeof(dev_light_t));
+	nwk_frm->buzzer = p_device_info->param.buzzer;
+	
+	if(nwk_param.ctrl_type)
+	{
+		nwk_param.ctrl_type = PLAT_FALSE;//携带自身的配置信息
+		nwk_frm_head->stype = NWK_FRM_UP_CFGINFO_STYPE;
+		nwk_cfg_frm_t *nwk_cfg_frm = (nwk_cfg_frm_t *)nwk_frm->reserve;
+		mem_cpy(&nwk_cfg_frm->lora_cfg,&p_device_info->lora_cfg,sizeof(dev_lora_t));
+	}
+	else
+	{
+		nwk_frm_head->stype = NWK_FRM_UP_STATE_STYPE;
+	}
+	
+	list_t *stack_priv_list = stack_priv_list_get_handle();
+	
+	OSEL_ENTER_CRITICAL();
+	list_behind_put(&kbuf->list, stack_priv_list);
+	OSEL_EXIT_CRITICAL();
+	//数据发送到APP，Uart 发送给 PC
+	stack_priv_list_send_handle();
+}
+
+
 
 //表示 调用发送信标 处理函数 仅用作信标发起模式下的传输板上。
 static void mac_time_handler(void)
@@ -370,12 +421,32 @@ static void mac_beacon_frame_proc(uint8_t *frm_buff)
 //普通节点 控制数据函数
 static void mac_ctrl_frame_proc(uint8_t *frm_buff)
 {
+	OSEL_DECL_CRITICAL();
+
 	device_info_t *p_device_info = device_info_get();
+	
 	nwk_beacon_frm_t *beacon_frm = (nwk_beacon_frm_t *)(frm_buff+sizeof(nwk_frm_head_t));
 	nwk_beacon_ctrl_frm_t *beacon_ctrl_frm = (nwk_beacon_ctrl_frm_t *)beacon_frm->reserve;
 	if(beacon_ctrl_frm->dst_id != mac_pib.id && beacon_ctrl_frm->dst_id != 0xff) return;
+
+	OSEL_ENTER_CRITICAL();
 	mem_cpy(&p_device_info->param.move_light,&beacon_ctrl_frm->light,sizeof(dev_light_t));
 	p_device_info->param.buzzer = beacon_ctrl_frm->buzzer;
+	
+	if (p_device_info->param.move_light.state == GREEN && 
+		p_device_info->param.move_light.filcker == PLAT_TRUE &&
+		p_device_info->param.buzzer == BUZZER_FLICKER)
+	{//准备 灯绿，闪烁，蜂鸣器闪鸣
+		p_device_info->param.move_state = READY_MOVE;
+	}
+	else if (p_device_info->param.move_light.state == RED &&
+		p_device_info->param.move_light.filcker == PLAT_TRUE &&
+		p_device_info->param.buzzer == BUZZER_FLICKER)
+	{//叫停 灯红，闪烁，蜂鸣器闪鸣
+		p_device_info->param.move_state = PASSIVITY_MOVE;
+	}
+	OSEL_EXIT_CRITICAL();
+	
 	stack_indicate_handle();
 }
 
@@ -397,23 +468,7 @@ static void mac_cfg_frame_proc(uint8_t *frm_buff)
 	nwk_beacon_frm_t *beacon_frm = (nwk_beacon_frm_t *)(frm_buff+sizeof(nwk_frm_head_t));
 	nwk_beacon_cfg_frm_t *beacon_cfg_frm = (nwk_beacon_cfg_frm_t *)beacon_frm->reserve;
 	if(beacon_cfg_frm->dst_id != mac_pib.id && beacon_cfg_frm->dst_id != 0xff) return;
-	nwk_param.ctrl_type = PLAT_TRUE;
-	dev_lora_t *dev_lora = (dev_lora_t *)beacon_cfg_frm->cfg;
-	if(device_info->param.lora_cfg.ADDH != dev_lora->ADDH || dev_lora->ADDL != device_info->param.lora_cfg.ADDL ||
-		device_info->param.lora_cfg.CHAN.CHAN_NUM != dev_lora->CHAN.CHAN_NUM ||  device_info->param.lora_cfg.OPTION.OPT_FEC != dev_lora->OPTION.OPT_FEC ||
-		device_info->param.lora_cfg.OPTION.OPT_IO_DEVICE != dev_lora->OPTION.OPT_IO_DEVICE ||  device_info->param.lora_cfg.OPTION.OPT_MODBUS != dev_lora->OPTION.OPT_MODBUS || 
-		device_info->param.lora_cfg.OPTION.OPT_RF_AWAKE_TIME != dev_lora->OPTION.OPT_RF_AWAKE_TIME || device_info->param.lora_cfg.OPTION.OPT_RF_TRS_PER != dev_lora->OPTION.OPT_RF_TRS_PER ||
-		device_info->param.lora_cfg.SPED.PBT != dev_lora->SPED.PBT ||  device_info->param.lora_cfg.SPED.SKY_BPS != dev_lora->SPED.SKY_BPS || device_info->param.lora_cfg.SPED.TTL_BPS != dev_lora->SPED.TTL_BPS)
-	{
-		mem_cpy(&device_info->param.lora_cfg,beacon_cfg_frm->cfg,sizeof(dev_lora_t));
-		if(device_info->param.lora_cfg.MODE == LORA_CFG_MODE)
-		{//保存flash
-			mem_cpy(&device_info->lora_cfg,beacon_cfg_frm->cfg,sizeof(dev_lora_t));
-			device_info_set(device_info,PLAT_TRUE);
-		}
-		device_info->param.lora_state = PLAT_TRUE;
-		stack_config_handle();
-	}
+	stack_config_handle(beacon_cfg_frm->cfg);
 }
 
 

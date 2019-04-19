@@ -14,7 +14,6 @@
 
 #define DEV_AUX_PIN_VALUE   GPIO_getInputPinValue((ACS_LORA_AUX_PIN/10), (1u<<(ACS_LORA_AUX_PIN%10)))
 
-
 #define DEV_STATE_LIGHT_RED_PIN			52u //工作状态灯 红管脚
 #define DEV_STATE_LIGHT_GREEN_PIN		51u //工作状态灯 绿管脚
 #define DEV_STATE_LIGHT_YELLOW_PIN		50u //工作状态灯 黄管脚

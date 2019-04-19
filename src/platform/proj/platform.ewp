@@ -354,6 +354,7 @@
                     <state>$PROJ_DIR$\..\..\include\platform\lib</state>
                     <state>$PROJ_DIR$\..\..\include\platform\osel</state>
                     <state>$PROJ_DIR$\..\..\include\app</state>
+                    <state>$PROJ_DIR$\..\..\include\app\include</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -1022,7 +1023,7 @@
                 </option>
                 <option>
                     <name>IarchiveOutput</name>
-                    <state>E:\git1\totoro\src\platform\proj\Debug\Exe\platform.a</state>
+                    <state>E:\MovingTrackStroeFile\MovingTrackStroeProject\src\platform\proj\Debug\Exe\platform.a</state>
                 </option>
             </data>
         </settings>

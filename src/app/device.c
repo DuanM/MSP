@@ -38,7 +38,7 @@ void device_info_init(void)
 		
 		pg_device_info->lora_cfg.MODE = LORA_CFG_MODE;
 		pg_device_info->lora_cfg.ADDH = 0x0;
-		pg_device_info->lora_cfg.ADDL = 0x0;
+		pg_device_info->lora_cfg.ADDL = GET_DEV_ID(pg_device_info->id);
 		
 		pg_device_info->lora_cfg.SPED.SKY_BPS = BPS2P4K;
 		pg_device_info->lora_cfg.SPED.TTL_BPS = TTL9600;

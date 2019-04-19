@@ -264,7 +264,7 @@ typedef struct
 {
 	uint16_t software;
 	uint8_t lora_state;
-	uint8_t gateway_ctrl_state;
+	uint8_t gateway_ctrl_state; //网关串口数据交互方式
 	
 	dev_gateway_order_t geteway_data;
 	dev_lora_t lora_cfg;
