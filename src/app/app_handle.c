@@ -164,7 +164,6 @@ static void app_lora_handler(void)
 #define APP_SIZE  10
 	static uint8_t frm_buff[APP_SIZE];
 	static uint8_t frm_len = 0;
-	
 	static uint8_t frm_flag = NWK_FRM_DEFAULT_FLG;
 	static uint8_t fram_head_len = sizeof(dev_lora_t);
 	
@@ -177,71 +176,101 @@ static void app_lora_handler(void)
 		{
 			frm_buff[frm_len] = buf[i];
 			frm_len++;
-			if(buf[i] == LORA_CFG_MODE)
+			if(buf[i] == LORA_QUERY_MODE || buf[i] == LORA_CFG_MODE)
 			{
+				if(buf[i] == LORA_QUERY_MODE)
+				{
+					fram_head_len = 3;
+				}
+				else if(buf[i] == LORA_CFG_MODE)
+				{
+					fram_head_len = sizeof(dev_lora_t);
+				}
 				mem_clr(frm_buff,APP_SIZE);
-				frm_buff[0] = LORA_CFG_MODE;
+				frm_buff[0] = buf[i];
 				frm_flag = NWK_FRM_HEAD_START_FLG;
 				frm_len = 1;
 			}
 			else if((frm_len >= fram_head_len) && (frm_flag == NWK_FRM_HEAD_START_FLG))
 			{
 				device_info_t *device_info = device_info_get();
-				dev_lora_t *dev_lora = (dev_lora_t *)frm_buff;
-				
-				DBG_LORA_PRINTF("\r\nLR ");
-				for(uint8_t i=0;i<frm_len;i++)
-				{
-					DBG_LORA_PRINTF("%X ",frm_buff[i]);
+				if(fram_head_len == 3)
+				{//查询
+					dev_lora_query_t *dev_lora_query = (dev_lora_query_t *)frm_buff;
+					device_info->param.lora_mode_num = dev_lora_query->MODE;
+					device_info->param.lora_version_num = dev_lora_query->VERS;
+					
+					DBG_LORA_PRINTF("\r\nVersion ");
+					for(uint8_t i=0;i<frm_len;i++)
+					{
+						DBG_LORA_PRINTF("%X ",frm_buff[i]);
+					}
+					DBG_LORA_PRINTF("\r\n");
+					
+					delay_ms(200);
+					
+					uint8_t buf[3]={0xC1,0xC1,0xC1};
+					hal_uart_send_string(UART_LORA, buf,3);
 				}
-				DBG_LORA_PRINTF("\r\n");
-				
-				DBG_LORA_PRINTF("LL ");
-				for(uint8_t i=0;i<sizeof(dev_lora_t);i++)
+				else
 				{
-					DBG_LORA_PRINTF("%X ", *(((uint8_t *)&device_info->param.lora_cfg)+i));
-				}
-				DBG_LORA_PRINTF("\r\n");
-				
-				if(dev_lora->MODE != device_info->param.lora_cfg.MODE || device_info->param.lora_cfg.ADDH != dev_lora->ADDH || dev_lora->ADDL != device_info->param.lora_cfg.ADDL ||
-					device_info->param.lora_cfg.CHAN.CHAN_NUM != dev_lora->CHAN.CHAN_NUM ||  device_info->param.lora_cfg.OPTION.OPT_FEC != dev_lora->OPTION.OPT_FEC ||
-					device_info->param.lora_cfg.OPTION.OPT_IO_DEVICE != dev_lora->OPTION.OPT_IO_DEVICE ||  device_info->param.lora_cfg.OPTION.OPT_MODBUS != dev_lora->OPTION.OPT_MODBUS || 
-					device_info->param.lora_cfg.OPTION.OPT_RF_AWAKE_TIME != dev_lora->OPTION.OPT_RF_AWAKE_TIME || device_info->param.lora_cfg.OPTION.OPT_RF_TRS_PER != dev_lora->OPTION.OPT_RF_TRS_PER ||
-					device_info->param.lora_cfg.SPED.PBT != dev_lora->SPED.PBT ||  device_info->param.lora_cfg.SPED.SKY_BPS != dev_lora->SPED.SKY_BPS || device_info->param.lora_cfg.SPED.TTL_BPS != dev_lora->SPED.TTL_BPS)
-				{
+					dev_lora_t *dev_lora = (dev_lora_t *)frm_buff;
+					
+					DBG_LORA_PRINTF("\r\nLR ");
+					for(uint8_t i=0;i<frm_len;i++)
+					{
+						DBG_LORA_PRINTF("%X ",frm_buff[i]);
+					}
+					DBG_LORA_PRINTF("\r\n");
+					
+					DBG_LORA_PRINTF("LL ");
+					for(uint8_t i=0;i<sizeof(dev_lora_t);i++)
+					{
+						DBG_LORA_PRINTF("%X ", *(((uint8_t *)&device_info->param.lora_cfg)+i));
+					}
+					DBG_LORA_PRINTF("\r\n");
+					
+					if(dev_lora->MODE != device_info->param.lora_cfg.MODE || device_info->param.lora_cfg.ADDH != dev_lora->ADDH || dev_lora->ADDL != device_info->param.lora_cfg.ADDL ||
+						device_info->param.lora_cfg.CHAN.CHAN_NUM != dev_lora->CHAN.CHAN_NUM ||  device_info->param.lora_cfg.OPTION.OPT_FEC != dev_lora->OPTION.OPT_FEC ||
+						device_info->param.lora_cfg.OPTION.OPT_IO_DEVICE != dev_lora->OPTION.OPT_IO_DEVICE ||  device_info->param.lora_cfg.OPTION.OPT_MODBUS != dev_lora->OPTION.OPT_MODBUS || 
+						device_info->param.lora_cfg.OPTION.OPT_RF_AWAKE_TIME != dev_lora->OPTION.OPT_RF_AWAKE_TIME || device_info->param.lora_cfg.OPTION.OPT_RF_TRS_PER != dev_lora->OPTION.OPT_RF_TRS_PER ||
+						device_info->param.lora_cfg.SPED.PBT != dev_lora->SPED.PBT ||  device_info->param.lora_cfg.SPED.SKY_BPS != dev_lora->SPED.SKY_BPS || device_info->param.lora_cfg.SPED.TTL_BPS != dev_lora->SPED.TTL_BPS)
+					{
+						while(!DEV_AUX_PIN_VALUE)
+						{//等 AUX 为高电平 即LORA 空闲状态
+							delay_ms(10);
+						}
+						
+						hal_uart_send_string(UART_LORA, (uint8_t *)&device_info->param.lora_cfg,sizeof(dev_lora_t));
+						
+						DBG_LORA_PRINTF("lora new cfg.\r\n");
+					}
+					else
+					{
+						DBG_LORA_PRINTF("lora old cfg.\r\n");
+					}
+					
+					DBG_LORA_PRINTF("bps[%x]",device_info->param.lora_cfg.SPED.SKY_BPS);
+					
+					hal_uart_init(UART_LORA, device_lora_baudrate_info_get(device_info->param.lora_cfg.SPED.TTL_BPS)); //lora
+					stack_uart_lora_irq_enable_callback();
+					
 					while(!DEV_AUX_PIN_VALUE)
 					{//等 AUX 为高电平 即LORA 空闲状态
 						delay_ms(10);
 					}
 					
-					hal_uart_send_string(UART_LORA, (uint8_t *)&device_info->param.lora_cfg,sizeof(dev_lora_t));
+					delay_ms(5); 
+					//uint8_t buf[3]={0xC4,0xC4,0xC4};
+					//hal_uart_send_string(UART_LORA, buf,3);
+					//delay_ms(10); 
+					ControlIO_LoraMode(LORA_M0);
 					
-					DBG_LORA_PRINTF("lora new cfg.\r\n");
-				}
-				else
-				{
-					DBG_LORA_PRINTF("lora old cfg.\r\n");
-				}
-				
-				DBG_LORA_PRINTF("bps[%x]",device_info->param.lora_cfg.SPED.SKY_BPS);
-				
-				hal_uart_init(UART_LORA, device_lora_baudrate_info_get(device_info->param.lora_cfg.SPED.TTL_BPS)); //lora
-				stack_uart_lora_irq_enable_callback();
-				
-				while(!DEV_AUX_PIN_VALUE)
-				{//等 AUX 为高电平 即LORA 空闲状态
 					delay_ms(10);
+					
+					device_info->param.lora_state = PLAT_FALSE;
+					
 				}
-				
-				delay_ms(5); 
-				//uint8_t buf[3]={0xC4,0xC4,0xC4};
-				//hal_uart_send_string(UART_LORA, buf,3);
-				//delay_ms(10); 
-				ControlIO_LoraMode(LORA_M0);
-				
-				delay_ms(10);
-				
-				device_info->param.lora_state = PLAT_FALSE;
 				
 				frm_len = 0;
 				mem_clr(frm_buff,APP_SIZE);
@@ -382,7 +411,7 @@ static void app_dbg_handler(void)
 									else
 									{
 										p_device_info->param.geteway_data.app_ctrl_flg = PLAT_TRUE;
-										p_device_info->param.geteway_data.app_ctrl_order = NWK_FRM_DOWN_CTRL_STYPE;
+										p_device_info->param.geteway_data.app_ctrl_order = NWK_FRM_DOWN_QUERY_STYPE;
 										mem_cpy(p_device_info->param.geteway_data.lora_ctrl_content,temp_buf+sizeof(nwk_frm_head_t),BeaconReserveLen);
 									}
 									break;
@@ -394,7 +423,7 @@ static void app_dbg_handler(void)
 									else
 									{
 										p_device_info->param.geteway_data.app_ctrl_flg = PLAT_TRUE;
-										p_device_info->param.geteway_data.app_ctrl_order = NWK_FRM_DOWN_CTRL_STYPE;
+										p_device_info->param.geteway_data.app_ctrl_order = NWK_FRM_DOWN_CFG_STYPE;
 										mem_cpy(p_device_info->param.geteway_data.lora_ctrl_content,temp_buf+sizeof(nwk_frm_head_t),BeaconReserveLen);
 									}
 									break;
@@ -705,7 +734,8 @@ void app_cfg_handler(void)
 	delay_ms(10);
 	hal_uart_rx_irq_enable(UART_LORA,1,app_lora_recv_callback);
 	
-	uint8_t buf[3]={0xC1,0xC1,0xC1};
+	//uint8_t buf[3]={0xC1,0xC1,0xC1};
+	uint8_t buf[3]={0xC3,0xC3,0xC3};
 	hal_uart_send_string(UART_LORA, buf,3);
 	
 	DBG_LORA_PRINTF("Cfg Sd \r\n");

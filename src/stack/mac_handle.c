@@ -188,6 +188,8 @@ static void mac_local_state_handler(void)
 		nwk_frm_head->stype = NWK_FRM_UP_CFGINFO_STYPE;
 		nwk_cfg_frm_t *nwk_cfg_frm = (nwk_cfg_frm_t *)nwk_frm->reserve;
 		mem_cpy(&nwk_cfg_frm->lora_cfg,&p_device_info->lora_cfg,sizeof(dev_lora_t));
+		nwk_cfg_frm->lora_mode_num = p_device_info->param.lora_mode_num;
+		nwk_cfg_frm->lora_version_num = p_device_info->param.lora_version_num;
 	}
 	else
 	{
@@ -564,6 +566,8 @@ static void mac_tx_fix(void)
 		nwk_frm_head->stype = NWK_FRM_UP_CFGINFO_STYPE;
 		nwk_cfg_frm_t *nwk_cfg_frm = (nwk_cfg_frm_t *)nwk_frm->reserve;
 		mem_cpy(&nwk_cfg_frm->lora_cfg,&p_device_info->lora_cfg,sizeof(dev_lora_t));
+		nwk_cfg_frm->lora_mode_num = p_device_info->param.lora_mode_num;
+		nwk_cfg_frm->lora_version_num = p_device_info->param.lora_version_num;
 	}
 	else
 	{

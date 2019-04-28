@@ -71,12 +71,11 @@
  * device Lora SKY_BPS
  */	
 #define	BPS0P3K 	0x0
-#define	BPS0P6K 	0x1
-#define	BPS1P2K 	0x2
-#define	BPS2P4K 	0x3//（默认）
-#define	BPS4P8K 	0x4
-#define	BPS9P6K 	0x5
-
+#define	BPS1P2K 	0x1
+#define	BPS2P4K 	0x2//（默认）
+#define	BPS4P8K 	0x3
+#define	BPS9P6K 	0x4
+#define	BPS19P2K 	0x5
 /**
  * device Lora option modbus
  */
@@ -145,8 +144,8 @@ typedef struct
 
 typedef struct
 {
-	uint8_t  CHAN_NUM		:6,//通信信道，默认 28H（170MHz）
-			 CHAN_RES		:2;//保留
+	uint8_t  CHAN_NUM		:5,//通信信道，默认 17H 对应（410MHz+CHAN * 1MHz），默认 17H（433MHz）
+			 CHAN_RES		:3;//保留
 }dev_chan_t;
 
 /**
@@ -175,6 +174,17 @@ typedef struct
 	dev_chan_t CHAN;//通信信道，默认 28H
 	dev_option_t OPTION;
 }dev_lora_t;
+/**
+ * device lora query
+ */
+
+typedef struct
+{
+	uint8_t HEAD;//模块查询头
+	uint8_t MODE;//模块型号
+	uint8_t VERS;//模块版本号
+	uint8_t OTHER;//模块其他参数
+}dev_lora_query_t;
 
 /**
  * device time
@@ -268,6 +278,8 @@ typedef struct
 	
 	dev_gateway_order_t geteway_data;
 	dev_lora_t lora_cfg;
+	uint8_t lora_mode_num; //lora型号
+	uint8_t lora_version_num;//lora版本号
 	dev_lora_mode_t lora_mode;
 	
 	uint8_t move_state; //物体移动状态

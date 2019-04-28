@@ -3,7 +3,7 @@
 
 #include <device.h>
 
-
+#define LORA_QUERY_MODE 0xC3
 #define LORA_CFG_MODE 0xC0
 #define NET_ALIVE_CNT 10
 
@@ -168,7 +168,9 @@ typedef struct
 typedef struct
 {
 	dev_lora_t lora_cfg;
-	uint8_t reserve[2];//保留字节
+	uint8_t lora_mode_num; //lora型号
+	uint8_t lora_version_num;//lora版本号
+	//uint8_t reserve[2];//保留字节
 }nwk_cfg_frm_t;
 
 
