@@ -123,50 +123,59 @@ static void app_key_callback(void)
 }
 
 //APP
-void app_lora_cfg_handler(uint8_t *cfg_buf)
+void app_lora_cfg_handler(uint8_t *cfg_buf,device_info_t *p_device_info)
 {
-	device_info_t *device_info = device_info_get();
 	dev_lora_t *dev_lora = (dev_lora_t *)cfg_buf;
 	
 	nwk_param.ctrl_type = PLAT_TRUE;
 	
-	if(device_info->param.lora_cfg.CHAN.CHAN_NUM != dev_lora->CHAN.CHAN_NUM ||  device_info->param.lora_cfg.OPTION.OPT_FEC != dev_lora->OPTION.OPT_FEC ||
-	device_info->param.lora_cfg.OPTION.OPT_IO_DEVICE != dev_lora->OPTION.OPT_IO_DEVICE ||  device_info->param.lora_cfg.OPTION.OPT_MODBUS != dev_lora->OPTION.OPT_MODBUS || 
-	device_info->param.lora_cfg.OPTION.OPT_RF_AWAKE_TIME != dev_lora->OPTION.OPT_RF_AWAKE_TIME || device_info->param.lora_cfg.OPTION.OPT_RF_TRS_PER != dev_lora->OPTION.OPT_RF_TRS_PER ||
-	device_info->param.lora_cfg.SPED.PBT != dev_lora->SPED.PBT ||  device_info->param.lora_cfg.SPED.SKY_BPS != dev_lora->SPED.SKY_BPS || device_info->param.lora_cfg.SPED.TTL_BPS != dev_lora->SPED.TTL_BPS)
+	if(p_device_info->param.lora_cfg.CHAN.CHAN_NUM != dev_lora->CHAN.CHAN_NUM ||  p_device_info->param.lora_cfg.OPTION.OPT_FEC != dev_lora->OPTION.OPT_FEC ||
+	p_device_info->param.lora_cfg.OPTION.OPT_IO_DEVICE != dev_lora->OPTION.OPT_IO_DEVICE ||  p_device_info->param.lora_cfg.OPTION.OPT_MODBUS != dev_lora->OPTION.OPT_MODBUS || 
+	p_device_info->param.lora_cfg.OPTION.OPT_RF_AWAKE_TIME != dev_lora->OPTION.OPT_RF_AWAKE_TIME || p_device_info->param.lora_cfg.OPTION.OPT_RF_TRS_PER != dev_lora->OPTION.OPT_RF_TRS_PER ||
+	p_device_info->param.lora_cfg.SPED.PBT != dev_lora->SPED.PBT ||  p_device_info->param.lora_cfg.SPED.SKY_BPS != dev_lora->SPED.SKY_BPS || p_device_info->param.lora_cfg.SPED.TTL_BPS != dev_lora->SPED.TTL_BPS)
 	{
-		device_info->param.lora_state = PLAT_TRUE;
-		
-		while(!DEV_AUX_PIN_VALUE)
-		{//等 AUX 为高电平 即LORA 空闲状态
-			delay_ms(10);
-		}
+		p_device_info->param.lora_state = PLAT_TRUE;
 		
 		ControlIO_LoraMode(LORA_M3);
 		hal_uart_init(UART_LORA, 9600); //lora
 		delay_ms(10);
 		
-		hal_uart_send_string(UART_LORA, (uint8_t *)dev_lora,sizeof(dev_lora_t));
-		
-		mem_cpy(&device_info->param.lora_cfg,dev_lora,sizeof(dev_lora_t));
-		if(device_info->param.lora_cfg.MODE == LORA_CFG_MODE)
-		{//保存flash
-			mem_cpy(&device_info->lora_cfg,dev_lora,sizeof(dev_lora_t));
-			device_info_set(device_info,PLAT_TRUE);
-		}
-		
-		hal_uart_init(UART_LORA, device_lora_baudrate_info_get(device_info->param.lora_cfg.SPED.TTL_BPS)); //主控对lora串口波特率
-		
 		while(!DEV_AUX_PIN_VALUE)
-		{//等 AUX 为高电平 即LORA 配置完成
+		{
 			delay_ms(10);
 		}
+		dev_lora->ADDH = 0x00;
+		dev_lora->ADDL = GET_DEV_ID(p_device_info->id);
 		
+		mem_cpy(&p_device_info->param.lora_cfg,dev_lora,sizeof(dev_lora_t));
+		
+		hal_uart_send_string(UART_LORA, (uint8_t *)&p_device_info->param.lora_cfg,sizeof(dev_lora_t));
+		
+		if(dev_lora->MODE == LORA_CFG_MODE)
+		{//����flash
+			p_device_info->lora_cfg.SPED.SKY_BPS = dev_lora->SPED.SKY_BPS;//BPS2P4K;BPS4P8K
+			p_device_info->lora_cfg.SPED.TTL_BPS = dev_lora->SPED.TTL_BPS;
+			p_device_info->lora_cfg.SPED.PBT = dev_lora->SPED.PBT;
+			
+			p_device_info->lora_cfg.CHAN.CHAN_NUM = dev_lora->CHAN.CHAN_NUM;
+			p_device_info->lora_cfg.CHAN.CHAN_RES = dev_lora->CHAN.CHAN_RES;
+			
+			p_device_info->lora_cfg.OPTION.OPT_MODBUS = dev_lora->OPTION.OPT_MODBUS;
+			p_device_info->lora_cfg.OPTION.OPT_IO_DEVICE = dev_lora->OPTION.OPT_IO_DEVICE;
+			p_device_info->lora_cfg.OPTION.OPT_RF_AWAKE_TIME = dev_lora->OPTION.OPT_RF_AWAKE_TIME;
+			p_device_info->lora_cfg.OPTION.OPT_FEC = dev_lora->OPTION.OPT_FEC;
+			p_device_info->lora_cfg.OPTION.OPT_RF_TRS_PER = dev_lora->OPTION.OPT_RF_TRS_PER;
+			
+			device_info_set(p_device_info,PLAT_TRUE);
+		}
+		while(!DEV_AUX_PIN_VALUE)
+		{
+			delay_ms(10);
+		}
+		hal_uart_init(UART_LORA, device_lora_baudrate_info_get(p_device_info->lora_cfg.SPED.TTL_BPS)); //lora
 		ControlIO_LoraMode(LORA_M0);
-		
-		delay_ms(10);
-		
-		device_info->param.lora_state = PLAT_FALSE;
+		delay_ms(300);
+		p_device_info->param.lora_state = PLAT_FALSE;
     }
 }
 

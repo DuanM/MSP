@@ -30,8 +30,6 @@ void main(void)
     
 	ControlIO_Init();
     
-	//hal_fram_init();
-    
 	hal_adc14_init();
     
 	hal_rtc_init();

@@ -19,7 +19,7 @@ list_t stack_data_rx_q;
 
 static fpv_t stack_indicate_func = PLAT_NULL;
 static fpv_t stack_send_func = PLAT_NULL;
-static fpcv_t stack_cfg_func = PLAT_NULL;
+static fppcv_t stack_cfg_func = PLAT_NULL;
 
 static list_t *stack_data_tx_q;
 
@@ -108,16 +108,16 @@ void stack_indicate_handle(void)
 	(*stack_indicate_func)();
 }
 
-void stack_config(fpcv_t func)
+void stack_config(fppcv_t func)
 {
 	if(func != PLAT_NULL)
 	stack_cfg_func = func;
 }
 
-void stack_config_handle(uint8_t *cfg_buf)
+void stack_config_handle(uint8_t *cfg_buf,device_info_t *device_info)
 {
 	if(stack_cfg_func != PLAT_NULL)
-	(*stack_cfg_func)(cfg_buf);
+	(*stack_cfg_func)(cfg_buf,device_info);
 }
 
 void stack_priv_list_cfg(list_t *list)

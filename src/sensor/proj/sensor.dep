@@ -83,12 +83,12 @@
             <name>$PROJ_DIR$\..\sensor.c</name>
             <outputs>
                 <tool>
-                    <name>__cstat</name>
-                    <file> 34</file>
-                </tool>
-                <tool>
                     <name>ICCARM</name>
                     <file> 49</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 34</file>
                 </tool>
             </outputs>
             <inputs>

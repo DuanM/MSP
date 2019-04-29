@@ -43,7 +43,7 @@
         <LeaveTargetRunning>_ 0</LeaveTargetRunning>
     </XdsDriver>
     <DebugChecksum>
-        <Checksum>408766522</Checksum>
+        <Checksum>4130880108</Checksum>
     </DebugChecksum>
     <Exceptions>
         <StopOnUncaught>_ 0</StopOnUncaught>
@@ -186,6 +186,11 @@
         <Fmt7>{W}1:value	4	0</Fmt7>
         <Fmt8>{W}1:value64	4	0</Fmt8>
     </watch_formats>
+    <LogFile>
+        <LoggingEnabled>_ 0</LoggingEnabled>
+        <LogFile>_ ""</LogFile>
+        <Category>_ 0</Category>
+    </LogFile>
     <TermIOLog>
         <LoggingEnabled>_ 0</LoggingEnabled>
         <LogFile>_ ""</LogFile>
@@ -196,11 +201,6 @@
     <CallStackStripe>
         <ShowTiming>1</ShowTiming>
     </CallStackStripe>
-    <LogFile>
-        <LoggingEnabled>_ 0</LoggingEnabled>
-        <LogFile>_ ""</LogFile>
-        <Category>_ 0</Category>
-    </LogFile>
     <DisassembleMode>
         <mode>0</mode>
     </DisassembleMode>
@@ -208,7 +208,8 @@
         <Bp0>_ 0 "EMUL_DATA" "p_device_info-&gt;prama.eleva" 0 0 0 0 4294967295</Bp0>
         <Bp1>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\init}.432.5" 0 0 1 "" 0 "" 0</Bp1>
         <Bp2>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\init}.407.2" 0 0 1 "" 0 "" 0</Bp2>
-        <Count>3</Count>
+        <Bp3>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\app_handle.c}.738.1" 0 0 1 "" 0 "" 0</Bp3>
+        <Count>4</Count>
     </Breakpoints2>
     <Aliases>
         <A0>_ "D:\WorkGroup\903_V3\ZKCS\totoro\src\platform\osel\uCOS-II\Source\os_core.c" ""</A0>

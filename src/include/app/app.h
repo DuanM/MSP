@@ -31,7 +31,8 @@ extern list_t app_data_tx_q;
 void app_init(void);
 
 void app_lora_recv_callback(void);
-void app_lora_cfg_handler(uint8_t *buf);
+
+void app_lora_cfg_handler(uint8_t *cfg_buf,device_info_t *p_device_info);
 
 void app_indicate_event(void);
 

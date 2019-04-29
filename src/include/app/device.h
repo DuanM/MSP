@@ -20,6 +20,10 @@
 #define SET_DEV_MODE_ID(id,b)		{id[1]=b;}
 #define SET_DEV_TYPE_ID(id,b)		{id[0]=b;}
 
+
+
+
+
 #define GPS_CALC (1000000.0)
 #define COORD_CALC (100.0)
 

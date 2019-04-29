@@ -96,12 +96,12 @@
             <name>$PROJ_DIR$\..\mac_handle.c</name>
             <outputs>
                 <tool>
-                    <name>__cstat</name>
-                    <file> 32</file>
-                </tool>
-                <tool>
                     <name>ICCARM</name>
                     <file> 30</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 32</file>
                 </tool>
             </outputs>
             <inputs>
@@ -115,12 +115,12 @@
             <name>$PROJ_DIR$\..\mac_pib.c</name>
             <outputs>
                 <tool>
-                    <name>__cstat</name>
-                    <file> 31</file>
-                </tool>
-                <tool>
                     <name>ICCARM</name>
                     <file> 28</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 31</file>
                 </tool>
             </outputs>
             <inputs>
@@ -134,12 +134,12 @@
             <name>$PROJ_DIR$\..\mac_slot.c</name>
             <outputs>
                 <tool>
-                    <name>__cstat</name>
-                    <file> 34</file>
-                </tool>
-                <tool>
                     <name>ICCARM</name>
                     <file> 29</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 34</file>
                 </tool>
             </outputs>
             <inputs>
@@ -153,12 +153,12 @@
             <name>$PROJ_DIR$\..\mac_trans.c</name>
             <outputs>
                 <tool>
-                    <name>__cstat</name>
-                    <file> 33</file>
-                </tool>
-                <tool>
                     <name>ICCARM</name>
                     <file> 27</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 33</file>
                 </tool>
             </outputs>
             <inputs>
@@ -172,12 +172,12 @@
             <name>$PROJ_DIR$\..\phy.c</name>
             <outputs>
                 <tool>
-                    <name>__cstat</name>
-                    <file> 36</file>
-                </tool>
-                <tool>
                     <name>ICCARM</name>
                     <file> 20</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 36</file>
                 </tool>
             </outputs>
             <inputs>
@@ -191,12 +191,12 @@
             <name>$PROJ_DIR$\..\stack.c</name>
             <outputs>
                 <tool>
-                    <name>__cstat</name>
-                    <file> 35</file>
-                </tool>
-                <tool>
                     <name>ICCARM</name>
                     <file> 41</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 35</file>
                 </tool>
             </outputs>
             <inputs>
@@ -210,12 +210,12 @@
             <name>$PROJ_DIR$\..\stack_analysis.c</name>
             <outputs>
                 <tool>
-                    <name>__cstat</name>
-                    <file> 37</file>
-                </tool>
-                <tool>
                     <name>ICCARM</name>
                     <file> 26</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 37</file>
                 </tool>
             </outputs>
             <inputs>

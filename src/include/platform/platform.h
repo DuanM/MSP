@@ -38,7 +38,6 @@ typedef void (*fpv_t)(void);      /* function pointer void */
 typedef void (*fppv_t)(void *);   /* function pointer void and parameter void pointer*/
 typedef void (*fpcv_t)(uint8_t *);      /* function pointer void */      
 
-
 #ifndef PLAT_NULL
 #define PLAT_NULL			        ((void*)0)
 #endif

@@ -80,12 +80,14 @@ void hal_uart_init(uint8_t uart_id, uint32_t baud_rate)
 		uart_config.parity = EUSCI_A_UART_NO_PARITY;
 		
 		res = UART_initModule(EUSCI_A1_BASE, &uart_config);
-        
+		
 		UART_enableModule(EUSCI_A1_BASE);
-
-		uart_entity[UART_A1].valid_flag = PLAT_TRUE;
-		res = queue_init(&uart_entity[UART_A1].queue, UART_RECV_BUF_SIZE);
-		DBG_ASSERT(res != PLAT_FALSE);
+		if(!uart_entity[UART_A1].valid_flag)
+		{
+			uart_entity[UART_A1].valid_flag = PLAT_TRUE;
+			res = queue_init(&uart_entity[UART_A1].queue, UART_RECV_BUF_SIZE);
+			DBG_ASSERT(res != PLAT_FALSE);
+		}
 	}
 	else if (uart_id == UART_A2)
 	{

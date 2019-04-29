@@ -102,7 +102,7 @@ bool_t hal_flash_write(uint8_t index)
 		}		
 	}	
 	
-	return res;
+	return PLAT_TRUE;
 }
 
 void *hal_flash_read(uint8_t index)

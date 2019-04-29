@@ -4,6 +4,7 @@
 #define SAVE_SIZE	(sizeof(device_info_t)-sizeof(dev_power_t)-sizeof(dev_time_t)-sizeof(dev_pos_t)-sizeof(dev_param_t))
 
 static device_info_t *pg_device_info = PLAT_NULL;
+nwk_id_t nwk_id;
 
 void device_info_init(void)
 {
@@ -56,6 +57,8 @@ void device_info_init(void)
 		OSEL_ENTER_CRITICAL();
 		hal_flash_write(DEVICE_STORE_INDEX);
 		OSEL_EXIT_CRITICAL();
+		
+		DBG_TRACE("init device config!\r\n");
 	}
 	else
 	{
@@ -70,7 +73,7 @@ void device_info_init(void)
 	//定位
  	pg_device_info->pos.sn = 'V';
 	pg_device_info->pos.we = 'V';
-	
+    
 	if(pg_device_info->lora_cfg.ADDL != GET_DEV_ID(pg_device_info->id))
 	{
 		pg_device_info->lora_cfg.ADDH = 0x00;
@@ -80,11 +83,17 @@ void device_info_init(void)
 		OSEL_EXIT_CRITICAL();
 	}
 	
+	DBG_PRINTF("\r\nConfig lora:");
+	for(uint8_t i=0;i<sizeof(dev_lora_t);i++)
+	{
+		DBG_PRINTF("%02X ",*((uint8_t *)(&pg_device_info->lora_cfg)+i));
+	}
+	DBG_PRINTF("\r\n");
+	
 	mem_cpy(&pg_device_info->param.lora_cfg,&pg_device_info->lora_cfg,sizeof(dev_lora_t));
 	
 	//罗盘
 	mem_set(&pg_device_info->param.fxos_data,0,sizeof(dev_fxos_t));
-	
 	
 	srand(GET_DEV_ID(pg_device_info->id));
 	
@@ -111,9 +120,18 @@ bool_t device_info_set(device_info_t *device_info, bool_t force_update)
 		if (force_update == PLAT_TRUE)
 		{
 			OSEL_ENTER_CRITICAL();
-			hal_flash_write(DEVICE_STORE_INDEX);
+			bool_t flash = hal_flash_write(DEVICE_STORE_INDEX);
 			OSEL_EXIT_CRITICAL();
-		}		
+			if(flash)
+			{
+				DBG_LORA_PRINTF("\r\nConfig lora flash:");
+				for(uint8_t i=0;i<sizeof(dev_lora_t);i++)
+				{
+					DBG_LORA_PRINTF("%02X ",*((uint8_t *)(&device_info->lora_cfg)+i));
+				}
+				DBG_LORA_PRINTF("\r\n");
+			}
+		}
 		return PLAT_TRUE;
 	}
 	else
