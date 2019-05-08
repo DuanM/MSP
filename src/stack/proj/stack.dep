@@ -84,24 +84,15 @@
             <file>$PROJ_DIR$\..\..\include\platform\nwk.h</file>
         </outputs>
         <file>
-            <name>[ROOT_NODE]</name>
-            <outputs>
-                <tool>
-                    <name>IARCHIVE</name>
-                    <file> 38</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
             <name>$PROJ_DIR$\..\mac_handle.c</name>
             <outputs>
                 <tool>
-                    <name>ICCARM</name>
-                    <file> 30</file>
-                </tool>
-                <tool>
                     <name>__cstat</name>
                     <file> 32</file>
+                </tool>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 30</file>
                 </tool>
             </outputs>
             <inputs>
@@ -115,12 +106,12 @@
             <name>$PROJ_DIR$\..\mac_pib.c</name>
             <outputs>
                 <tool>
-                    <name>ICCARM</name>
-                    <file> 28</file>
-                </tool>
-                <tool>
                     <name>__cstat</name>
                     <file> 31</file>
+                </tool>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 28</file>
                 </tool>
             </outputs>
             <inputs>
@@ -134,12 +125,12 @@
             <name>$PROJ_DIR$\..\mac_slot.c</name>
             <outputs>
                 <tool>
-                    <name>ICCARM</name>
-                    <file> 29</file>
-                </tool>
-                <tool>
                     <name>__cstat</name>
                     <file> 34</file>
+                </tool>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 29</file>
                 </tool>
             </outputs>
             <inputs>
@@ -153,12 +144,12 @@
             <name>$PROJ_DIR$\..\mac_trans.c</name>
             <outputs>
                 <tool>
-                    <name>ICCARM</name>
-                    <file> 27</file>
-                </tool>
-                <tool>
                     <name>__cstat</name>
                     <file> 33</file>
+                </tool>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 27</file>
                 </tool>
             </outputs>
             <inputs>
@@ -172,12 +163,12 @@
             <name>$PROJ_DIR$\..\phy.c</name>
             <outputs>
                 <tool>
-                    <name>ICCARM</name>
-                    <file> 20</file>
-                </tool>
-                <tool>
                     <name>__cstat</name>
                     <file> 36</file>
+                </tool>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 20</file>
                 </tool>
             </outputs>
             <inputs>
@@ -191,12 +182,12 @@
             <name>$PROJ_DIR$\..\stack.c</name>
             <outputs>
                 <tool>
-                    <name>ICCARM</name>
-                    <file> 41</file>
-                </tool>
-                <tool>
                     <name>__cstat</name>
                     <file> 35</file>
+                </tool>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 41</file>
                 </tool>
             </outputs>
             <inputs>
@@ -210,12 +201,12 @@
             <name>$PROJ_DIR$\..\stack_analysis.c</name>
             <outputs>
                 <tool>
-                    <name>ICCARM</name>
-                    <file> 26</file>
-                </tool>
-                <tool>
                     <name>__cstat</name>
                     <file> 37</file>
+                </tool>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 26</file>
                 </tool>
             </outputs>
             <inputs>
@@ -224,6 +215,15 @@
                     <file> 40 42 43 44 45 46 47 48 49 50 52 54 55 56 58 39 60 59 72 14 16 13 25 70 63 61 62 65 66 18 68 15 74 73 11 12 71 64 17 69 24 19 10 22 75 21 23 76 57 51 1 2 0</file>
                 </tool>
             </inputs>
+        </file>
+        <file>
+            <name>[ROOT_NODE]</name>
+            <outputs>
+                <tool>
+                    <name>IARCHIVE</name>
+                    <file> 38</file>
+                </tool>
+            </outputs>
         </file>
     </configuration>
     <configuration>

@@ -137,13 +137,18 @@ void app_lora_cfg_handler(uint8_t *cfg_buf,device_info_t *p_device_info)
 		p_device_info->param.lora_state = PLAT_TRUE;
 		
 		ControlIO_LoraMode(LORA_M3);
+		
 		hal_uart_init(UART_LORA, 9600); //lora
-		delay_ms(10);
+		
+		hal_uart_rx_irq_enable(UART_LORA,1,app_lora_recv_callback);
 		
 		while(!DEV_AUX_PIN_VALUE)
 		{
 			delay_ms(10);
 		}
+		
+		delay_ms(10);
+		
 		dev_lora->ADDH = 0x00;
 		dev_lora->ADDL = GET_DEV_ID(p_device_info->id);
 		
@@ -151,8 +156,10 @@ void app_lora_cfg_handler(uint8_t *cfg_buf,device_info_t *p_device_info)
 		
 		hal_uart_send_string(UART_LORA, (uint8_t *)&p_device_info->param.lora_cfg,sizeof(dev_lora_t));
 		
+		delay_ms(200);
+		
 		if(dev_lora->MODE == LORA_CFG_MODE)
-		{//±£´æflash
+		{
 			p_device_info->lora_cfg.SPED.SKY_BPS = dev_lora->SPED.SKY_BPS;//BPS2P4K;BPS4P8K
 			p_device_info->lora_cfg.SPED.TTL_BPS = dev_lora->SPED.TTL_BPS;
 			p_device_info->lora_cfg.SPED.PBT = dev_lora->SPED.PBT;
@@ -168,14 +175,27 @@ void app_lora_cfg_handler(uint8_t *cfg_buf,device_info_t *p_device_info)
 			
 			device_info_set(p_device_info,PLAT_TRUE);
 		}
+		
 		while(!DEV_AUX_PIN_VALUE)
 		{
 			delay_ms(10);
 		}
-		hal_uart_init(UART_LORA, device_lora_baudrate_info_get(p_device_info->lora_cfg.SPED.TTL_BPS)); //lora
-		ControlIO_LoraMode(LORA_M0);
-		delay_ms(300);
-		p_device_info->param.lora_state = PLAT_FALSE;
+		
+		//ControlIO_LoraMode(LORA_M0);
+		
+		//hal_uart_init(UART_LORA, device_lora_baudrate_info_get(p_device_info->lora_cfg.SPED.TTL_BPS)); //lora
+		
+		uint8_t buf[3]={0xC1,0xC1,0xC1};
+		
+		hal_uart_send_string(UART_LORA, buf,3);
+		
+		//while(!DEV_AUX_PIN_VALUE)
+		//{
+		//	delay_ms(10);
+		//}
+		//delay_ms(10);
+		
+		//p_device_info->param.lora_state = PLAT_FALSE;
     }
 }
 

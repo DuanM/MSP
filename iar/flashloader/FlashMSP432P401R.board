@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<flash_board>
+  <pass>
+    <loader>$TOOLKIT_DIR$\config\flashloader\TexasInstruments\FlashMSP432P401R.flash</loader>
+    <range>CODE 0x00000000 0x0003FFFF</range>
+  </pass>
+   <pass>
+    <loader>$TOOLKIT_DIR$\config\flashloader\TexasInstruments\FlashMSP432P401R_info.flash</loader>
+    <range>CODE 0x00200000 0x00203FFF</range>
+  </pass>    
+</flash_board>
+

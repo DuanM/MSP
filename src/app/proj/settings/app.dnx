@@ -208,7 +208,7 @@
         <Bp0>_ 0 "EMUL_DATA" "p_device_info-&gt;prama.eleva" 0 0 0 0 4294967295</Bp0>
         <Bp1>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\init}.432.5" 0 0 1 "" 0 "" 0</Bp1>
         <Bp2>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\init}.407.2" 0 0 1 "" 0 "" 0</Bp2>
-        <Bp3>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\app_handle.c}.738.1" 0 0 1 "" 0 "" 0</Bp3>
+        <Bp3>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\app_handle.c}.736.1" 0 0 1 "" 0 "" 0</Bp3>
         <Count>4</Count>
     </Breakpoints2>
     <Aliases>

@@ -31,6 +31,8 @@
 #define NWK_FRM_DOWN_CTRL_STYPE		0x01//下发 控制
 #define NWK_FRM_DOWN_QUERY_STYPE	0x02//下发 查询
 #define NWK_FRM_DOWN_CFG_STYPE		0x03//下发 配置
+
+#define NWK_FRM_DOWN_LOCAL_QUERY_STYPE	0x04//下发 查询本地
 #define NWK_FRM_DOWN_GATEWAY_STYPE	0xFF//下发 释放串口协议控制
 
 

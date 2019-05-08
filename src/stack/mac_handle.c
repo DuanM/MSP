@@ -577,28 +577,27 @@ static void mac_tx_fix(void)
 		nwk_frm_head->stype = NWK_FRM_UP_STATE_STYPE;
 	}
 	
-	kbuf_t *skbuf = kbuf_alloc(KBUF_SMALL_TYPE);
-	if(skbuf) 
-	{
-		//数据发送到APP，Uart 发送给 PC
-		mem_cpy(skbuf->base,kbuf->base,kbuf->valid_len);
-		skbuf->valid_len = kbuf->valid_len;
-		
-		list_t *stack_priv_list = stack_priv_list_get_handle();
-		
-		OSEL_ENTER_CRITICAL();
-		list_behind_put(&skbuf->list, stack_priv_list);
-		OSEL_EXIT_CRITICAL();
-		
-		stack_priv_list_send_handle();//串口发送
-	}
+	//kbuf_t *skbuf = kbuf_alloc(KBUF_SMALL_TYPE);
+	//if(skbuf) 
+	//{
+//		//数据发送到APP，Uart 发送给 PC
+//		mem_cpy(skbuf->base,kbuf->base,kbuf->valid_len);
+//		skbuf->valid_len = kbuf->valid_len;
+//		
+//		list_t *stack_priv_list = stack_priv_list_get_handle();
+//		
+//		OSEL_ENTER_CRITICAL();
+//		list_behind_put(&skbuf->list, stack_priv_list);
+//		OSEL_EXIT_CRITICAL();
+//		
+//		stack_priv_list_send_handle();//串口发送
+//	}
 	
 	OSEL_ENTER_CRITICAL();
 	list_behind_put(&kbuf->list, &stack_data1_tx_q);
 	OSEL_EXIT_CRITICAL();
 	
 	stack_tx_event();//lora 发送
-	
 }
 
 

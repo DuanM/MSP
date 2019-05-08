@@ -13,6 +13,7 @@ static void app_indicate_callback(void);
 static void app_indicate_handler(void);
 static void app_key_handler(void);
 static void app_aux_handler(void);
+static void app_local_config_handler(void);
 
 static uint8_t app_indicate_id = 0;
 
@@ -255,17 +256,21 @@ static void app_lora_handler(void)
 						DBG_LORA_PRINTF("lora old cfg.\r\n");
 					}
 					
-					hal_uart_init(UART_LORA, device_lora_baudrate_info_get(device_info->param.lora_cfg.SPED.TTL_BPS)); //lora
-					stack_uart_lora_irq_enable_callback();
+					while(!DEV_AUX_PIN_VALUE)
+					{//等 AUX 为高电平 即LORA 空闲状态
+						delay_ms(10);
+					}
+					
+					ControlIO_LoraMode(LORA_M0);
 					
 					while(!DEV_AUX_PIN_VALUE)
 					{//等 AUX 为高电平 即LORA 空闲状态
 						delay_ms(10);
 					}
-					//uint8_t buf[3]={0xC4,0xC4,0xC4};
-					//hal_uart_send_string(UART_LORA, buf,3);
-					//delay_ms(10); 
-					ControlIO_LoraMode(LORA_M0);
+					
+					hal_uart_init(UART_LORA, device_lora_baudrate_info_get(device_info->param.lora_cfg.SPED.TTL_BPS)); //lora
+					
+					stack_uart_lora_irq_enable_callback();
 					
 					delay_ms(300);
 					
@@ -391,6 +396,7 @@ static void app_dbg_handler(void)
 									if(nwk_query->dst_id == GET_DEV_ID(p_device_info->id))
 									{//查询本地
 										nwk_param.ctrl_type = PLAT_TRUE;
+										app_local_config_handler();
 									}
 									else if(GET_DEV_MODE_ID(p_device_info->id) == DEV_MODE_CENTRE)
 									{
@@ -410,6 +416,9 @@ static void app_dbg_handler(void)
 										p_device_info->param.geteway_data.app_ctrl_order = NWK_FRM_DOWN_CFG_STYPE;
 										mem_cpy(p_device_info->param.geteway_data.lora_ctrl_content,temp_buf+sizeof(nwk_frm_head_t),BeaconReserveLen);
 									}
+									break;
+								case NWK_FRM_DOWN_LOCAL_QUERY_STYPE://下发 查询本地信息
+									app_local_config_handler();
 									break;
 								case NWK_FRM_DOWN_GATEWAY_STYPE://下发 释放串口协议控制
 									p_device_info->param.gateway_ctrl_state = PLAT_FALSE;
@@ -723,10 +732,56 @@ void app_cfg_handler(void)
 	//uint8_t buf[3]={0xC1,0xC1,0xC1};
 	uint8_t buf[3]={0xC3,0xC3,0xC3};
 	hal_uart_send_string(UART_LORA, buf,3);
-	
-	DBG_LORA_PRINTF("Cfg Sd \r\n");
 }
 
+
+static void app_local_config_handler(void)
+{
+	OSEL_DECL_CRITICAL();
+	
+	kbuf_t *kbuf = kbuf_alloc(KBUF_SMALL_TYPE);
+	if(kbuf==PLAT_NULL) return;
+	nwk_frm_head_t *nwk_frm_head = PLAT_NULL;
+	device_info_t *p_device_info = device_info_get();
+	kbuf->valid_len = sizeof(nwk_frm_head_t);
+	nwk_frm_head = (nwk_frm_head_t *)kbuf->base;
+	nwk_frm_head->head.first = NWK_FRM_HEAD0;
+	nwk_frm_head->head.second = NWK_FRM_HEAD1;
+	nwk_frm_head->type = NWK_FRM_UP_MTYPE;
+	nwk_frm_head->frm_len = sizeof(nwk_status_frm_t);
+	mem_cpy(&nwk_frm_head->id,&p_device_info->id,sizeof(nwk_id_t));
+	nwk_frm_head->check = 0x0;
+	
+	kbuf->valid_len += sizeof(nwk_status_frm_t);
+	nwk_status_frm_t *nwk_frm = (nwk_status_frm_t *)((uint8_t *)nwk_frm_head+sizeof(nwk_frm_head_t));
+	nwk_frm->dst_id = 0x00;
+	mem_cpy(&nwk_frm->fxos_data,&p_device_info->param.fxos_data,sizeof(dev_fxos_t));
+	mem_cpy(&nwk_frm->pos,&p_device_info->pos,sizeof(dev_pos_t));
+	mem_cpy(&nwk_frm->light,&p_device_info->param.move_light,sizeof(dev_light_t));
+	nwk_frm->buzzer = p_device_info->param.buzzer;
+	
+	if(nwk_param.ctrl_type)
+	{
+		nwk_param.ctrl_type = PLAT_FALSE;//携带自身的配置信息
+		nwk_frm_head->stype = NWK_FRM_UP_CFGINFO_STYPE;
+		nwk_cfg_frm_t *nwk_cfg_frm = (nwk_cfg_frm_t *)nwk_frm->reserve;
+		mem_cpy(&nwk_cfg_frm->lora_cfg,&p_device_info->lora_cfg,sizeof(dev_lora_t));
+		nwk_cfg_frm->lora_mode_num = p_device_info->param.lora_mode_num;
+		nwk_cfg_frm->lora_version_num = p_device_info->param.lora_version_num;
+	}
+	else
+	{
+		nwk_frm_head->stype = NWK_FRM_UP_STATE_STYPE;
+	}
+	
+	OSEL_ENTER_CRITICAL();
+	list_behind_put(&kbuf->list, &app_data_tx_q);
+	OSEL_EXIT_CRITICAL();
+	
+	//数据发送到APP，Uart 发送给 PC
+	uint16_t object = APP_EVENT_DBG_TX;
+	osel_event_set(app_event_h, &object);
+}
 
 
 

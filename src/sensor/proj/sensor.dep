@@ -5,6 +5,22 @@
     <configuration>
         <name>Debug</name>
         <outputs>
+            <file>$TOOLKIT_DIR$\inc\c\stdint.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\math.h</file>
+            <file>$PROJ_DIR$\..\..\include\platform\hal\hal_adc.h</file>
+            <file>$PROJ_DIR$\..\..\include\platform\hal\hal_rtc.h</file>
+            <file>$PROJ_DIR$\..\..\include\platform\hal\hal_battery.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\DLib_Product.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\ysizet.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\sensor.o</file>
+            <file>$PROJ_DIR$\Debug\Exe\sensor.a</file>
+            <file>$PROJ_DIR$\..\..\platform\osel\uCOS-II\Source\ucos_ii.h</file>
+            <file>$PROJ_DIR$\..\..\platform\osel\uCOS-II\Config\os_cfg.h</file>
+            <file>$PROJ_DIR$\..\..\include\platform\hal\hal_i2c.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\fxos8700cq.o</file>
+            <file>$PROJ_DIR$\..\..\include\app\device.h</file>
+            <file>$PROJ_DIR$\..\..\include\app\app_dbg.h</file>
+            <file>$PROJ_DIR$\..\..\include\platform\nwk.h</file>
             <file>$PROJ_DIR$\..\..\include\platform\hal\hal_mem.h</file>
             <file>$PROJ_DIR$\..\..\include\platform\hal\hal_misc.h</file>
             <file>$PROJ_DIR$\..\..\include\platform\hal\hal_rf.h</file>
@@ -47,35 +63,19 @@
             <file>$TOOLKIT_DIR$\inc\c\DLib_Defaults.h</file>
             <file>$PROJ_DIR$\..\..\platform\hal\ti\devices\msp432p4xx\inc\msp.h</file>
             <file>$TOOLKIT_DIR$\CMSIS\Include\core_cm4.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\stdint.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\math.h</file>
-            <file>$PROJ_DIR$\..\..\include\platform\hal\hal_adc.h</file>
-            <file>$PROJ_DIR$\..\..\include\platform\hal\hal_rtc.h</file>
-            <file>$PROJ_DIR$\..\..\include\platform\hal\hal_battery.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\DLib_Product.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\ysizet.h</file>
-            <file>$PROJ_DIR$\Debug\Obj\sensor.o</file>
-            <file>$PROJ_DIR$\Debug\Exe\sensor.a</file>
-            <file>$PROJ_DIR$\..\..\platform\osel\uCOS-II\Source\ucos_ii.h</file>
-            <file>$PROJ_DIR$\..\..\platform\osel\uCOS-II\Config\os_cfg.h</file>
-            <file>$PROJ_DIR$\..\..\include\platform\hal\hal_i2c.h</file>
-            <file>$PROJ_DIR$\Debug\Obj\fxos8700cq.o</file>
-            <file>$PROJ_DIR$\..\..\include\app\device.h</file>
-            <file>$PROJ_DIR$\..\..\include\app\app_dbg.h</file>
-            <file>$PROJ_DIR$\..\..\include\platform\nwk.h</file>
         </outputs>
         <file>
             <name>$PROJ_DIR$\..\fxos8700cq.c</name>
             <outputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 54</file>
+                    <file> 12</file>
                 </tool>
             </outputs>
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 15 24 25 27 39 26 47 48 38 35 31 43 36 42 40 23 29 28 32 37 41 33 30 51 20 52 22 21 7 6 11 9 10 8 13 14 12 1 5 4 0 2 3 45 53 44 46 57 55 56 16</file>
+                    <file> 31 40 41 43 55 42 5 6 54 51 47 1 52 0 56 39 45 44 48 53 57 49 46 9 36 10 38 37 23 22 27 25 26 24 29 30 28 17 21 20 16 18 19 3 11 2 4 15 13 14 32</file>
                 </tool>
             </inputs>
         </file>
@@ -83,18 +83,18 @@
             <name>$PROJ_DIR$\..\sensor.c</name>
             <outputs>
                 <tool>
-                    <name>ICCARM</name>
-                    <file> 49</file>
+                    <name>__cstat</name>
+                    <file> 50</file>
                 </tool>
                 <tool>
-                    <name>__cstat</name>
-                    <file> 34</file>
+                    <name>ICCARM</name>
+                    <file> 7</file>
                 </tool>
             </outputs>
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 15 24 25 27 39 26 47 48 38 35 31 43 36 42 40 23 29 28 32 37 41 33 30 51 20 52 22 21 7 6 11 9 10 8 13 14 12 1 5 4 0 2 3 45 53 44 46 57 55 56 16 17</file>
+                    <file> 31 40 41 43 55 42 5 6 54 51 47 1 52 0 56 39 45 44 48 53 57 49 46 9 36 10 38 37 23 22 27 25 26 24 29 30 28 17 21 20 16 18 19 3 11 2 4 15 13 14 32 33</file>
                 </tool>
             </inputs>
         </file>
@@ -103,7 +103,7 @@
             <outputs>
                 <tool>
                     <name>IARCHIVE</name>
-                    <file> 50</file>
+                    <file> 8</file>
                 </tool>
             </outputs>
         </file>
